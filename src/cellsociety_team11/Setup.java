@@ -1,5 +1,6 @@
 package cellsociety_team11;
 
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -10,9 +11,12 @@ import java.util.Scanner;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -75,10 +79,52 @@ public class Setup extends Application
 		
 		Scene scene = new Scene(root, width, height, myBackground);
 		
-		Button START = createButton("Start", 200, 200);
-		root.getChildren().add(START);
-		scene.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
+		addButtons(root);
+		
+		addTextFields(root);
+		
 		return scene;
+	}
+
+	private void addButtons(Group root) 
+	{
+		//What does he mean by "Any text displayed in the user interface should be set using resource files, not hard-coded"???
+		Button START = createButton("Start", 100, 200);
+		START.setOnAction(new EventHandler<ActionEvent>()
+				{
+				public void handle (ActionEvent e)
+					{
+						System.out.println("pressed start button");
+						if (START.getText().equals("Start"))
+						{
+							START.setText("Reset");
+						}
+						else
+						{
+							START.setText("Start");
+						}
+					}
+				});
+		root.getChildren().add(START);
+		
+		Button PAUSE = createButton("Pause", 200, 200);
+		PAUSE.setOnAction(new EventHandler<ActionEvent>()
+			{
+				public void handle (ActionEvent e)
+					{
+						System.out.println("pressed pause button");
+						if (PAUSE.getText().equals("Pause"))
+						{
+							PAUSE.setText("Resume");
+						}
+						else
+						{
+							PAUSE.setText("Pause");
+						}
+						
+					}
+			});
+		root.getChildren().add(PAUSE);
 	}
 
 	private Button createButton(String text, int xCoordinate, int yCoordinate)
@@ -88,10 +134,42 @@ public class Setup extends Application
 		bt.setLayoutY(yCoordinate);
 		return bt;
 	}
+	
+	private void addTextFields(Group root) 
+	{
+		TextField SECTOR = new TextField();
+		SECTOR.setPromptText("Enter Sector Number:");
+		SECTOR.setLayoutX(0);
+		SECTOR.setLayoutY(0);
+		root.getChildren().add(SECTOR);
+		
+		TextField SIMULATION_NAME = new TextField();
+		SIMULATION_NAME.setPromptText("Enter Simulation Type:");
+		SIMULATION_NAME.setLayoutX(150);
+		SIMULATION_NAME.setLayoutY(0);
+		root.getChildren().add(SIMULATION_NAME);
+		
+		Button GO = createButton("GO", 300, 0);
+		GO.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle (ActionEvent e)
+				{
+					if(SECTOR.getText() != null && !SECTOR.getText().isEmpty() && SIMULATION_NAME.getText() != null && !SIMULATION_NAME.getText().isEmpty())
+					{
+						System.out.println(SECTOR.getText());
+						System.out.println(SIMULATION_NAME.getText());
+					}
+				}
+		});
+		root.getChildren().add(GO);
+		
+		
+	}
 
 
 	private void updateAll(double secondDelay, Stage primaryStage)
 	{
+		
 		
 	}
 	
