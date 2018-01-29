@@ -12,8 +12,9 @@ Each simulation has specified CellOccupant objects and a Simulation object that 
 
 ### User Interface
 
-change: which simulation, pause/resume, reset/start
-This section describes how the user will interact with your program (keep it very simple to start). It should describe the overall appearance of program's user interface components and how users interact with these components (especially those specific to your program, i.e., means of input other than menus or toolbars). It should also include one or more pictures of the user interface (these pictures can be hand drawn and scanned in, created with a standard drawing program, or screen shots from a dummy program that serves as a exemplar). Finally, it should describe any erroneous situations that are reported to the user (i.e., bad input data, empty data, etc.). This section should go into as much detail as necessary to cover all your team wants to say.
+![UI](IMG_0849.jpeg)
+
+Our UI will have a start/reset button, a pause/resume button, and text fields for updating simulations where the user will input a sector and a simulation before pressing a Go button. If the user inputs an invalid sector or simulation type, they will be notified that it is invalid. 
 
 ### Design Details
 
@@ -32,4 +33,16 @@ Use Cases:
 
 ### Design Considerations
 
+One issue that we need to resolve before attempting to devise a complete design solution will be the additional instance variables that some simulations require and others do not. Currently, we are thinking of addressing these additional instance variables in the subclasses of Simulation as needed as these values will be needed when updating states. 
+
+A design consideration that we discussed extensively was how break up the functionality of our program into different classes. We ultimately decided to have two main superclasses, each with various, more specific subclasses. We also discussed whether we should incorporate a method in the CellOccupant subclasses to aid in the checkStates method from a particular Simulation subclass. We were worried that the checkStates method may become too long and decrease readability, but we currently have not figured out a good way to do this. We need to be able to access the 2D array from the Simulation class as well as the information of CellOccupants and their neighbors, which makes it difficult to move functionality into the CellOccupant subclasses.
+
 ### Team Responsibilities
+
+Belanie: Creation of the Setup class, creation of GUI, eventually read in information from XML files
+
+Miles: Simulation class and subclasses
+
+Kelley: CellOccupant class and subclasses
+
+After we each get a start on the above responsibilities, we will regroup to re-divide the method and class creation in order to ensure that each member is contributing an equal amount.
