@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
+import javafx.scene.paint.Color;
+
 public class SegregationModel extends Simulation {
 	
 	public SegregationModel(int width, int height, int type) {
@@ -20,16 +22,16 @@ public class SegregationModel extends Simulation {
 				int[] pos = { i, j };
 				double randNum = Math.random();
 				if (randNum <= 0.1){
-					// empty squares around the edges
-					CellOccupant toAdd = new FireOccupant(0, pos);
+					// ~10% empty squares
+					CellOccupant toAdd = new SegOccupant(0, pos, Color.WHITE);
 					this.setPos(i, j, toAdd);
 				} else if (randNum > 0.1 && randNum <= 0.55) {
-					// fire in the middle
-					CellOccupant toAdd = new FireOccupant(2, pos);
+					// ~45% type 2 squares
+					CellOccupant toAdd = new SegOccupant(2, pos, Color.RED);
 					this.setPos(i, j, toAdd);
 				} else {
-					// trees everywhere else
-					CellOccupant toAdd = new FireOccupant(1, pos);
+					// ~45% type 1 squares
+					CellOccupant toAdd = new SegOccupant(1, pos, Color.BLUE);
 					this.setPos(i, j, toAdd);
 				}
 			}
@@ -77,7 +79,7 @@ public class SegregationModel extends Simulation {
 	@Override
 	public void passTwo() {
 		// TODO Auto-generated method stub
-		int numChanged = 0;
+		// int numChanged = 0;
 		for (int i = 0; i < this.getHeight(); i++) {
 			for (int j = 0; j < this.getWidth(); j++) {
 				CellOccupant currCell = this.getPos(i, j);
@@ -87,7 +89,7 @@ public class SegregationModel extends Simulation {
 					currCell.setCurrentLocation(currCell.getNextLocation());
 					this.setPos(currCell.getCurrentLocation()[0], currCell.getCurrentLocation()[1], currCell);
 					//System.out.println("CHANGED LOCATIONS");
-					numChanged++;
+					//numChanged++;
 				}
 			}
 		}

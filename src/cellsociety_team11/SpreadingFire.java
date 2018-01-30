@@ -2,6 +2,8 @@ package cellsociety_team11;
 
 import java.util.ArrayList;
 
+import javafx.scene.paint.Color;
+
 public class SpreadingFire extends Simulation {
 
 	public SpreadingFire(int width, int height, int type) {
@@ -21,15 +23,15 @@ public class SpreadingFire extends Simulation {
 				int[] pos = { i, j };
 				if (i == 0 || j == 0 || i == this.getHeight() - 1 || j == this.getWidth() - 1) {
 					// empty squares around the edges
-					CellOccupant toAdd = new FireOccupant(0, pos);
+					FireOccupant toAdd = new FireOccupant(0, pos, Color.YELLOW);
 					this.setPos(i, j, toAdd);
 				} else if (i == (this.getHeight() / 2) && j == (this.getWidth() / 2)) {
 					// fire in the middle
-					CellOccupant toAdd = new FireOccupant(2, pos);
+					FireOccupant toAdd = new FireOccupant(2, pos, Color.RED);
 					this.setPos(i, j, toAdd);
 				} else {
 					// trees everywhere else
-					CellOccupant toAdd = new FireOccupant(1, pos);
+					FireOccupant toAdd = new FireOccupant(1, pos, Color.GREEN);
 					this.setPos(i, j, toAdd);
 				}
 			}
@@ -46,10 +48,11 @@ public class SpreadingFire extends Simulation {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < this.getHeight(); i++) {
 			for (int j = 0; j < this.getWidth(); j++) {
-				CellOccupant update = this.getPos(i, j);
+				FireOccupant update = (FireOccupant) this.getPos(i, j);
 				if(update.getCurrentState() != 0) {
 					ArrayList<CellOccupant> neighbors = this.getNeighbors(i, j);
 					for (CellOccupant neighbor : neighbors) {
+						neighbor = (FireOccupant) neighbor;
 						// if neighbor on fire
 						if (neighbor.getCurrentState() == 2) {
 							// 15% chance of catching fire
@@ -81,7 +84,7 @@ public class SpreadingFire extends Simulation {
 		int numOnFire = 0;
 		for (int i = 0; i < this.getHeight(); i++) {
 			for (int j = 0; j < this.getWidth(); j++) {
-				CellOccupant currCell = this.getPos(i, j);
+				FireOccupant currCell = (FireOccupant) this.getPos(i, j);
 				if(currCell.getCurrentState() != currCell.getNextState()) {
 					currCell.setCurrentState(currCell.getNextState());
 					//running = true;
