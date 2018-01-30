@@ -1,0 +1,30 @@
+<UserControls>
+	<Button type="Start/Reset">
+		<Text1>Start</Text1>
+		<Text2>Reset</Text2>
+		<xCoordinate>0</xCoordinate>
+		<yCoordinate>300</yCoordinate>
+	</Button>
+	<Button type="Pause/Resume">
+		<Text1>Pause</Text1>
+		<Text2>Resume</Text2>
+		<xCoordinate>75</xCoordinate>
+		<yCoordinate>300</yCoordinate>
+	</Button>
+	<TextField type="Sector">
+		<Prompt>Enter Sector Number</Prompt>
+		<xCoordinate>0</xCoordinate>
+		<yCoordinate>350</yCoordinate>
+	</TextField>
+	<TextField type="SimulationType">
+		<Prompt>Enter Simulation Type</Prompt>
+		<xCoordinate>175</xCoordinate>
+		<yCoordinate>350</yCoordinate>
+	</TextField>
+	<Button type="GO">
+		<Text1>GO</Text1>
+		<Text2>GO</Text2>
+		<xCoordinate>350</xCoordinate>
+		<yCoordinate>350</yCoordinate>
+	</Button>
+</UserControls>

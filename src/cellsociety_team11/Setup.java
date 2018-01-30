@@ -3,10 +3,21 @@ package cellsociety_team11;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -50,8 +61,8 @@ public class Setup extends Application
 	 */
 	private Scene SCENE;
 	private final String TITLE = "CA Simulations";
-	private static final int WIDTH = 400;
-	private static final int HEIGHT = 400;
+	private static final int WIDTH = 600;
+	private static final int HEIGHT = 500;
 	private static final Paint BACKGROUND = Color.WHITE;
 	private static final int FRAMES_PER_SECOND = 60;
 	private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
@@ -73,110 +84,106 @@ public class Setup extends Application
 		//SCENE.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
 	}
 	
+	
+	//given a 2d array it has to create an image for it
 	private Scene setupScene(int width, int height, Paint myBackground, Stage primaryStage) 
 	{
 		Group root = new Group();
 		
 		Scene scene = new Scene(root, width, height, myBackground);
+		try{
+			File GUIconfigurations = new File("data/GUIconfigurations.xml");
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document configs = db.parse(GUIconfigurations);
+			configs.getDocumentElement().normalize();
+			
+			NodeList buttons = configs.getElementsByTagName("Button");
+			NodeList textFields = configs.getElementsByTagName("TextField");
+			addButtons(root, buttons);
+			addTextFields(root, textFields);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		
-		addButtons(root);
+		fillSimulationArray();
 		
-		addTextFields(root);
+		showSimulationConfiguration();
+		
+		Rectangle r = new Rectangle(0,0,5,5);
+		r.setFill(Color.BLUE);
+		root.getChildren().add(r);
 		
 		return scene;
 	}
 
-	private void addButtons(Group root) 
+	private void addButtons(Group root, NodeList buttons) 
 	{
-		//What does he mean by "Any text displayed in the user interface should be set using resource files, not hard-coded"???
-		Button START = createButton("Start", 100, 200);
-		START.setOnAction(new EventHandler<ActionEvent>()
-				{
-				public void handle (ActionEvent e)
-					{
-						System.out.println("pressed start button");
-						if (START.getText().equals("Start"))
-						{
-							START.setText("Reset");
-						}
-						else
-						{
-							START.setText("Start");
-						}
-					}
-				});
-		root.getChildren().add(START);
-		
-		Button PAUSE = createButton("Pause", 200, 200);
-		PAUSE.setOnAction(new EventHandler<ActionEvent>()
+		for (int i = 0; i < buttons.getLength(); i++)
+		{
+			Node button = buttons.item(i);
+			
+			if (button.getNodeType() == Node.ELEMENT_NODE)
 			{
-				public void handle (ActionEvent e)
-					{
-						System.out.println("pressed pause button");
-						if (PAUSE.getText().equals("Pause"))
-						{
-							PAUSE.setText("Resume");
-						}
-						else
-						{
-							PAUSE.setText("Pause");
-						}
-						
-					}
-			});
-		root.getChildren().add(PAUSE);
-	}
-
-	private Button createButton(String text, int xCoordinate, int yCoordinate)
-	{
-		Button bt = new Button(text);
-		bt.setLayoutX(xCoordinate);
-		bt.setLayoutY(yCoordinate);
-		return bt;
+				Element myButton = (Element) button;
+				Button b = new Button(myButton.getElementsByTagName("Text1").item(0).getTextContent());
+				b.setLayoutX(Integer.parseInt(myButton.getElementsByTagName("xCoordinate").item(0).getTextContent()));
+				b.setLayoutY(Integer.parseInt(myButton.getElementsByTagName("yCoordinate").item(0).getTextContent()));
+//				b.setOnAction(new EventHandler<ActionEvent>()
+//				{
+//					public void handle (ActionEvent e)
+//						{
+//						}
+//				});
+				root.getChildren().add(b);
+			}
+		}
+		//What does he mean by "Any text displayed in the user interface should be set using resource files, not hard-coded"???
 	}
 	
-	private void addTextFields(Group root) 
+	private void addTextFields(Group root, NodeList textFields) 
 	{
-		TextField SECTOR = new TextField();
-		SECTOR.setPromptText("Enter Sector Number:");
-		SECTOR.setLayoutX(0);
-		SECTOR.setLayoutY(0);
-		root.getChildren().add(SECTOR);
-		
-		TextField SIMULATION_NAME = new TextField();
-		SIMULATION_NAME.setPromptText("Enter Simulation Type:");
-		SIMULATION_NAME.setLayoutX(150);
-		SIMULATION_NAME.setLayoutY(0);
-		root.getChildren().add(SIMULATION_NAME);
-		
-		Button GO = createButton("GO", 300, 0);
-		GO.setOnAction(new EventHandler<ActionEvent>()
+		for (int i = 0; i < textFields.getLength(); i++)
 		{
-			public void handle (ActionEvent e)
+			Node textField = textFields.item(i);
+			
+			if (textField.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element myTextField = (Element) textField;
+				TextField tf = new TextField();
+				tf.setPromptText(myTextField.getElementsByTagName("Prompt").item(0).getTextContent());
+				tf.setLayoutX(Integer.parseInt(myTextField.getElementsByTagName("xCoordinate").item(0).getTextContent()));
+				tf.setLayoutY(Integer.parseInt(myTextField.getElementsByTagName("yCoordinate").item(0).getTextContent()));
+				tf.setOnAction(new EventHandler<ActionEvent>()
 				{
-					if(SECTOR.getText() != null && !SECTOR.getText().isEmpty() && SIMULATION_NAME.getText() != null && !SIMULATION_NAME.getText().isEmpty())
-					{
-						System.out.println(SECTOR.getText());
-						System.out.println(SIMULATION_NAME.getText());
-					}
-				}
-		});
-		root.getChildren().add(GO);
-		
+					public void handle (ActionEvent e)
+						{
+							System.out.println(tf.getText());
+						}
+				});
+				root.getChildren().add(tf);
+			}
+		}		
+	}
+	
+	private void fillSimulationArray() 
+	{
+		// TODO Auto-generated method stub
 		
 	}
 
+	private void showSimulationConfiguration() 
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 	private void updateAll(double secondDelay, Stage primaryStage)
 	{
 		
 		
-	}
-	
-	private Object handleMouseInput(double x, double y) 
-	{
-		
-		return null;
 	}
 	
 	public static void main(String[] args)
