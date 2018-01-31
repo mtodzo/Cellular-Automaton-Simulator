@@ -28,7 +28,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -57,10 +59,6 @@ public class Setup extends Application
 	 * well as step forward through it.Allow users to speed up or slow down the simulation's animation rate.
 	 * Any text displayed in the user interface should be set using resource files, not hard-coded.
 	 */
-
-	//remaining buttons:
-	//load new configuration file (file chooser?)
-	//calculate display size of an individual cell
 	
 	//button functionality:
 	//start, reset, do we want to do a start/stop button?
@@ -69,6 +67,7 @@ public class Setup extends Application
 	//go
 	//pause/resume
 	//change simulation animation rate
+	//load new file
 	
 	/*
 	 * Read in an XML formatted file that contains the initial settings for a simulation. The file contains three parts:
@@ -166,6 +165,7 @@ public class Setup extends Application
 	private javafx.scene.Node addButtons(Properties prop) 
 	{
 		VBox controls = new VBox();
+		
 		Button START = new Button(prop.getProperty("StartText"));
 		START.setOnAction(new EventHandler<ActionEvent>()
 				{
@@ -182,6 +182,7 @@ public class Setup extends Application
 						}
 					}
 				});
+		
 		Button PAUSE = new Button(prop.getProperty("PauseText"));
 		PAUSE.setOnAction(new EventHandler<ActionEvent>()
 			{
@@ -198,6 +199,7 @@ public class Setup extends Application
 						}
 					}
 			});
+		
 		Button STEP = new Button(prop.getProperty("StepText"));
 		STEP.setOnAction(new EventHandler<ActionEvent>()
 			{
@@ -206,6 +208,7 @@ public class Setup extends Application
 						System.out.println("pressed step button");
 					}
 			});
+		
 		Button STOP = new Button( prop.getProperty("StopText"));
 		STOP.setOnAction(new EventHandler<ActionEvent>()
 			{
@@ -214,10 +217,12 @@ public class Setup extends Application
 						System.out.println("pressed stop button");
 					}
 			});
-		controls.getChildren().addAll(START,PAUSE, STEP, STOP);
+		
+		Slider ANIMATION_RATE = new Slider(0, 20, 1);
+		
+		controls.getChildren().addAll(START,PAUSE, STEP, STOP, ANIMATION_RATE);
 		controls.setSpacing(10);
 		return controls;
-		
 	}
 
 	private void fillSimulationArray(String SimulationFileName) 
@@ -268,9 +273,6 @@ public class Setup extends Application
 		{
 			e.printStackTrace();
 		}
-			
-		
-		
 	}
 
 	private GridPane displaySimulationConfiguration(CellOccupant[][] CONFIGURATION) 
@@ -285,7 +287,6 @@ public class Setup extends Application
 				SIMULATION_DISPLAY.add(r, i, j);
 			}
 		}
-		
 		return SIMULATION_DISPLAY;
 	}
 
