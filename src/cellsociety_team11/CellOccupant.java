@@ -78,6 +78,12 @@ public abstract class CellOccupant {
 	public void setNextLocation(int[] location) {
 		nextLocation = location;
 	}
+	
+	public void noChange() {
+		this.setNextState(this.currentState);
+		this.setNextLocation(this.currentLocation);
+		this.setNextPaint(this.currentColor);
+	}
 
 	// public abstract int getTurnsOnFire();
 	

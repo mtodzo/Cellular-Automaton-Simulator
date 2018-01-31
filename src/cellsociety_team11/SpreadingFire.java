@@ -1,7 +1,5 @@
 package cellsociety_team11;
 
-import java.util.ArrayList;
-
 import javafx.scene.paint.Color;
 
 public class SpreadingFire extends Simulation {
@@ -40,8 +38,7 @@ public class SpreadingFire extends Simulation {
 	}
 
 	/**
-	 * If a tree has a neighbor that is burning, then the tree will burn in the next
-	 * turn. later need to refine the rules
+	 * iterate through the grid and calculate the nextState for each cellOccupant.
 	 */
 	@Override
 	public void passOne() {
@@ -49,28 +46,7 @@ public class SpreadingFire extends Simulation {
 		for (int i = 0; i < this.getHeight(); i++) {
 			for (int j = 0; j < this.getWidth(); j++) {
 				FireOccupant update = (FireOccupant) this.getPos(i, j);
-				if(update.getCurrentState() != 0) {
-					ArrayList<CellOccupant> neighbors = this.getNeighbors(i, j);
-					for (CellOccupant neighbor : neighbors) {
-						neighbor = (FireOccupant) neighbor;
-						// if neighbor on fire
-						if (neighbor.getCurrentState() == 2) {
-							// 15% chance of catching fire
-							if(Math.random() <= 0.15) {
-								update.setNextState(2);
-							}
-						}
-					}
-					// if currently on fire
-					if(update.getCurrentState() == 2) {
-						if(update.getTurnsOnFire() == 5) {
-							update.setNextState(0);
-						} else {
-							update.updateTurnsOnFire();
-						}
-					}
-					
-				}
+				update.calculateNextState(this.getNeighbors(i, j));
 			}
 		}
 	}
@@ -87,7 +63,6 @@ public class SpreadingFire extends Simulation {
 				FireOccupant currCell = (FireOccupant) this.getPos(i, j);
 				if(currCell.getCurrentState() != currCell.getNextState()) {
 					currCell.setCurrentState(currCell.getNextState());
-					//running = true;
 				}
 				if(currCell.getCurrentState() == 2) {
 					numOnFire++;
