@@ -2,28 +2,29 @@ package cellsociety_team11;
 
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -31,6 +32,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -47,18 +52,31 @@ public class Setup extends Application
 	/*
 	 * Display the current states of the 2D grid and animate the simulation from its initial state until the user
 	 * stops it. Allow users to load a new configuration file, which stops the current simulation and starts the new 
-	 * one.The display size of an individual cell should be calculated each time by the grid's total size, but the
+	 * one. The display size of an individual cell should be calculated each time by the grid's total size, but the
 	 * size of the visualization window should not change. Allow users to pause and resume the simulation, as 
 	 * well as step forward through it.Allow users to speed up or slow down the simulation's animation rate.
 	 * Any text displayed in the user interface should be set using resource files, not hard-coded.
 	 */
 
+	//remaining buttons:
+	//load new configuration file (file chooser?)
+	//calculate display size of an individual cell
+	
+	//button functionality:
+	//start, reset, do we want to do a start/stop button?
+	//stop
+	//step
+	//go
+	//pause/resume
+	//change simulation animation rate
+	
 	/*
 	 * Read in an XML formatted file that contains the initial settings for a simulation. The file contains three parts:
 	 * name of the kind of simulation it represents, as well as a title for this simulation and this simulation's author
 	 * settings for global configuration parameters specific to the simulation dimensions of the grid and the initial
-	 *  configuration of the states for the cells in the grid
+	 * configuration of the states for the cells in the grid
 	 */
+	
 	private Scene SCENE;
 	private final String TITLE = "CA Simulations";
 	private static final int WIDTH = 600;
@@ -68,11 +86,14 @@ public class Setup extends Application
 	private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
 	private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	private Timeline ANIMATION = new Timeline();
+	
+	private CellOccupant[][] CURRENT_CONFIGURATION;
 
 	@Override
 	public void start(Stage primaryStage)
 	{
-		SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage);
+		String SimulationFileName = "SampleSimulationData.xml";
+		SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage, SimulationFileName);
 		primaryStage.setScene(SCENE);
 		primaryStage.setTitle(TITLE);
 		primaryStage.show();
@@ -80,110 +101,199 @@ public class Setup extends Application
 		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e->updateAll(SECOND_DELAY, primaryStage));
 		ANIMATION.setCycleCount(Timeline.INDEFINITE);
 		ANIMATION.getKeyFrames().add(frame);
-		ANIMATION.play();
-		//SCENE.setOnMouseClicked(e -> handleMouseInput(e.getX(), e.getY()));
+		ANIMATION.play(); // move this to start stop eventually
 	}
 	
 	
 	//given a 2d array it has to create an image for it
-	private Scene setupScene(int width, int height, Paint myBackground, Stage primaryStage) 
+	private Scene setupScene(int width, int height, Paint myBackground, Stage primaryStage, String SimulationFileName) 
 	{
-		Group root = new Group();
+		BorderPane root = new BorderPane();
 		
 		Scene scene = new Scene(root, width, height, myBackground);
-		try{
-			File GUIconfigurations = new File("data/GUIconfigurations.xml");
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document configs = db.parse(GUIconfigurations);
-			configs.getDocumentElement().normalize();
+		
+		Properties prop = new Properties();
+		try
+		{
+			InputStream configs = new FileInputStream("data/UserInterfaceConfigurations.properties");
+			prop.load(configs);
 			
-			NodeList buttons = configs.getElementsByTagName("Button");
-			NodeList textFields = configs.getElementsByTagName("TextField");
-			addButtons(root, buttons);
-			addTextFields(root, textFields);
+			root.setLeft(addButtons(prop));
+			root.setBottom(addTextFields(prop));
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 		
-		fillSimulationArray();
+		fillSimulationArray(SimulationFileName);
 		
-		showSimulationConfiguration();
+		//create new simulation
 		
-		Rectangle r = new Rectangle(0,0,5,5);
-		r.setFill(Color.BLUE);
-		root.getChildren().add(r);
+		GridPane CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_CONFIGURATION);
+		root.setCenter(CURRENT_DISPLAY);
 		
 		return scene;
 	}
 
-	private void addButtons(Group root, NodeList buttons) 
+	private javafx.scene.Node addTextFields(Properties prop) 
 	{
-		for (int i = 0; i < buttons.getLength(); i++)
-		{
-			Node button = buttons.item(i);
-			
-			if (button.getNodeType() == Node.ELEMENT_NODE)
+		HBox controls = new HBox();
+		TextField CHOOSE_SECTOR = new TextField();
+		CHOOSE_SECTOR.setPromptText(prop.getProperty("SectorFieldText"));
+		TextField CHOOSE_SIMULATION = new TextField();
+		CHOOSE_SIMULATION.setPromptText(prop.getProperty("SimulationFieldText"));
+		Button GO = new Button(prop.getProperty("GoText"));
+		GO.setOnAction(new EventHandler<ActionEvent>()
 			{
-				Element myButton = (Element) button;
-				Button b = new Button(myButton.getElementsByTagName("Text1").item(0).getTextContent());
-				b.setLayoutX(Integer.parseInt(myButton.getElementsByTagName("xCoordinate").item(0).getTextContent()));
-				b.setLayoutY(Integer.parseInt(myButton.getElementsByTagName("yCoordinate").item(0).getTextContent()));
-//				b.setOnAction(new EventHandler<ActionEvent>()
-//				{
-//					public void handle (ActionEvent e)
-//						{
-//						}
-//				});
-				root.getChildren().add(b);
-			}
-		}
-		//What does he mean by "Any text displayed in the user interface should be set using resource files, not hard-coded"???
-	}
-	
-	private void addTextFields(Group root, NodeList textFields) 
-	{
-		for (int i = 0; i < textFields.getLength(); i++)
-		{
-			Node textField = textFields.item(i);
-			
-			if (textField.getNodeType() == Node.ELEMENT_NODE)
-			{
-				Element myTextField = (Element) textField;
-				TextField tf = new TextField();
-				tf.setPromptText(myTextField.getElementsByTagName("Prompt").item(0).getTextContent());
-				tf.setLayoutX(Integer.parseInt(myTextField.getElementsByTagName("xCoordinate").item(0).getTextContent()));
-				tf.setLayoutY(Integer.parseInt(myTextField.getElementsByTagName("yCoordinate").item(0).getTextContent()));
-				tf.setOnAction(new EventHandler<ActionEvent>()
-				{
-					public void handle (ActionEvent e)
-						{
-							System.out.println(tf.getText());
-						}
-				});
-				root.getChildren().add(tf);
-			}
-		}		
-	}
-	
-	private void fillSimulationArray() 
-	{
-		// TODO Auto-generated method stub
+				public void handle (ActionEvent e)
+					{
+						System.out.println("pressed go button");
+						if(CHOOSE_SECTOR.getText() != null && !CHOOSE_SECTOR.getText().isEmpty() && CHOOSE_SIMULATION.getText() != null && !CHOOSE_SIMULATION.getText().isEmpty())
+							{
+								System.out.println(CHOOSE_SECTOR.getText());
+								System.out.println(CHOOSE_SIMULATION.getText());
+							}
+					}
+			});
+		controls.getChildren().addAll(CHOOSE_SECTOR,CHOOSE_SIMULATION,GO);
+		controls.setSpacing(10);
+		return controls;
 		
 	}
 
-	private void showSimulationConfiguration() 
+
+	private javafx.scene.Node addButtons(Properties prop) 
 	{
-		// TODO Auto-generated method stub
+		VBox controls = new VBox();
+		Button START = new Button(prop.getProperty("StartText"));
+		START.setOnAction(new EventHandler<ActionEvent>()
+				{
+				public void handle (ActionEvent e)
+					{
+						System.out.println("pressed start button");
+						if (START.getText().equals(prop.getProperty("StartText")))
+						{
+							START.setText(prop.getProperty("ResetText"));
+						}
+						else
+						{
+							START.setText(prop.getProperty("StartText"));
+						}
+					}
+				});
+		Button PAUSE = new Button(prop.getProperty("PauseText"));
+		PAUSE.setOnAction(new EventHandler<ActionEvent>()
+			{
+				public void handle (ActionEvent e)
+					{
+						System.out.println("pressed pause button");
+						if (PAUSE.getText().equals(prop.getProperty("PauseText")))
+						{
+							PAUSE.setText(prop.getProperty("ResumeText"));
+						}
+						else
+						{
+							PAUSE.setText(prop.getProperty("PauseText"));
+						}
+					}
+			});
+		Button STEP = new Button(prop.getProperty("StepText"));
+		STEP.setOnAction(new EventHandler<ActionEvent>()
+			{
+				public void handle (ActionEvent e)
+					{
+						System.out.println("pressed step button");
+					}
+			});
+		Button STOP = new Button( prop.getProperty("StopText"));
+		STOP.setOnAction(new EventHandler<ActionEvent>()
+			{
+				public void handle (ActionEvent e)
+					{
+						System.out.println("pressed stop button");
+					}
+			});
+		controls.getChildren().addAll(START,PAUSE, STEP, STOP);
+		controls.setSpacing(10);
+		return controls;
 		
+	}
+
+	private void fillSimulationArray(String SimulationFileName) 
+	{
+		try
+		{
+			File NEW_SIMULATION = new File("data/" + SimulationFileName);
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document sim = db.parse(NEW_SIMULATION);
+			sim.getDocumentElement().normalize();
+			
+			NodeList SimulationProperties = sim.getElementsByTagName("Properties");
+			for (int i = 0; i < SimulationProperties.getLength(); i++)
+			{
+				Node PROPERTY = SimulationProperties.item(i);
+				if (PROPERTY.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element property = (Element) PROPERTY;
+					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
+					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
+					
+					CURRENT_CONFIGURATION = new CellOccupant[width][height];
+				}
+			}
+			
+			NodeList CellOccupants = sim.getElementsByTagName("CellOccupant");
+			for (int i = 0; i < CellOccupants.getLength(); i++)
+			{
+				Node OCCUPANT = CellOccupants.item(i);
+				if (OCCUPANT.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element occupant = (Element) OCCUPANT;
+					int initState = Integer.parseInt(occupant.getElementsByTagName("CurrentState").item(0).getTextContent());
+					int xCor = Integer.parseInt(occupant.getElementsByTagName("xLocation").item(0).getTextContent());
+					int yCor = Integer.parseInt(occupant.getElementsByTagName("yLocation").item(0).getTextContent());
+					String COLOR = occupant.getElementsByTagName("Color").item(0).getTextContent();
+					int[] initLocation = new int[2];
+					initLocation[0] = xCor;
+					initLocation[1] = yCor;
+					Paint initColor = Color.valueOf(COLOR);
+					
+					CURRENT_CONFIGURATION[xCor][yCor] = new CellOccupant(initState, initLocation, initColor);
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+			
+		
+		
+	}
+
+	private GridPane displaySimulationConfiguration(CellOccupant[][] CONFIGURATION) 
+	{
+		GridPane SIMULATION_DISPLAY = new GridPane();
+		for (int i = 0; i < CONFIGURATION.length; i++)
+		{
+			for(int j = 0; j<CONFIGURATION[i].length; j++)
+			{
+				Rectangle r = new Rectangle(20,20);
+				r.setFill(CONFIGURATION[i][j].getCurrentPaint());
+				SIMULATION_DISPLAY.add(r, i, j);
+			}
+		}
+		
+		return SIMULATION_DISPLAY;
 	}
 
 	private void updateAll(double secondDelay, Stage primaryStage)
 	{
+		//simulation.update based on seconds
 		
-		
+		//displaySimulationConfiguration(CURRENT_CONFIGURATION);	
 	}
 	
 	public static void main(String[] args)
