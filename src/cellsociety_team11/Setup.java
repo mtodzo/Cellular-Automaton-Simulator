@@ -267,7 +267,7 @@ public class Setup extends Application
 					initLocation[1] = yCor;
 					Paint initColor = Color.valueOf(COLOR);
 					
-					CURRENT_CONFIGURATION[xCor][yCor] = new CellOccupant(initState, initLocation, initColor);
+					CURRENT_CONFIGURATION[xCor][yCor] = new SegOccupant(initState, initLocation, initColor);
 				}
 			}
 		}
