@@ -1,60 +1,99 @@
 package cellsociety_team11;
 
+import java.util.ArrayList;
+
 public abstract class Simulation {
-	private boolean isRunning;
-	private String simType;
-	protected CellOccupant[][] myOccupants;
+	private int gridWidth;
+	private int gridHeight;
+	private boolean simRunning;
+	private int simType;
+	private CellOccupant[][] myGrid;
 	
-	public Simulation(CellOccupant[][] grid) {
-		myOccupants =grid;
-		isRunning = true;
+	public Simulation(int width, int height, int type) {
+		gridWidth = width;
+		gridHeight = height;
+		simType = type;
+		myGrid = new CellOccupant[gridHeight][gridWidth];
+		simRunning = true;
 	}
 	
-	/*
-	 * Sets the specified cell within myOccupants to hold the passed type
-	 */
-	public void setOccupant(int x, int y, CellOccupant type) {
-		myOccupants[x][y] = type;
+	public void doneRunning() {
+		simRunning = false;
 	}
 	
-	/*
-	 * Change the run status to start, stop, or pause the simulation.
-	 */
-	public void setRunStatus(boolean status) {
-		isRunning = status;
+	public void setPos(int x, int y, CellOccupant type) {
+		myGrid[x][y] = type;
 	}
-	/*
-	 * Returns the run status of the simulation
-	 */
+	
+	public int getWidth() {
+		return gridWidth;
+	}
+	
+	public int getHeight() {
+		return gridHeight;
+	}
+	
 	public boolean getStatus() {
-		return isRunning;
+		return simRunning;
 	}
 	
-	/*
-	 * Returns the type of the simulation
-	 */
-	public String getType() {
+	public int getType() {
 		return simType;
 	}
-	/*
-	 * Returns the myOccupants grid
-	 */
-	public CellOccupant[][] getOccupantGrid() {
-		return myOccupants;
+	
+	public CellOccupant[][] getGrid() {
+		return myGrid;
 	}
 	
-	/*
-	 * Returns the CellOccupant at the specified location
-	 */
-	public CellOccupant getOccupant(int x, int y) {
-		return myOccupants[x][y];
+	public CellOccupant getPos(int x, int y) {
+		return myGrid[x][y];
 	}
 	
 	
-	public abstract void init(CellOccupant[][] grid);
+	public abstract void initializeSim();
 	
-	public abstract void setNextStates();
+	public abstract void passOne();
 	
-	public abstract void updateStates();
+	public abstract void passTwo();
+	
+	public ArrayList<int[]> getPositionsOfType(int type){
+		ArrayList<int[]> positionsOfType = new ArrayList<int[]>();
+		for(int i = 0; i < gridWidth;i++) {
+			for(int j = 0; j < gridHeight;j++) {
+				if (myGrid[i][j].getCurrentState() == type) {
+					positionsOfType.add(myGrid[i][j].getCurrentLocation());
+				}
+			}
+		}
+		return positionsOfType;
+	}
+	
+	public ArrayList<CellOccupant> getNeighbors(int xPos, int yPos) {
+		ArrayList<CellOccupant> myNeighbors = new ArrayList<CellOccupant>();
+		for(int i = -1; i < 2; i++) {
+			for(int j = -1; j < 2; j++) {
+				if(!(i==0 && j==0)) {
+					int xGet = myGrid[xPos][yPos].getCurrentLocation()[0] + i;
+					int yGet = myGrid[xPos][yPos].getCurrentLocation()[1] + j;
+					if(xGet >= 0 && xGet < this.getWidth() && yGet >= 0 && yGet < this.getHeight()) {
+						myNeighbors.add(this.getPos(xGet,yGet));
+					}	
+				}
+			}
+		}
+		return myNeighbors;
+	}
+	public void printGrid() {
+		for(CellOccupant[] row : this.getGrid()) {
+			String buff = "";
+			for(CellOccupant occ : row) {
+				buff += occ.getCurrentState();
+				buff += "   ";
+			}
+			System.out.println(buff);
+		}
+		System.out.println("\n\n");
+	}
+	
 		
 }

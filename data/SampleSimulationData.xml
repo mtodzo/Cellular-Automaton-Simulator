@@ -1,0 +1,22 @@
+<Simulation>
+	<Properties>
+		<Type>SegregationModel</Type>
+		<Width>1</Width>
+		<Height>2</Height>
+		<NumCells>2</NumCells>
+	</Properties>
+	<CellOccupant>
+		<OccupantType>SegOccupant</OccupantType>
+		<CurrentState>0</CurrentState>
+		<xLocation>0</xLocation>
+		<yLocation>0</yLocation>
+		<Color>BLUE</Color>
+	</CellOccupant>
+	<CellOccupant>
+		<Type>SegOccupant</Type>
+		<CurrentState>1</CurrentState>
+		<xLocation>0</xLocation>
+		<yLocation>1</yLocation>
+		<Color>GREEN</Color>
+	</CellOccupant>
+</Simulation>
