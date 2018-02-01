@@ -12,6 +12,7 @@ public class FireOccupant extends CellOccupant {
 
 	public FireOccupant(int initState, int[] initLocation, Paint initColor) {
 		super(initState, initLocation, initColor);
+		// 1 for unut fire 
 		turnsOnFire = 0;
 	}
 
