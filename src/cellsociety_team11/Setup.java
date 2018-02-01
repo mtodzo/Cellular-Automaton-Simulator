@@ -129,6 +129,8 @@ public class Setup extends Application
 		
 		//create new simulation
 		
+		//or we could put the fill array in the simulaiton class and call that with a properies file?
+		
 		GridPane CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_CONFIGURATION);
 		root.setCenter(CURRENT_DISPLAY);
 		
