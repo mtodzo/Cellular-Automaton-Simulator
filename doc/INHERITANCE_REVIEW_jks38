@@ -1,0 +1,23 @@
+## Inheritance Review Questions
+Author: Kelley Scroggs
+I worked with: Ben Auriemma, Brendan Cheng, and Conrad Mitchell
+
+# Part 1
+
+1. We are encapsulating the update rules within the cell subclasses.  So no other part of the program will know the logic behind how the cells update.
+2. There will be one large cell super class called CellOccupant. Each type of simulation will extend this super class to have its own subclass of the CellOccupant.
+3. The CellOccupant superclass will be closed. The subclasses will be open. If we add a new simulation then we will still use the same sublcass, but we will have to create a new celloccupant subclass.
+4. If we get an import file that creates a state that is not part of the game, we will need to throw an error alerting that we have the wrong state.
+5. I define good by being simple and easily able extendable if we were to add another type of simulation. My desing accomplishes this by minimizing the required changes. Only the logic of the new updates will need to be added.
+
+# Part 2
+
+1. My area is linked to the visualization, which will need to know the states and locations of each cell. It is also linked to the simulation class which will need to create a grid full of states.
+2. These dependencies are based on how the other classes are implemented
+3. We can minimize dependencies by adding as much of the logic into the smaller classes as possible, so we do not need to go back and forth between classes.
+4. The FireOccupant Class and the SegOccupant class share a lot of logic in the CellOccupant class. Most of the shared material is data about the cells state, location, color, etc. The things that vary are update rules, so this is implemented in the subclasses.
+
+# Part 3
+1. Grid of cells is initialized from the file. Cell's next state is updated in the first pass. Cell's current state is changed in the second pass. Simulation is changed. New Cells are created in the grid.
+2. I am excited to work on the shared things that I can put in the super class.
+3. I am most worried about figuring out a way to correctly update each cell on the first pass. 

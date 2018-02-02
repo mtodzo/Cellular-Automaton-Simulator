@@ -12,15 +12,15 @@ public class FireOccupant extends CellOccupant {
 
 	public FireOccupant(int initState, int[] initLocation, Paint initColor) {
 		super(initState, initLocation, initColor);
-		// 1 for unut fire 
+		// 1 for initially fire 
 		turnsOnFire = 0;
 	}
 
-	public void updateTurnsOnFire() {
+	private void updateTurnsOnFire() {
 		turnsOnFire++;
 	}
 
-	public int getTurnsOnFire() {
+	private int getTurnsOnFire() {
 		return turnsOnFire;
 	}
 
