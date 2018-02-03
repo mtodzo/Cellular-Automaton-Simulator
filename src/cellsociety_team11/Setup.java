@@ -62,7 +62,6 @@ public class Setup extends Application
 	 */
 	
 	//button functionality:
-	//reset
 	//step
 	//go
 	//change simulation animation rate
@@ -96,7 +95,7 @@ public class Setup extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
-		String SimulationFileName = "SampleSpreadingFire.xml";
+		String SimulationFileName = "SampleGameOfLife2.xml";
 		SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage, SimulationFileName);
 		primaryStage.setScene(SCENE);
 		primaryStage.setTitle(TITLE);
@@ -105,7 +104,6 @@ public class Setup extends Application
 		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e->updateAll(SECOND_DELAY, primaryStage));
 		ANIMATION.setCycleCount(Timeline.INDEFINITE);
 		ANIMATION.getKeyFrames().add(frame);
-		//ANIMATION.play(); // move this to start stop eventually
 	}
 
 	private Scene setupScene(int width, int height, Paint myBackground, Stage primaryStage, String SimulationFileName) 
@@ -120,7 +118,7 @@ public class Setup extends Application
 			InputStream configs = new FileInputStream("data/UserInterfaceConfigurations.properties");
 			prop.load(configs);
 			
-			root.setLeft(addButtons(prop));
+			root.setLeft(addButtons(prop, primaryStage));
 			root.setBottom(addTextFields(prop));
 		}
 		catch(Exception e)
@@ -164,7 +162,7 @@ public class Setup extends Application
 	}
 
 
-	private javafx.scene.Node addButtons(Properties prop) 
+	private javafx.scene.Node addButtons(Properties prop, Stage primaryStage) 
 	{
 		VBox controls = new VBox();
 		
@@ -181,7 +179,10 @@ public class Setup extends Application
 						}
 						else
 						{
+							ANIMATION.stop();
 							START.setText(prop.getProperty("StartText"));
+							Setup newGame = new Setup();
+							newGame.start(primaryStage);
 						}
 					}
 				});
@@ -288,6 +289,7 @@ public class Setup extends Application
 		}
 		else
 		{
+			System.out.println("else");
 			return new FireOccupant(initState, initLocation, initColor);
 		}
 		
@@ -317,6 +319,8 @@ public class Setup extends Application
 		
 		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid());
 		root.setCenter(CURRENT_DISPLAY);
+		
+		System.out.println("loop");
 	}
 	
 	public static void main(String[] args)
