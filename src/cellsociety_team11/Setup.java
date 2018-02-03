@@ -23,6 +23,8 @@ import org.w3c.dom.NodeList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -46,6 +48,8 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -80,9 +84,9 @@ public class Setup extends Application
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 500;
 	private static final Paint BACKGROUND = Color.WHITE;
-	private static final int FRAMES_PER_SECOND = 1;
-	private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
-	private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+	private int FRAMES_PER_SECOND = 1;
+	private int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
+	private double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	private Timeline ANIMATION = new Timeline();
 	
 	private Simulation CURRENT_SIMULATION;
@@ -91,12 +95,22 @@ public class Setup extends Application
 	private BorderPane root;
 	private CellOccupant[][] CURRENT_CONFIGURATION;
 	
+	private static String SimulationFileName = "";
+	
 
 	@Override
 	public void start(Stage primaryStage)
 	{
-		String SimulationFileName = "SampleGameOfLife2.xml";
-		SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage, SimulationFileName);
+		if (SimulationFileName.equals(""))
+		{
+			SCENE = openingScene(WIDTH, HEIGHT, BACKGROUND, primaryStage);
+			
+		}
+		else
+		{
+			SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage, SimulationFileName);
+		}
+		SimulationFileName = "SampleGameOfLife2.xml";
 		primaryStage.setScene(SCENE);
 		primaryStage.setTitle(TITLE);
 		primaryStage.show();
@@ -106,6 +120,27 @@ public class Setup extends Application
 		ANIMATION.getKeyFrames().add(frame);
 	}
 
+	private Scene openingScene(int width, int height, Paint myBackground, Stage primaryStage)
+	{
+		root = new BorderPane();
+		
+		Scene scene = new Scene(root, width, height, myBackground);
+		
+		Properties prop = new Properties();
+		try
+		{
+			InputStream configs = new FileInputStream("data/UserInterfaceConfigurations.properties");
+			prop.load(configs);
+			root.setBottom(addTextFields(prop, primaryStage));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return scene;
+		
+	}
 	private Scene setupScene(int width, int height, Paint myBackground, Stage primaryStage, String SimulationFileName) 
 	{
 		root = new BorderPane();
@@ -119,7 +154,7 @@ public class Setup extends Application
 			prop.load(configs);
 			
 			root.setLeft(addButtons(prop, primaryStage));
-			root.setBottom(addTextFields(prop));
+			root.setBottom(addTextFields(prop, primaryStage));
 		}
 		catch(Exception e)
 		{
@@ -135,32 +170,31 @@ public class Setup extends Application
 		return scene;
 	}
 
-	private javafx.scene.Node addTextFields(Properties prop) 
+	private javafx.scene.Node addTextFields(Properties prop, Stage primaryStage) 
 	{
 		HBox controls = new HBox();
-		TextField CHOOSE_SECTOR = new TextField();
-		CHOOSE_SECTOR.setPromptText(prop.getProperty("SectorFieldText"));
-		TextField CHOOSE_SIMULATION = new TextField();
-		CHOOSE_SIMULATION.setPromptText(prop.getProperty("SimulationFieldText"));
-		Button GO = new Button(prop.getProperty("GoText"));
-		GO.setOnAction(new EventHandler<ActionEvent>()
-			{
-				public void handle (ActionEvent e)
-					{
-						System.out.println("pressed go button");
-						if(CHOOSE_SECTOR.getText() != null && !CHOOSE_SECTOR.getText().isEmpty() && CHOOSE_SIMULATION.getText() != null && !CHOOSE_SIMULATION.getText().isEmpty())
+		FileChooser CHOOSE_SIMULATION = new FileChooser();
+		Button CHOOSER = new Button(prop.getProperty("FileChooserText"));
+		CHOOSER.setOnAction(new EventHandler<ActionEvent>()
+				{
+					public void handle (ActionEvent e)
+						{
+							CHOOSE_SIMULATION.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
+							File path = new File("./data");
+							CHOOSE_SIMULATION.setInitialDirectory(path);
+							File file = CHOOSE_SIMULATION.showOpenDialog(primaryStage);
+							if (file != null)
 							{
-								System.out.println(CHOOSE_SECTOR.getText());
-								System.out.println(CHOOSE_SIMULATION.getText());
+								SimulationFileName = file.getName();
+								resetSimulation(primaryStage);
 							}
-					}
-			});
-		controls.getChildren().addAll(CHOOSE_SECTOR,CHOOSE_SIMULATION,GO);
+						}
+				});
+		controls.getChildren().add(CHOOSER);
 		controls.setSpacing(10);
 		return controls;
 		
 	}
-
 
 	private javafx.scene.Node addButtons(Properties prop, Stage primaryStage) 
 	{
@@ -171,7 +205,6 @@ public class Setup extends Application
 				{
 				public void handle (ActionEvent e)
 					{
-						System.out.println("pressed start button");
 						if (START.getText().equals(prop.getProperty("StartText")))
 						{
 							ANIMATION.play();
@@ -179,10 +212,8 @@ public class Setup extends Application
 						}
 						else
 						{
-							ANIMATION.stop();
 							START.setText(prop.getProperty("StartText"));
-							Setup newGame = new Setup();
-							newGame.start(primaryStage);
+							resetSimulation(primaryStage);
 						}
 					}
 				});
@@ -214,7 +245,16 @@ public class Setup extends Application
 					}
 			});
 		
-		Slider ANIMATION_RATE = new Slider(0, 20, 1);
+		Slider ANIMATION_RATE = new Slider(0,10,1);
+		ANIMATION_RATE.valueProperty().addListener(new ChangeListener<Number>() 
+				{
+			       @Override
+			        public void changed(ObservableValue<? extends Number> observable, 
+			        		Number oldValue, Number newValue)
+			       {
+			    	    FRAMES_PER_SECOND = newValue.intValue();
+			        }
+				});
 		
 		controls.getChildren().addAll(START,PAUSE, STEP, ANIMATION_RATE);
 		controls.setSpacing(10);
@@ -289,7 +329,6 @@ public class Setup extends Application
 		}
 		else
 		{
-			System.out.println("else");
 			return new FireOccupant(initState, initLocation, initColor);
 		}
 		
@@ -319,8 +358,13 @@ public class Setup extends Application
 		
 		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid());
 		root.setCenter(CURRENT_DISPLAY);
-		
-		System.out.println("loop");
+	}
+	
+	private void resetSimulation(Stage primaryStage)
+	{
+		ANIMATION.stop();
+		Setup newGame = new Setup();
+		newGame.start(primaryStage);
 	}
 	
 	public static void main(String[] args)

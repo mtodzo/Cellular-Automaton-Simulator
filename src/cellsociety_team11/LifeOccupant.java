@@ -33,22 +33,17 @@ public class LifeOccupant extends CellOccupant{
 		if (this.getCurrentState() == ALIVE && liveNeighbors < minLiveNeighbors) {
 			this.setNextState(DEAD);
 			this.setNextPaint(typeColors[DEAD]);
-			System.out.println("first if");
 		}
 		else if (this.getCurrentState() == DEAD && liveNeighbors >= numToReproduce) {
 			this.setNextState(ALIVE);
 			this.setNextPaint(typeColors[ALIVE]);
-			System.out.println("second if");
 		}
 		else if (this.getCurrentState() == ALIVE && liveNeighbors >= maxLiveNeighbors) {
 			this.setNextState(DEAD);
 			this.setNextPaint(typeColors[DEAD]);
-			System.out.println("third if");
 		}
 		else {
 			this.noChange();
-			System.out.println("goes to else");
-			System.out.println(this.getCurrentState());
 		}
 	}
 
