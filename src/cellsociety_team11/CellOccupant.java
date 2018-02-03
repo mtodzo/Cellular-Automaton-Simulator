@@ -89,7 +89,8 @@ public abstract class CellOccupant {
 		this.setNextLocation(this.currentLocation);
 		this.setNextPaint(this.currentColor);
 	}
-
+	
+	public abstract void calculateNextState(ArrayList<CellOccupant> neighborsList);
 	// public abstract int getTurnsOnFire();
 	
 	// public abstract void updateTurnsOnFire();
