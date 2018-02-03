@@ -59,7 +59,7 @@ public class Simulation {
 	public void setNextStates() {
 		for (int y=0; y< myOccupants.length; y++) {
 			for (int x=0; x<myOccupants[0].length; x++) {
-				ArrayList<CellOccupant> neighbors = getNeighbors();
+				ArrayList<CellOccupant> neighbors = getNeighbors(myOccupants[x][y]);
 				myOccupants[x][y].calcNextState(neighbors);
 			}
 		}
@@ -73,9 +73,23 @@ public class Simulation {
 		}
 	}
 	
-	private ArrayList<CellOccupant> getNeighbors() {
-		// TODO Auto-generated method stub
-		return null;
+	private ArrayList<CellOccupant> getNeighbors(CellOccupant current) {
+		int xLoc = current.getCurrentLocation()[0];
+		int yLoc = current.getCurrentLocation()[1];
+		ArrayList<CellOccupant> neighbors = new ArrayList<>();
+		if (xLoc != 0) {
+			neighbors.add(myOccupants[xLoc-1][yLoc]);
+		}
+		if (xLoc < myOccupants[0].length) {
+			neighbors.add(myOccupants[xLoc+1][yLoc]);
+		}
+		if (yLoc != 0) {
+			neighbors.add(myOccupants[xLoc][yLoc-1]);
+		}
+		if (yLoc < myOccupants.length) {
+			neighbors.add(myOccupants[xLoc][yLoc+1]);
+		}
+		return neighbors;
 	}
 	
 	private ArrayList<int[]> getEmptyLocations(){
