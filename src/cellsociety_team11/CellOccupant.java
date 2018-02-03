@@ -52,8 +52,8 @@ public abstract class CellOccupant {
 	}
 	
 	// set current paint
-	public void setCurrentPaint(Paint color) {
-		currentColor = color;
+	public void setCurrentPaint() {
+		currentColor = this.getNextPaint();
 	}
 	
 	// set next paint
@@ -62,7 +62,8 @@ public abstract class CellOccupant {
 	}
 	
 	// set current state
-	public void setCurrentState() {
+	public void setCurrentState() 
+	{
 		currentState = this.getNextState();
 	}
 
@@ -88,7 +89,8 @@ public abstract class CellOccupant {
 		this.setNextLocation(this.currentLocation);
 		this.setNextPaint(this.currentColor);
 	}
-
+	
+	public abstract void calculateNextState(ArrayList<CellOccupant> neighborsList);
 	// public abstract int getTurnsOnFire();
 	
 	// public abstract void updateTurnsOnFire();

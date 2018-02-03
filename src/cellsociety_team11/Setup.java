@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Scanner;
@@ -61,13 +62,12 @@ public class Setup extends Application
 	 */
 	
 	//button functionality:
-	//start, reset, do we want to do a start/stop button?
-	//stop
+	//reset
 	//step
 	//go
-	//pause/resume
 	//change simulation animation rate
 	//load new file
+	//display size of an individual cell should be calculated each time by the grid's total size
 	
 	/*
 	 * Read in an XML formatted file that contains the initial settings for a simulation. The file contains three parts:
@@ -81,17 +81,22 @@ public class Setup extends Application
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 500;
 	private static final Paint BACKGROUND = Color.WHITE;
-	private static final int FRAMES_PER_SECOND = 60;
+	private static final int FRAMES_PER_SECOND = 1;
 	private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
 	private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	private Timeline ANIMATION = new Timeline();
 	
+	private Simulation CURRENT_SIMULATION;
+	private String CURRENT_SIMULATION_TYPE;
+	private GridPane CURRENT_DISPLAY;
+	private BorderPane root;
 	private CellOccupant[][] CURRENT_CONFIGURATION;
+	
 
 	@Override
 	public void start(Stage primaryStage)
 	{
-		String SimulationFileName = "SampleSimulationData.xml";
+		String SimulationFileName = "SampleSpreadingFire.xml";
 		SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage, SimulationFileName);
 		primaryStage.setScene(SCENE);
 		primaryStage.setTitle(TITLE);
@@ -100,14 +105,12 @@ public class Setup extends Application
 		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e->updateAll(SECOND_DELAY, primaryStage));
 		ANIMATION.setCycleCount(Timeline.INDEFINITE);
 		ANIMATION.getKeyFrames().add(frame);
-		ANIMATION.play(); // move this to start stop eventually
+		//ANIMATION.play(); // move this to start stop eventually
 	}
-	
-	
-	//given a 2d array it has to create an image for it
+
 	private Scene setupScene(int width, int height, Paint myBackground, Stage primaryStage, String SimulationFileName) 
 	{
-		BorderPane root = new BorderPane();
+		root = new BorderPane();
 		
 		Scene scene = new Scene(root, width, height, myBackground);
 		
@@ -125,13 +128,10 @@ public class Setup extends Application
 			e.printStackTrace();
 		}
 		
+		
 		fillSimulationArray(SimulationFileName);
 		
-		//create new simulation
-		
-		//or we could put the fill array in the simulaiton class and call that with a properies file?
-		
-		GridPane CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_CONFIGURATION);
+		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid());
 		root.setCenter(CURRENT_DISPLAY);
 		
 		return scene;
@@ -176,6 +176,7 @@ public class Setup extends Application
 						System.out.println("pressed start button");
 						if (START.getText().equals(prop.getProperty("StartText")))
 						{
+							ANIMATION.play();
 							START.setText(prop.getProperty("ResetText"));
 						}
 						else
@@ -190,13 +191,14 @@ public class Setup extends Application
 			{
 				public void handle (ActionEvent e)
 					{
-						System.out.println("pressed pause button");
 						if (PAUSE.getText().equals(prop.getProperty("PauseText")))
 						{
+							ANIMATION.pause();
 							PAUSE.setText(prop.getProperty("ResumeText"));
 						}
 						else
 						{
+							ANIMATION.play();
 							PAUSE.setText(prop.getProperty("PauseText"));
 						}
 					}
@@ -211,18 +213,9 @@ public class Setup extends Application
 					}
 			});
 		
-		Button STOP = new Button( prop.getProperty("StopText"));
-		STOP.setOnAction(new EventHandler<ActionEvent>()
-			{
-				public void handle (ActionEvent e)
-					{
-						System.out.println("pressed stop button");
-					}
-			});
-		
 		Slider ANIMATION_RATE = new Slider(0, 20, 1);
 		
-		controls.getChildren().addAll(START,PAUSE, STEP, STOP, ANIMATION_RATE);
+		controls.getChildren().addAll(START,PAUSE, STEP, ANIMATION_RATE);
 		controls.setSpacing(10);
 		return controls;
 	}
@@ -237,6 +230,8 @@ public class Setup extends Application
 			Document sim = db.parse(NEW_SIMULATION);
 			sim.getDocumentElement().normalize();
 			
+			CURRENT_SIMULATION_TYPE = sim.getDocumentElement().getAttribute("type");
+			
 			NodeList SimulationProperties = sim.getElementsByTagName("Properties");
 			for (int i = 0; i < SimulationProperties.getLength(); i++)
 			{
@@ -247,7 +242,9 @@ public class Setup extends Application
 					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
 					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
 					
+					
 					CURRENT_CONFIGURATION = new CellOccupant[width][height];
+					
 				}
 			}
 			
@@ -267,14 +264,33 @@ public class Setup extends Application
 					initLocation[1] = yCor;
 					Paint initColor = Color.valueOf(COLOR);
 					
-					CURRENT_CONFIGURATION[xCor][yCor] = new SegOccupant(initState, initLocation, initColor);
+					CURRENT_CONFIGURATION[xCor][yCor] = createCellOccupant(CURRENT_SIMULATION_TYPE, initState,initLocation, initColor);
 				}
 			}
+			
+			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private CellOccupant createCellOccupant(String simulationType, int initState, int[] initLocation, Paint initColor)
+	{
+		if (simulationType.equals("SpreadingFire"))
+		{
+			return new FireOccupant(initState, initLocation, initColor);
+		}
+		else if (simulationType.equals("GameOfLife"))
+		{
+			return new LifeOccupant(initState, initLocation, initColor);
+		}
+		else
+		{
+			return new FireOccupant(initState, initLocation, initColor);
+		}
+		
 	}
 
 	private GridPane displaySimulationConfiguration(CellOccupant[][] CONFIGURATION) 
@@ -286,6 +302,7 @@ public class Setup extends Application
 			{
 				Rectangle r = new Rectangle(20,20);
 				r.setFill(CONFIGURATION[i][j].getCurrentPaint());
+				r.setStroke(Color.BLACK);
 				SIMULATION_DISPLAY.add(r, i, j);
 			}
 		}
@@ -294,9 +311,12 @@ public class Setup extends Application
 
 	private void updateAll(double secondDelay, Stage primaryStage)
 	{
-		//simulation.update based on seconds
+		CURRENT_SIMULATION.setNextStates();
+		CURRENT_SIMULATION.updateStates();
+		root.getChildren().remove(CURRENT_DISPLAY);
 		
-		//displaySimulationConfiguration(CURRENT_CONFIGURATION);	
+		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid());
+		root.setCenter(CURRENT_DISPLAY);
 	}
 	
 	public static void main(String[] args)

@@ -7,7 +7,7 @@ import javafx.scene.paint.Paint;
 
 public class FireOccupant extends CellOccupant {
 	private int turnsOnFire;
-	private static final double PROB_CATCH_FIRE = 0.15;
+	private static final double PROB_CATCH_FIRE = 1;
 	private static final Paint[] typeColors = {Color.YELLOW, Color.GREEN, Color.RED};
 
 	public FireOccupant(int initState, int[] initLocation, Paint initColor) {
