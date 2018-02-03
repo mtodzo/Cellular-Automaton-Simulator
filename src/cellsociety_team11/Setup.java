@@ -91,12 +91,15 @@ public class Setup extends Application
 	private Timeline ANIMATION = new Timeline();
 	
 	private Simulation CURRENT_SIMULATION;
+	private GridPane CURRENT_DISPLAY;
+	private BorderPane root;
+	private CellOccupant[][] CURRENT_CONFIGURATION;
 	
 
 	@Override
 	public void start(Stage primaryStage)
 	{
-		String SimulationFileName = "SampleSimulationData.xml";
+		String SimulationFileName = "SampleSpreadingFire.xml";
 		SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage, SimulationFileName);
 		primaryStage.setScene(SCENE);
 		primaryStage.setTitle(TITLE);
@@ -108,11 +111,9 @@ public class Setup extends Application
 		ANIMATION.play(); // move this to start stop eventually
 	}
 
-
-	//given a 2d array it has to create an image for it
 	private Scene setupScene(int width, int height, Paint myBackground, Stage primaryStage, String SimulationFileName) 
 	{
-		BorderPane root = new BorderPane();
+		root = new BorderPane();
 		
 		Scene scene = new Scene(root, width, height, myBackground);
 		
@@ -137,8 +138,8 @@ public class Setup extends Application
 		
 		//or we could put the fill array in the simulaiton class and call that with a properies file?
 		
-		//GridPane CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_CONFIGURATION);
-		//root.setCenter(CURRENT_DISPLAY);
+		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid());
+		root.setCenter(CURRENT_DISPLAY);
 		
 		return scene;
 	}
@@ -254,7 +255,13 @@ public class Setup extends Application
 					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
 					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
 					
-					CellOccupant[][] CURRENT_CONFIGURATION = new CellOccupant[width][height];
+					CURRENT_CONFIGURATION = new CellOccupant[width][height];
+					
+//					CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION);
+
+//					CURRENT_CONFIGURATION = new CellOccupant[width][height];
+					
+//					CellOccupant[][] CURRENT_CONFIGURATION = new CellOccupant[width][height];
 					
 //					CURRENT_SIMULATION = createSimulation(type, CURRENT_CONFIGURATION);
 					
@@ -276,12 +283,18 @@ public class Setup extends Application
 					initLocation[0] = xCor;
 					initLocation[1] = yCor;
 					Paint initColor = Color.valueOf(COLOR);
+					
+					CURRENT_CONFIGURATION[xCor][yCor] = new FireOccupant(initState, initLocation, initColor);
+					
+//					CURRENT_SIMULATION.getOccupantGrid()[xCor][yCor] = fire;
 				
 //					CellOccupant x = createCellOccupant(simulationtype, initstate, initlocation, initcolor)
 //					CURRENT_SIMULATION.getGrid()[xCor][yCor] 
 //					CURRENT_CONFIGURATION[xCor][yCor] = new SegOccupant(initState, initLocation, initColor);
 				}
 			}
+			
+			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION);
 		}
 		catch(Exception e)
 		{
@@ -316,6 +329,7 @@ public class Setup extends Application
 			{
 				Rectangle r = new Rectangle(20,20);
 				r.setFill(CONFIGURATION[i][j].getCurrentPaint());
+				r.setStroke(Color.BLACK);
 				SIMULATION_DISPLAY.add(r, i, j);
 			}
 		}
@@ -324,6 +338,13 @@ public class Setup extends Application
 
 	private void updateAll(double secondDelay, Stage primaryStage)
 	{
+		CURRENT_SIMULATION.setNextStates();
+		CURRENT_SIMULATION.updateStates();
+		
+		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid());
+		
+		root.setCenter(CURRENT_DISPLAY);
+	
 		//simulation.update based on seconds
 		
 		//displaySimulationConfiguration(CURRENT_CONFIGURATION);	
