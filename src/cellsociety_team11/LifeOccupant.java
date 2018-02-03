@@ -13,7 +13,7 @@ import javafx.scene.paint.Paint;
 
 public class LifeOccupant extends CellOccupant{
 	private static int DEAD = 0;
-	private static int ALIVE = 0;
+	private static int ALIVE = 1;
 	private static int minLiveNeighbors = 2;
 	private static int numToReproduce = 3;
 	private static int maxLiveNeighbors  = 3;
