@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Scanner;
@@ -69,6 +70,9 @@ public class Setup extends Application
 	//change simulation animation rate
 	//load new file
 	
+	//make a hashmap for simulations to simulation name
+	//make a hashmap for celloccupant type to cell occupant name
+	
 	/*
 	 * Read in an XML formatted file that contains the initial settings for a simulation. The file contains three parts:
 	 * name of the kind of simulation it represents, as well as a title for this simulation and this simulation's author
@@ -86,7 +90,8 @@ public class Setup extends Application
 	private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	private Timeline ANIMATION = new Timeline();
 	
-	private CellOccupant[][] CURRENT_CONFIGURATION;
+	private Simulation CURRENT_SIMULATION;
+	
 
 	@Override
 	public void start(Stage primaryStage)
@@ -102,8 +107,8 @@ public class Setup extends Application
 		ANIMATION.getKeyFrames().add(frame);
 		ANIMATION.play(); // move this to start stop eventually
 	}
-	
-	
+
+
 	//given a 2d array it has to create an image for it
 	private Scene setupScene(int width, int height, Paint myBackground, Stage primaryStage, String SimulationFileName) 
 	{
@@ -125,14 +130,15 @@ public class Setup extends Application
 			e.printStackTrace();
 		}
 		
+		
 		fillSimulationArray(SimulationFileName);
 		
 		//create new simulation
 		
 		//or we could put the fill array in the simulaiton class and call that with a properies file?
 		
-		GridPane CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_CONFIGURATION);
-		root.setCenter(CURRENT_DISPLAY);
+		//GridPane CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_CONFIGURATION);
+		//root.setCenter(CURRENT_DISPLAY);
 		
 		return scene;
 	}
@@ -244,10 +250,14 @@ public class Setup extends Application
 				if (PROPERTY.getNodeType() == Node.ELEMENT_NODE)
 				{
 					Element property = (Element) PROPERTY;
+					String type = property.getElementsByTagName("Type").item(0).getTextContent();
 					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
 					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
 					
-					CURRENT_CONFIGURATION = new CellOccupant[width][height];
+					CellOccupant[][] CURRENT_CONFIGURATION = new CellOccupant[width][height];
+					
+//					CURRENT_SIMULATION = createSimulation(type, CURRENT_CONFIGURATION);
+					
 				}
 			}
 			
@@ -266,8 +276,10 @@ public class Setup extends Application
 					initLocation[0] = xCor;
 					initLocation[1] = yCor;
 					Paint initColor = Color.valueOf(COLOR);
-					
-					CURRENT_CONFIGURATION[xCor][yCor] = new SegOccupant(initState, initLocation, initColor);
+				
+//					CellOccupant x = createCellOccupant(simulationtype, initstate, initlocation, initcolor)
+//					CURRENT_SIMULATION.getGrid()[xCor][yCor] 
+//					CURRENT_CONFIGURATION[xCor][yCor] = new SegOccupant(initState, initLocation, initColor);
 				}
 			}
 		}
@@ -276,6 +288,24 @@ public class Setup extends Application
 			e.printStackTrace();
 		}
 	}
+
+//	private Simulation createSimulation(String type, CellOccupant[][] configuration) 
+//	{
+//		if (type.equals("SegregationModel"))
+//		{
+//			return new SegregationModel(configuration);
+//		}
+//		else if(type.equals("SpreadingFire"))
+//		{
+//			return new SpreadingFire(configuration);
+//		}
+//		
+//	}
+
+//	private CellOccupant createCellOccupant(String simulationType, int initState, int initLocation, Paint initColor)
+//	{
+//		
+//	}
 
 	private GridPane displaySimulationConfiguration(CellOccupant[][] CONFIGURATION) 
 	{
