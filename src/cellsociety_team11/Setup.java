@@ -66,11 +66,8 @@ public class Setup extends Application
 	 */
 	
 	//button functionality:
-	//step
-	//go
 	//change simulation animation rate
-	//load new file
-	//display size of an individual cell should be calculated each time by the grid's total size
+	//change the exception handling
 	
 	/*
 	 * Read in an XML formatted file that contains the initial settings for a simulation. The file contains three parts:
@@ -84,9 +81,9 @@ public class Setup extends Application
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 500;
 	private static final Paint BACKGROUND = Color.WHITE;
-	private int FRAMES_PER_SECOND = 1;
-	private int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
-	private double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+	private static int FRAMES_PER_SECOND = 1;
+	private static int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
+	private static double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	private Timeline ANIMATION = new Timeline();
 	
 	private Simulation CURRENT_SIMULATION;
@@ -94,9 +91,9 @@ public class Setup extends Application
 	private GridPane CURRENT_DISPLAY;
 	private BorderPane root;
 	private CellOccupant[][] CURRENT_CONFIGURATION;
+	private int BlockSize;
 	
 	private static String SimulationFileName = "";
-	
 
 	@Override
 	public void start(Stage primaryStage)
@@ -104,13 +101,11 @@ public class Setup extends Application
 		if (SimulationFileName.equals(""))
 		{
 			SCENE = openingScene(WIDTH, HEIGHT, BACKGROUND, primaryStage);
-			
 		}
 		else
 		{
 			SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage, SimulationFileName);
 		}
-		SimulationFileName = "SampleGameOfLife2.xml";
 		primaryStage.setScene(SCENE);
 		primaryStage.setTitle(TITLE);
 		primaryStage.show();
@@ -126,48 +121,46 @@ public class Setup extends Application
 		
 		Scene scene = new Scene(root, width, height, myBackground);
 		
-		Properties prop = new Properties();
-		try
-		{
-			InputStream configs = new FileInputStream("data/UserInterfaceConfigurations.properties");
-			prop.load(configs);
-			root.setBottom(addTextFields(prop, primaryStage));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		return scene;
-		
+		Properties prop = loadUIConfigurations();
+		root.setBottom(addTextFields(prop, primaryStage));
+		return scene;	
 	}
+
 	private Scene setupScene(int width, int height, Paint myBackground, Stage primaryStage, String SimulationFileName) 
 	{
 		root = new BorderPane();
 		
 		Scene scene = new Scene(root, width, height, myBackground);
 		
+		Properties prop = loadUIConfigurations();
+		root.setLeft(addButtons(prop, primaryStage));
+		root.setBottom(addTextFields(prop, primaryStage));
+		
+		fillSimulationArray(SimulationFileName);
+		
+		Text SimulationType = new Text(CURRENT_SIMULATION_TYPE);
+		root.setTop(SimulationType);
+		
+		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid(), BlockSize);
+		root.setCenter(CURRENT_DISPLAY);
+		
+		return scene;
+	}
+	
+	private Properties loadUIConfigurations() 
+	{
 		Properties prop = new Properties();
 		try
 		{
 			InputStream configs = new FileInputStream("data/UserInterfaceConfigurations.properties");
-			prop.load(configs);
-			
-			root.setLeft(addButtons(prop, primaryStage));
-			root.setBottom(addTextFields(prop, primaryStage));
+			prop.load(configs);	
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 		
-		
-		fillSimulationArray(SimulationFileName);
-		
-		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid());
-		root.setCenter(CURRENT_DISPLAY);
-		
-		return scene;
+		return prop;
 	}
 
 	private javafx.scene.Node addTextFields(Properties prop, Stage primaryStage) 
@@ -241,7 +234,9 @@ public class Setup extends Application
 			{
 				public void handle (ActionEvent e)
 					{
-						System.out.println("pressed step button");
+						ANIMATION.pause();
+						updateAll(SECOND_DELAY, primaryStage);
+						PAUSE.setText(prop.getProperty("ResumeText"));
 					}
 			});
 		
@@ -283,7 +278,7 @@ public class Setup extends Application
 					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
 					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
 					
-					
+					BlockSize = 400/width;
 					CURRENT_CONFIGURATION = new CellOccupant[width][height];
 					
 				}
@@ -334,14 +329,14 @@ public class Setup extends Application
 		
 	}
 
-	private GridPane displaySimulationConfiguration(CellOccupant[][] CONFIGURATION) 
+	private GridPane displaySimulationConfiguration(CellOccupant[][] CONFIGURATION, int BlockSize) 
 	{
 		GridPane SIMULATION_DISPLAY = new GridPane();
 		for (int i = 0; i < CONFIGURATION.length; i++)
 		{
 			for(int j = 0; j<CONFIGURATION[i].length; j++)
 			{
-				Rectangle r = new Rectangle(20,20);
+				Rectangle r = new Rectangle(BlockSize, BlockSize);
 				r.setFill(CONFIGURATION[i][j].getCurrentPaint());
 				r.setStroke(Color.BLACK);
 				SIMULATION_DISPLAY.add(r, i, j);
@@ -356,7 +351,7 @@ public class Setup extends Application
 		CURRENT_SIMULATION.updateStates();
 		root.getChildren().remove(CURRENT_DISPLAY);
 		
-		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid());
+		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid(), BlockSize);
 		root.setCenter(CURRENT_DISPLAY);
 	}
 	
