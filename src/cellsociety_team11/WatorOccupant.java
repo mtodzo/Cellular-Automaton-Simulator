@@ -57,7 +57,7 @@ public class WatorOccupant extends CellOccupant {
 	 * Calculates the next state. Does so by switching the information in each cell.
 	 */
 	@Override
-	public void calculateNextState(ArrayList<CellOccupant> neighborsList) {
+	public void calcNextState(ArrayList<CellOccupant> neighborsList) {
 
 		if (this.getCurrentState() == FISH_STATE && this.getNextState() == FISH_STATE) {
 			WatorOccupant neighborCell = neighborIsType(EMPTY_STATE, neighborsList);
@@ -197,5 +197,4 @@ public class WatorOccupant extends CellOccupant {
 		}
 		return null;
 	}
-
 }
