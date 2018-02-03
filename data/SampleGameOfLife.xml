@@ -1,4 +1,4 @@
-<Simulation type = "SpreadingFire">
+<Simulation type = "GameOfLife">
 	<Properties>
 		<Width>5</Width>
 		<Height>5</Height>
