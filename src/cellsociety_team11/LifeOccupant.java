@@ -2,6 +2,7 @@ package cellsociety_team11;
 
 import java.util.ArrayList;
 
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /*Any live cell with fewer than two live neighbors dies, as if caused by underpopulation.
@@ -16,6 +17,7 @@ public class LifeOccupant extends CellOccupant{
 	private static int minLiveNeighbors = 2;
 	private static int numToReproduce = 3;
 	private static int maxLiveNeighbors  = 3;
+	private static final Paint[] typeColors = {Color.BLUE, Color.RED};
 	public LifeOccupant(int initState, int[] initLocation, Paint initColor) {
 		super(initState,initLocation,initColor);
 	}
@@ -30,12 +32,15 @@ public class LifeOccupant extends CellOccupant{
 		}
 		if (this.getCurrentState() == ALIVE && liveNeighbors < minLiveNeighbors) {
 			this.setNextState(DEAD);
+			this.setNextPaint(typeColors[DEAD]);
 		}
 		else if (this.getCurrentState() == DEAD && liveNeighbors >= numToReproduce) {
 			this.setNextState(ALIVE);
+			this.setNextPaint(typeColors[ALIVE]);
 		}
 		else if (this.getCurrentState() == ALIVE && liveNeighbors >= maxLiveNeighbors) {
 			this.setNextState(DEAD);
+			this.setNextPaint(typeColors[DEAD]);
 		}
 		else {
 			this.noChange();
