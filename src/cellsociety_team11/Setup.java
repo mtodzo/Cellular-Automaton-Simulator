@@ -229,6 +229,15 @@ public class Setup extends Application
 					}
 			});
 		
+		Button STOP = new Button(prop.getProperty("StopText"));
+		STOP.setOnAction(new EventHandler<ActionEvent>()
+				{
+				public void handle (ActionEvent e)
+					{
+						ANIMATION.stop();
+					}
+				});
+		
 		Button STEP = new Button(prop.getProperty("StepText"));
 		STEP.setOnAction(new EventHandler<ActionEvent>()
 			{
@@ -251,7 +260,7 @@ public class Setup extends Application
 			        }
 				});
 		
-		controls.getChildren().addAll(START,PAUSE, STEP, ANIMATION_RATE);
+		controls.getChildren().addAll(START,PAUSE, STOP, STEP, ANIMATION_RATE);
 		controls.setSpacing(10);
 		return controls;
 	}
