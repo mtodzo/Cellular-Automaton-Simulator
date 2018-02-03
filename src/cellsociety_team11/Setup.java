@@ -85,7 +85,7 @@ public class Setup extends Application
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 500;
 	private static final Paint BACKGROUND = Color.WHITE;
-	private static final int FRAMES_PER_SECOND = 60;
+	private static final int FRAMES_PER_SECOND = 1;
 	private static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
 	private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	private Timeline ANIMATION = new Timeline();
@@ -340,9 +340,11 @@ public class Setup extends Application
 	{
 		CURRENT_SIMULATION.setNextStates();
 		CURRENT_SIMULATION.updateStates();
+		root.getChildren().remove(CURRENT_DISPLAY);
 		
 		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid());
-		
+		System.out.println(CURRENT_SIMULATION.getOccupant(1, 2).getCurrentState());
+		System.out.println(CURRENT_SIMULATION.getOccupant(1, 2).getCurrentPaint().toString());
 		root.setCenter(CURRENT_DISPLAY);
 	
 		//simulation.update based on seconds
