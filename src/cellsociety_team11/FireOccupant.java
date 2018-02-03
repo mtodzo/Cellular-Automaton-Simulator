@@ -27,7 +27,7 @@ public class FireOccupant extends CellOccupant {
 	/** 
 	 * Calculate the next state.
 	 * States:
-	 * 		Nothing:	0
+	 * 		Nothing:		0
 	 * 		Tree:		1
 	 * 		Fire:		2
 	 * Transitions:	
@@ -36,13 +36,14 @@ public class FireOccupant extends CellOccupant {
 	 * 				   \
 	 * 			<>T  ->	F<> (if burning for < 5 times)
 	 * 			(p=0.15 if neighbor)
-	 */			
-	public void calculateNextState(ArrayList<CellOccupant> neighborsList) {
+	 */		
+	@Override
+	public void calcNextState(ArrayList<CellOccupant> neighbors) {
 		if(this.getCurrentState() == 0) {
 			// no changes, might not be necessary
 			this.noChange();
 		} else if (this.getCurrentState() == 1) {
-			if(neighborOnFire(neighborsList)) {
+			if(neighborOnFire(neighbors)) {
 				if(Math.random() < PROB_CATCH_FIRE) {
 					this.setNextState(2);
 					this.setNextPaint(typeColors[2]);
