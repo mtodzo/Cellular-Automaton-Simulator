@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javafx.scene.paint.Paint;
 
 public abstract class CellOccupant {
+
 	private int currentState;
 	private int nextState;
 	private int[] currentLocation;
