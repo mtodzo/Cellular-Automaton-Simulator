@@ -2,98 +2,106 @@ package cellsociety_team11;
 
 import java.util.ArrayList;
 
-public abstract class Simulation {
-	private int gridWidth;
-	private int gridHeight;
-	private boolean simRunning;
-	private int simType;
-	private CellOccupant[][] myGrid;
+public class Simulation {
+	private boolean isRunning;
+	private String simType;
+	protected CellOccupant[][] myOccupants;
+	private ArrayList<int[]> myEmptyLocs;
+	private static final int EMPTY = 0;
 	
-	public Simulation(int width, int height, int type) {
-		gridWidth = width;
-		gridHeight = height;
-		simType = type;
-		myGrid = new CellOccupant[gridHeight][gridWidth];
-		simRunning = true;
+	public Simulation(CellOccupant[][] grid) {
+		myOccupants =grid;
+		isRunning = true;
 	}
 	
-	public void doneRunning() {
-		simRunning = false;
+	/*
+	 * Sets the specified cell within myOccupants to hold the passed type
+	 */
+	public void setOccupant(int x, int y, CellOccupant type) {
+		myOccupants[x][y] = type;
 	}
 	
-	public void setPos(int x, int y, CellOccupant type) {
-		myGrid[x][y] = type;
+	/*
+	 * Change the run status to start, stop, or pause the simulation.
+	 */
+	public void setRunStatus(boolean status) {
+		isRunning = status;
 	}
-	
-	public int getWidth() {
-		return gridWidth;
-	}
-	
-	public int getHeight() {
-		return gridHeight;
-	}
-	
+	/*
+	 * Returns the run status of the simulation
+	 */
 	public boolean getStatus() {
-		return simRunning;
+		return isRunning;
 	}
 	
-	public int getType() {
+	/*
+	 * Returns the type of the simulation
+	 */
+	public String getType() {
 		return simType;
 	}
-	
-	public CellOccupant[][] getGrid() {
-		return myGrid;
+	/*
+	 * Returns the myOccupants grid
+	 */
+	public CellOccupant[][] getOccupantGrid() {
+		return myOccupants;
 	}
 	
-	public CellOccupant getPos(int x, int y) {
-		return myGrid[x][y];
+	/*
+	 * Returns the CellOccupant at the specified location
+	 */
+	public CellOccupant getOccupant(int x, int y) {
+		return myOccupants[x][y];
 	}
 	
 	
-	public abstract void initializeSim();
 	
-	public abstract void passOne();
+	public void setNextStates() {
+		for (int y=0; y< myOccupants.length; y++) {
+			for (int x=0; x<myOccupants[0].length; x++) {
+				ArrayList<CellOccupant> neighbors = getNeighbors(myOccupants[x][y]);
+				myOccupants[x][y].calcNextState(neighbors);
+			}
+		}
+	}
 	
-	public abstract void passTwo();
+	public  void updateStates() {
+		for (int y=0; y< myOccupants.length; y++) {
+			for (int x=0; x<myOccupants[0].length; x++) {
+				myOccupants[x][y].setCurrentState();
+				myOccupants[x][y].setCurrentPaint();
+			}
+		}
+	}
 	
-	public ArrayList<int[]> getPositionsOfType(int type){
-		ArrayList<int[]> positionsOfType = new ArrayList<int[]>();
-		for(int i = 0; i < gridWidth;i++) {
-			for(int j = 0; j < gridHeight;j++) {
-				if (myGrid[i][j].getCurrentState() == type) {
-					positionsOfType.add(myGrid[i][j].getCurrentLocation());
+	private ArrayList<CellOccupant> getNeighbors(CellOccupant current) {
+		int xLoc = current.getCurrentLocation()[0];
+		int yLoc = current.getCurrentLocation()[1];
+		ArrayList<CellOccupant> neighbors = new ArrayList<>();
+		if (xLoc < myOccupants[0].length-1) {
+			neighbors.add(myOccupants[xLoc+1][yLoc]);
+		}
+		if (xLoc !=0) {
+			neighbors.add(myOccupants[xLoc-1][yLoc]);
+		}
+		if (yLoc != 0) {
+			neighbors.add(myOccupants[xLoc][yLoc-1]);
+		}
+		if (yLoc < myOccupants.length-1) {
+			neighbors.add(myOccupants[xLoc][yLoc+1]);
+		}
+		return neighbors;
+	}
+	
+	private ArrayList<int[]> getEmptyLocations(){
+		for (int y=0; y<myOccupants.length; y++) {
+			for (int x=0; x<myOccupants[0].length; x++) {
+				if (myOccupants[x][y].getCurrentState() == EMPTY) {
+					myEmptyLocs.add(myOccupants[x][y].getCurrentLocation());
 				}
 			}
 		}
-		return positionsOfType;
-	}
-	
-	public ArrayList<CellOccupant> getNeighbors(int xPos, int yPos) {
-		ArrayList<CellOccupant> myNeighbors = new ArrayList<CellOccupant>();
-		for(int i = -1; i < 2; i++) {
-			for(int j = -1; j < 2; j++) {
-				if(!(i==0 && j==0)) {
-					int xGet = myGrid[xPos][yPos].getCurrentLocation()[0] + i;
-					int yGet = myGrid[xPos][yPos].getCurrentLocation()[1] + j;
-					if(xGet >= 0 && xGet < this.getWidth() && yGet >= 0 && yGet < this.getHeight()) {
-						myNeighbors.add(this.getPos(xGet,yGet));
-					}	
-				}
-			}
-		}
-		return myNeighbors;
-	}
-	public void printGrid() {
-		for(CellOccupant[] row : this.getGrid()) {
-			String buff = "";
-			for(CellOccupant occ : row) {
-				buff += occ.getCurrentState();
-				buff += "   ";
-			}
-			System.out.println(buff);
-		}
-		System.out.println("\n\n");
-	}
-	
+		return myEmptyLocs;
 		
+	}		
 }
