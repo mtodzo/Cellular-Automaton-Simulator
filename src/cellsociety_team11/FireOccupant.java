@@ -37,6 +37,7 @@ public class FireOccupant extends CellOccupant {
 	 * 			<>T  ->	F<> (if burning for < 5 times)
 	 * 			(p=0.15 if neighbor)
 	 */			
+	@Override
 	public void calculateNextState(ArrayList<CellOccupant> neighborsList) {
 		if(this.getCurrentState() == 0) {
 			// no changes, might not be necessary
