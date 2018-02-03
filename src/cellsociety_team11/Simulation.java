@@ -69,6 +69,7 @@ public class Simulation {
 		for (int y=0; y< myOccupants.length; y++) {
 			for (int x=0; x<myOccupants[0].length; x++) {
 				myOccupants[x][y].setCurrentState();
+				myOccupants[x][y].setCurrentPaint();
 			}
 		}
 	}
@@ -77,16 +78,16 @@ public class Simulation {
 		int xLoc = current.getCurrentLocation()[0];
 		int yLoc = current.getCurrentLocation()[1];
 		ArrayList<CellOccupant> neighbors = new ArrayList<>();
-		if (xLoc != 0) {
-			neighbors.add(myOccupants[xLoc-1][yLoc]);
-		}
-		if (xLoc < myOccupants[0].length) {
+		if (xLoc < myOccupants[0].length-1) {
 			neighbors.add(myOccupants[xLoc+1][yLoc]);
+		}
+		if (xLoc !=0) {
+			neighbors.add(myOccupants[xLoc-1][yLoc]);
 		}
 		if (yLoc != 0) {
 			neighbors.add(myOccupants[xLoc][yLoc-1]);
 		}
-		if (yLoc < myOccupants.length) {
+		if (yLoc < myOccupants.length-1) {
 			neighbors.add(myOccupants[xLoc][yLoc+1]);
 		}
 		return neighbors;
