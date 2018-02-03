@@ -15,18 +15,18 @@ public class SegOccupant extends CellOccupant {
 	 * Otherwise it does not change
 	 */
 	@Override
-	public void calcNextState(ArrayList<CellOccupant> neighbors) {
+	public void calculateNextState(ArrayList<CellOccupant> neighbors) {
 		int similarCount = 0;
 		for (CellOccupant neighbor: neighbors) {
 			if (neighbor.getCurrentState() == this.getCurrentState()) similarCount++;
 		}
-		if ((double)similarCount/neighbors.size() < similarityNeeded) {
-			int random = (int) Math.random()*emptyLocs.size();
-			this.setNextLocation(emptyLocs.get(random));
-		}
-		else {
+//		if ((double)similarCount/neighbors.size() < similarityNeeded) {
+//			int random = (int) Math.random()*emptyLocs.size();
+//			this.setNextLocation(emptyLocs.get(random));
+//		}
+		//else {
 			this.noChange();
-		}
+		//}
 	}
 }
 

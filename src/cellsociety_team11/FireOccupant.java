@@ -7,7 +7,9 @@ import javafx.scene.paint.Paint;
 
 public class FireOccupant extends CellOccupant {
 	private int turnsOnFire;
+
 	private static final double PROB_CATCH_FIRE = .15;
+
 	private static final Paint[] typeColors = {Color.YELLOW, Color.GREEN, Color.RED};
 
 	public FireOccupant(int initState, int[] initLocation, Paint initColor) {
@@ -38,7 +40,7 @@ public class FireOccupant extends CellOccupant {
 	 * 			(p=0.15 if neighbor)
 	 */		
 	@Override
-	public void calcNextState(ArrayList<CellOccupant> neighbors) {
+	public void calculateNextState(ArrayList<CellOccupant> neighbors) {
 		if(this.getCurrentState() == 0) {
 			// no changes, might not be necessary
 			this.noChange();
