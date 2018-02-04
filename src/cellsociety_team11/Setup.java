@@ -92,6 +92,7 @@ public class Setup extends Application
 	private BorderPane root;
 	private CellOccupant[][] CURRENT_CONFIGURATION;
 	private int BlockSize;
+	private KeyFrame frame;
 	
 	private static String SimulationFileName = "";
 
@@ -261,6 +262,7 @@ public class Setup extends Application
 			        public void changed(ObservableValue<? extends Number> observable, 
 			        		Number oldValue, Number newValue)
 			       {
+			    	 
 			    	    FRAMES_PER_SECOND = newValue.intValue();
 			        }
 				});
@@ -318,7 +320,7 @@ public class Setup extends Application
 				}
 			}
 			
-			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION);
+			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE);
 		}
 		catch(Exception e)
 		{
@@ -337,6 +339,10 @@ public class Setup extends Application
 		else if (simulationType.equals("GameOfLife"))
 		{
 			return new LifeOccupant(initState, initLocation, initColor);
+		}
+		else if (simulationType.equals("Segregation"))
+		{
+			return new SegOccupant(initState, initLocation, initColor);
 		}
 		else
 		{
