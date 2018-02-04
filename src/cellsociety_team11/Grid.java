@@ -72,7 +72,6 @@ public abstract class Grid {
 	public abstract List<CellOccupant> getNeighbors(CellOccupant cell);
 	
 	public CellOccupant getNeighborOfType(List<CellOccupant> neighbors, int type){
-		Collections.shuffle(neighbors);
 		List<CellOccupant> neighborsOfType = new ArrayList<>();
 		for (CellOccupant current: neighbors) {
 			if (current.getCurrentState() == type && current.getNextState() == type) {
