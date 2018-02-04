@@ -1,7 +1,9 @@
 package cellsociety_team11;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public abstract class Grid {
 	private CellOccupant[][] myGrid;
@@ -70,13 +72,19 @@ public abstract class Grid {
 	public abstract List<CellOccupant> getNeighbors(CellOccupant cell);
 	
 	public CellOccupant getNeighborOfType(List<CellOccupant> neighbors, int type){
+		Collections.shuffle(neighbors);
 		List<CellOccupant> neighborsOfType = new ArrayList<>();
 		for (CellOccupant current: neighbors) {
 			if (current.getCurrentState() == type && current.getNextState() == type) {
 				neighborsOfType.add(current);
 			}
 		}
-		int randomIndex = (int) Math.random()*neighborsOfType.size();
+		if(neighborsOfType.isEmpty()) {
+			return null;
+		}
+
+		Random r = new Random();
+		int randomIndex = r.nextInt(neighborsOfType.size());
 		return neighborsOfType.get(randomIndex);
 	}
 	
