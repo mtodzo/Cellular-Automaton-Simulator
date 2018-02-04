@@ -31,7 +31,7 @@ public class WrapAroundGrid extends Grid {
 			} else if(yGet > this.getWidth() -1) {
 				yGet = 0;
 			}
-			neighbors.add(this.getOccupant(0,yGet));
+			neighbors.add(this.getOccupant(cell.getCurrentLocation()[0],yGet));
 		}
 		return neighbors;
 	}
