@@ -1,9 +1,11 @@
 package cellsociety_team11;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -14,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 public class DisplayGrid {
 	
@@ -22,10 +25,12 @@ public class DisplayGrid {
 	private CellOccupant[][] CURRENT_CONFIGURATION;
 	private Simulation CURRENT_SIMULATION;
 	private String SimulationFileName;
+	private Stage primaryStage;
 	
-	public DisplayGrid(String smf)
+	public DisplayGrid(String smf, Stage ps)
 	{
 		SimulationFileName = smf;
+		primaryStage = ps;
 	}
 	
 	public String getCURRENT_SIMULATION_TYPE() 
@@ -93,11 +98,17 @@ public class DisplayGrid {
 			
 			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE);
 		}
+		catch(ParserConfigurationException e)
+		{
+			System.out.println("Could not parse through XML configuration file.");
+			primaryStage.close();
+			return;
+		}
 		catch(Exception e)
 		{
-			System.out.println("");
-			//e.printStackTrace();
-			//parser configuration exception
+			System.out.println("Could not load XML file");
+			primaryStage.close();
+			return;
 		}
 	}
 
