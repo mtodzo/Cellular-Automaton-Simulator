@@ -25,7 +25,9 @@ public class SegOccupant extends CellOccupant {
 		}
 		if ((double)similarCount/grid.getNeighbors(this).size() < similarityNeeded) {
 			int random = (int) Math.random()*grid.getNextPositionsOfType(EMPTY).size();
+			this.setNextState(EMPTY);
 			this.setNextLocation(grid.getNextPositionsOfType(EMPTY).get(random));
+			grid.setOccupant(grid.getNextPositionsOfType(EMPTY).get(random)[0], grid.getNextPositionsOfType(EMPTY).get(random)[1], this);
 		}
 		else {
 			this.noChange();
