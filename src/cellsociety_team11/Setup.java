@@ -82,7 +82,7 @@ public class Setup extends Application
 	private static final int HEIGHT = 500;
 	private static final Paint BACKGROUND = Color.WHITE;
 	private static int FRAMES_PER_SECOND = 1;
-	private static int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
+	private static double MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
 	private static double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	private Timeline ANIMATION = new Timeline();
 	
@@ -110,7 +110,18 @@ public class Setup extends Application
 		primaryStage.setTitle(TITLE);
 		primaryStage.show();
 		
-		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e->updateAll(SECOND_DELAY, primaryStage));
+		makeFrames(primaryStage, FRAMES_PER_SECOND);
+		
+//		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e->updateAll(SECOND_DELAY, primaryStage));
+//		ANIMATION.setCycleCount(Timeline.INDEFINITE);
+//		ANIMATION.getKeyFrames().add(frame);
+	}
+	
+	public void makeFrames(Stage primaryStage, int framesPerSecond)
+	{
+		double millisecondDelay = 1000.0 / framesPerSecond;
+		double secondDelay = 1.0/ framesPerSecond;
+		KeyFrame frame = new KeyFrame(Duration.millis(millisecondDelay), e->updateAll(secondDelay, primaryStage));
 		ANIMATION.setCycleCount(Timeline.INDEFINITE);
 		ANIMATION.getKeyFrames().add(frame);
 	}
@@ -121,8 +132,11 @@ public class Setup extends Application
 		
 		Scene scene = new Scene(root, width, height, myBackground);
 		
-		Properties prop = loadUIConfigurations();
+		Properties prop;
+		
+		prop = loadUIConfigurations();
 		root.setBottom(addTextFields(prop, primaryStage));
+		
 		return scene;	
 	}
 
@@ -147,7 +161,7 @@ public class Setup extends Application
 		return scene;
 	}
 	
-	private Properties loadUIConfigurations() 
+	private Properties loadUIConfigurations()
 	{
 		Properties prop = new Properties();
 		try
@@ -157,7 +171,9 @@ public class Setup extends Application
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			System.out.println("UI Configurations file not found");
+			//throw new InvalidFileException(".properties file is invalid");
+			//e.printStackTrace();
 		}
 		
 		return prop;
@@ -249,18 +265,22 @@ public class Setup extends Application
 					}
 			});
 		
-		Slider ANIMATION_RATE = new Slider(0,10,1);
+		Text INFO = new Text("Frames Per Second:");
+		Text RATE = new Text();
+		Slider ANIMATION_RATE = new Slider(0.1,10, FRAMES_PER_SECOND);
 		ANIMATION_RATE.valueProperty().addListener(new ChangeListener<Number>() 
 				{
 			       @Override
 			        public void changed(ObservableValue<? extends Number> observable, 
 			        		Number oldValue, Number newValue)
-			       {
-			    	    FRAMES_PER_SECOND = newValue.intValue();
+			        {
+			    	    makeFrames(primaryStage, newValue.intValue());
+			    	    RATE.setText(ANIMATION_RATE.valueProperty().getValue().toString());
 			        }
 				});
+		RATE.setText(ANIMATION_RATE.valueProperty().getValue().toString());
 		
-		controls.getChildren().addAll(START,PAUSE, STOP, STEP, ANIMATION_RATE);
+		controls.getChildren().addAll(START,PAUSE, STOP, STEP, INFO, ANIMATION_RATE, RATE);
 		controls.setSpacing(10);
 		return controls;
 	}
@@ -313,11 +333,13 @@ public class Setup extends Application
 				}
 			}
 			
-			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION);
+			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE);
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			System.out.println("");
+			//e.printStackTrace();
+			//parser configuration exception
 		}
 	}
 
@@ -330,6 +352,10 @@ public class Setup extends Application
 		else if (simulationType.equals("GameOfLife"))
 		{
 			return new LifeOccupant(initState, initLocation, initColor);
+		}
+		else if (simulationType.equals("Segregation"))
+		{
+			return new SegOccupant(initState, initLocation, initColor);
 		}
 		else
 		{

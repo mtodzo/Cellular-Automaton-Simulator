@@ -2,6 +2,7 @@ package cellsociety_team11;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -57,11 +58,10 @@ public class WatorOccupant extends CellOccupant {
 	 * Calculates the next state. Does so by switching the information in each cell.
 	 */
 	@Override
-	public void calcNextState(ArrayList<CellOccupant> neighborsList) {
+	public void calculateNextState(Grid grid) {
 
 		if (this.getCurrentState() == FISH_STATE && this.getNextState() == FISH_STATE) {
-			WatorOccupant neighborCell = neighborIsType(EMPTY_STATE, neighborsList);
-
+			WatorOccupant neighborCell= (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),EMPTY_STATE);
 			if (neighborCell != null) {
 				// MOVE TO EMPTY NEIGHBOR, either we leave a fish behind or we dont
 				switchCells(this, neighborCell);
@@ -81,7 +81,7 @@ public class WatorOccupant extends CellOccupant {
 			}
 		} else if (this.getCurrentState() == SHARK_STATE && this.getNextState() == SHARK_STATE) {
 
-			WatorOccupant fishNeighbor = neighborIsType(FISH_STATE, neighborsList);
+			WatorOccupant fishNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),FISH_STATE);
 
 			if (fishNeighbor != null) {
 				switchCells(this, fishNeighbor);
@@ -103,7 +103,7 @@ public class WatorOccupant extends CellOccupant {
 
 			} else {
 				// move to empty
-				WatorOccupant emptyNeighbor = neighborIsType(EMPTY_STATE, neighborsList);
+				WatorOccupant emptyNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),EMPTY_STATE);
 
 				if (emptyNeighbor != null) {
 					switchCells(this, emptyNeighbor);
@@ -176,25 +176,4 @@ public class WatorOccupant extends CellOccupant {
 
 	}
 
-	/**
-	 * Helper method for calculateNextState method. Determines which if any of the
-	 * cell's neighbors are of the type specified. If there are more than one.
-	 * returns a random one. If there are no neighbors of the type specified,
-	 * returns null.
-	 * 
-	 * @param neighborsList
-	 * @param type
-	 * @return
-	 */
-	private WatorOccupant neighborIsType(int type, ArrayList<CellOccupant> neighborsList) {
-		// System.out.println("CALL TO neighborIsType(" + type +")");
-		Collections.shuffle(neighborsList);
-		for (CellOccupant neighbor : neighborsList) {
-			if (neighbor.getCurrentState() == type && neighbor.getNextState() == type) {
-				// System.out.println("found type: " + neighbor.getCurrentState());
-				return (WatorOccupant) neighbor;
-			}
-		}
-		return null;
-	}
 }

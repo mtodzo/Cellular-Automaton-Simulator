@@ -1,10 +1,9 @@
 package cellsociety_team11;
 
-import java.util.ArrayList;
-
 import javafx.scene.paint.Paint;
 
 public abstract class CellOccupant {
+
 	private int currentState;
 	private int nextState;
 	private int[] currentLocation;
@@ -71,8 +70,6 @@ public abstract class CellOccupant {
 	public void setNextState(int state) {
 		nextState = state;
 	}
-	
-	public abstract void calcNextState(ArrayList<CellOccupant> neighbors);//, ArrayList<int[]> emptyLocs);
 
 	// set current location
 	public void setCurrentLocation(int[] location) {
@@ -90,7 +87,7 @@ public abstract class CellOccupant {
 		this.setNextPaint(this.currentColor);
 	}
 	
-	public abstract void calculateNextState(ArrayList<CellOccupant> neighborsList);
+	public abstract void calculateNextState(Grid grid);
 	// public abstract int getTurnsOnFire();
 	
 	// public abstract void updateTurnsOnFire();
