@@ -1,4 +1,4 @@
-<Simulation type = "SegregationModel">
+<Simulation type = "Segregation">
 	<Properties>
 		<Width>8</Width>
 		<Height>8</Height>
