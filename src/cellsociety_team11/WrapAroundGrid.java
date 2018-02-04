@@ -1,7 +1,6 @@
 package cellsociety_team11;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class WrapAroundGrid extends Grid {
