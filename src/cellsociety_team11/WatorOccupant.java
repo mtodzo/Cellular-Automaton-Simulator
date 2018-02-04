@@ -1,9 +1,5 @@
 package cellsociety_team11;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -13,7 +9,7 @@ public class WatorOccupant extends CellOccupant {
 	private static final int FISH_TO_REPRODUCE = 2;
 	private static final int SHARK_TO_REPRODUCE = 4;
 	private static final int SHARK_TO_DIE = 2;
-	private static final Paint[] typeColors = { Color.WHITE, Color.GREEN, Color.BLUE };
+	private static final Paint[] typeColors = { Color.WHITE, Color.BLUE, Color.GREEN };
 	private static final int EMPTY_STATE = 0;
 	private static final int FISH_STATE = 1;
 	private static final int SHARK_STATE = 2;
@@ -61,13 +57,14 @@ public class WatorOccupant extends CellOccupant {
 	public void calculateNextState(Grid grid) {
 
 		if (this.getCurrentState() == FISH_STATE && this.getNextState() == FISH_STATE) {
-			WatorOccupant neighborCell= (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),EMPTY_STATE);
+			WatorOccupant neighborCell = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), EMPTY_STATE);
 			if (neighborCell != null) {
 				// MOVE TO EMPTY NEIGHBOR, either we leave a fish behind or we dont
 				switchCells(this, neighborCell);
 				// System.out.println(turnsAlive);
 				if (neighborCell.turnsAlive >= FISH_TO_REPRODUCE) {
 					this.setNextState(FISH_STATE);
+					this.setNextPaint(typeColors[FISH_STATE]);
 					this.resetTurnsAlive();
 					neighborCell.resetTurnsAlive();
 				} else {
@@ -81,13 +78,15 @@ public class WatorOccupant extends CellOccupant {
 			}
 		} else if (this.getCurrentState() == SHARK_STATE && this.getNextState() == SHARK_STATE) {
 
-			WatorOccupant fishNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),FISH_STATE);
+			WatorOccupant fishNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), FISH_STATE);
 
 			if (fishNeighbor != null) {
+				System.out.println("Shark has fish neighbor");
 				switchCells(this, fishNeighbor);
 				fishNeighbor.resetEnergyUnits();
 				if (fishNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
 					this.setNextState(SHARK_STATE);
+					this.setNextPaint(typeColors[SHARK_STATE]);
 					this.resetTurnsAlive();
 					this.resetEnergyUnits();
 					fishNeighbor.resetTurnsAlive();
@@ -95,6 +94,7 @@ public class WatorOccupant extends CellOccupant {
 
 				} else {
 					this.setNextState(EMPTY_STATE);
+					this.setNextPaint(typeColors[EMPTY_STATE]);
 					this.resetTurnsAlive();
 					this.resetEnergyUnits();
 					fishNeighbor.incTurnsAlive();
@@ -103,12 +103,14 @@ public class WatorOccupant extends CellOccupant {
 
 			} else {
 				// move to empty
-				WatorOccupant emptyNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),EMPTY_STATE);
+				WatorOccupant emptyNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),
+						EMPTY_STATE);
 
 				if (emptyNeighbor != null) {
 					switchCells(this, emptyNeighbor);
 					if (emptyNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
 						this.setNextState(SHARK_STATE);
+						this.setNextPaint(typeColors[SHARK_STATE]);
 						this.resetTurnsAlive();
 						this.resetEnergyUnits();
 						emptyNeighbor.resetTurnsAlive();
@@ -116,6 +118,7 @@ public class WatorOccupant extends CellOccupant {
 
 					} else {
 						this.setNextState(EMPTY_STATE);
+						this.setNextPaint(typeColors[EMPTY_STATE]);
 						this.resetTurnsAlive();
 						this.resetEnergyUnits();
 						emptyNeighbor.incTurnsAlive();
@@ -125,9 +128,9 @@ public class WatorOccupant extends CellOccupant {
 					if (emptyNeighbor.energyUnits <= 0) {
 						// System.out.println("SHARK DIES\n");
 						emptyNeighbor.setNextState(EMPTY_STATE);
+						emptyNeighbor.setNextPaint(typeColors[EMPTY_STATE]);
 						emptyNeighbor.resetEnergyUnits();
 						emptyNeighbor.resetTurnsAlive();
-						emptyNeighbor.setNextPaint(typeColors[EMPTY_STATE]);
 					}
 
 				} else {
@@ -137,9 +140,9 @@ public class WatorOccupant extends CellOccupant {
 					if (this.energyUnits <= 0) {
 						// System.out.println("SHARK DIES");
 						this.setNextState(EMPTY_STATE);
+						this.setNextPaint(typeColors[EMPTY_STATE]);
 						this.resetEnergyUnits();
 						this.resetTurnsAlive();
-						this.setNextPaint(typeColors[EMPTY_STATE]);
 					}
 				}
 			}
