@@ -1,25 +1,55 @@
 package cellsociety_team11;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 public class Simulation {
 	private boolean isRunning;
-	private String simType;
-	protected CellOccupant[][] myOccupants;
-	private ArrayList<int[]> myEmptyLocs;
-	private static final int EMPTY = 0;
+	private String mySimulationType;
+	//private CellOccupant[][] myOccupants;
+	private Grid myGrid;
+	//private List<int[]> myEmptyLocations;
+	//private static final int EMPTY = 0;
+	private Map<String, String> simulationToGridMap;
 	
-	public Simulation(CellOccupant[][] grid) {
-		myOccupants =grid;
+	public Simulation(CellOccupant[][] grid, String simType) {
+		Properties properties = new Properties();
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream("SimlationGridTypes.properties");
+		try {
+			properties.load(in);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		simulationToGridMap = new HashMap<>();
+		for (String key: properties.stringPropertyNames()) {
+			simulationToGridMap.put(key, properties.getProperty(key));
+		}
+		switch(simulationToGridMap.get(simType)) {
+		case "SpreadingFire": myGrid = new SquareGrid(grid);
+		break;
+		case "PredatorPrey": myGrid = new WrapAroundGrid(grid);
+		break;
+		case "GameOfLife": myGrid = new DiagonalSquareGrid(grid);
+		break;
+		case "Segregation": myGrid = new DiagonalSquareGrid(grid);
+		break;
+		}
 		isRunning = true;
 	}
 	
 	/*
 	 * Sets the specified cell within myOccupants to hold the passed type
 	 */
-	public void setOccupant(int x, int y, CellOccupant type) {
-		myOccupants[x][y] = type;
-	}
+//	public void setOccupant(int x, int y, CellOccupant type) {
+//		myOccupants[x][y] = type;
+//	}
 	
 	/*
 	 * Change the run status to start, stop, or pause the simulation.
@@ -38,70 +68,38 @@ public class Simulation {
 	 * Returns the type of the simulation
 	 */
 	public String getType() {
-		return simType;
+		return mySimulationType;
 	}
 	/*
 	 * Returns the myOccupants grid
 	 */
 	public CellOccupant[][] getOccupantGrid() {
-		return myOccupants;
+		return myGrid.getGrid();
 	}
 	
 	/*
 	 * Returns the CellOccupant at the specified location
 	 */
-	public CellOccupant getOccupant(int x, int y) {
-		return myOccupants[x][y];
-	}
-	
+//	public CellOccupant getOccupant(int x, int y) {
+//		return myOccupants[x][y];
+//	}
 	
 	
 	public void setNextStates() {
-		for (int y=0; y< myOccupants.length; y++) {
-			for (int x=0; x<myOccupants[0].length; x++) {
-				ArrayList<CellOccupant> neighbors = getNeighbors(myOccupants[x][y]);
-				myOccupants[x][y].calcNextState(neighbors);
+		for (int y=0; y< myGrid.getLength(); y++) {
+			for (int x=0; x<myGrid.getWidth(); x++) {
+//				ArrayList<CellOccupant> neighbors = getNeighbors(myOccupants[x][y]);
+				myGrid.getOccupant(x, y).calculateNextState(myGrid);
 			}
 		}
 	}
 	
 	public  void updateStates() {
-		for (int y=0; y< myOccupants.length; y++) {
-			for (int x=0; x<myOccupants[0].length; x++) {
-				myOccupants[x][y].setCurrentState();
-				myOccupants[x][y].setCurrentPaint();
+		for (int y=0; y< myGrid.getLength(); y++) {
+			for (int x=0; x<myGrid.getWidth(); x++) {
+				myGrid.getOccupant(x, y).setCurrentState();
+				myGrid.getOccupant(x, y).setCurrentPaint();
 			}
 		}
-	}
-	
-	private ArrayList<CellOccupant> getNeighbors(CellOccupant current) {
-		int xLoc = current.getCurrentLocation()[0];
-		int yLoc = current.getCurrentLocation()[1];
-		ArrayList<CellOccupant> neighbors = new ArrayList<>();
-		if (xLoc < myOccupants[0].length-1) {
-			neighbors.add(myOccupants[xLoc+1][yLoc]);
-		}
-		if (xLoc !=0) {
-			neighbors.add(myOccupants[xLoc-1][yLoc]);
-		}
-		if (yLoc != 0) {
-			neighbors.add(myOccupants[xLoc][yLoc-1]);
-		}
-		if (yLoc < myOccupants.length-1) {
-			neighbors.add(myOccupants[xLoc][yLoc+1]);
-		}
-		return neighbors;
-	}
-	
-	private ArrayList<int[]> getEmptyLocations(){
-		for (int y=0; y<myOccupants.length; y++) {
-			for (int x=0; x<myOccupants[0].length; x++) {
-				if (myOccupants[x][y].getCurrentState() == EMPTY) {
-					myEmptyLocs.add(myOccupants[x][y].getCurrentLocation());
-				}
-			}
-		}
-		return myEmptyLocs;
-		
-	}		
+	}	
 }

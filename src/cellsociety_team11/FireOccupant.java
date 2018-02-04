@@ -1,13 +1,15 @@
 package cellsociety_team11;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class FireOccupant extends CellOccupant {
 	private int turnsOnFire;
-	private static final double PROB_CATCH_FIRE = 1;
+
+	private static final double PROB_CATCH_FIRE = .15;
+
 	private static final Paint[] typeColors = {Color.YELLOW, Color.GREEN, Color.RED};
 
 	public FireOccupant(int initState, int[] initLocation, Paint initColor) {
@@ -38,12 +40,12 @@ public class FireOccupant extends CellOccupant {
 	 * 			(p=0.15 if neighbor)
 	 */		
 	@Override
-	public void calcNextState(ArrayList<CellOccupant> neighbors) {
+	public void calculateNextState(Grid grid) {
 		if(this.getCurrentState() == 0) {
 			// no changes, might not be necessary
 			this.noChange();
 		} else if (this.getCurrentState() == 1) {
-			if(neighborOnFire(neighbors)) {
+			if(neighborOnFire(grid.getNeighbors(this))) {
 				if(Math.random() < PROB_CATCH_FIRE) {
 					this.setNextState(2);
 					this.setNextPaint(typeColors[2]);
@@ -70,9 +72,9 @@ public class FireOccupant extends CellOccupant {
 	 * @param neighborsList
 	 * @return
 	 */
-	private boolean neighborOnFire(ArrayList<CellOccupant> neighborsList) {
+	private boolean neighborOnFire(List<CellOccupant> neighborsList) {
 		for(CellOccupant neighbor : neighborsList) {
-			if(neighbor.getCurrentState() == 2) {
+			if (neighbor.getCurrentState() == 2) {
 				return true;
 			}
 		}
