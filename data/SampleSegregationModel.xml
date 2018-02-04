@@ -16,49 +16,49 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>0</xLocation>
 		<yLocation>2</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>1</CurrentState>
+		<CurrentState>0</CurrentState>
 		<xLocation>0</xLocation>
 		<yLocation>3</yLocation>
-		<Color>RED</Color>
-	</CellOccupant>
-	<CellOccupant>
-		<CurrentState>1</CurrentState>
-		<xLocation>0</xLocation>
-		<yLocation>4</yLocation>
-		<Color>RED</Color>
+		<Color>YELLOW</Color>
 	</CellOccupant>
 	<CellOccupant>
 		<CurrentState>1</CurrentState>
 		<xLocation>0</xLocation>
+		<yLocation>4</yLocation>
+		<Color>RED</Color>
+	</CellOccupant>
+	<CellOccupant>
+		<CurrentState>1</CurrentState>
+		<xLocation>0</xLocation>
 		<yLocation>5</yLocation>
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>0</xLocation>
 		<yLocation>6</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>0</xLocation>
 		<yLocation>7</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>1</xLocation>
 		<yLocation>0</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>1</xLocation>
 		<yLocation>1</yLocation>
 		<Color>BLUE</Color>
@@ -73,28 +73,28 @@
 		<CurrentState>0</CurrentState>
 		<xLocation>1</xLocation>
 		<yLocation>3</yLocation>
-		<Color>BLUE</Color>
+		<Color>YELLOW</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>1</xLocation>
 		<yLocation>4</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>1</xLocation>
 		<yLocation>5</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>1</CurrentState>
+		<CurrentState>0</CurrentState>
 		<xLocation>1</xLocation>
 		<yLocation>6</yLocation>
-		<Color>RED</Color>
+		<Color>YELLOW</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>1</xLocation>
 		<yLocation>7</yLocation>
 		<Color>BLUE</Color>
@@ -118,7 +118,7 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>2</xLocation>
 		<yLocation>3</yLocation>
 		<Color>BLUE</Color>
@@ -127,7 +127,7 @@
 		<CurrentState>0</CurrentState>
 		<xLocation>2</xLocation>
 		<yLocation>4</yLocation>
-		<Color>BLUE</Color>
+		<Color>YELLOW</Color>
 	</CellOccupant>
 	<CellOccupant>
 		<CurrentState>1</CurrentState>
@@ -142,13 +142,13 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>2</xLocation>
 		<yLocation>7</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>3</xLocation>
 		<yLocation>0</yLocation>
 		<Color>BLUE</Color>
@@ -163,7 +163,7 @@
 		<CurrentState>0</CurrentState>
 		<xLocation>3</xLocation>
 		<yLocation>2</yLocation>
-		<Color>BLUE</Color>
+		<Color>YELLOW</Color>
 	</CellOccupant>
 	<CellOccupant>
 		<CurrentState>1</CurrentState>
@@ -172,7 +172,7 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>3</xLocation>
 		<yLocation>4</yLocation>
 		<Color>BLUE</Color>
@@ -196,34 +196,34 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>4</xLocation>
 		<yLocation>0</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>4</xLocation>
 		<yLocation>1</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>4</xLocation>
 		<yLocation>2</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>1</CurrentState>
+		<CurrentState>0</CurrentState>
 		<xLocation>4</xLocation>
 		<yLocation>3</yLocation>
-		<Color>RED</Color>
+		<Color>YELLOW</Color>
 	</CellOccupant>
 	<CellOccupant>
 		<CurrentState>0</CurrentState>
 		<xLocation>4</xLocation>
 		<yLocation>4</yLocation>
-		<Color>BLUE</Color>
+		<Color>YELLOW</Color>
 	</CellOccupant>
 	<CellOccupant>
 		<CurrentState>1</CurrentState>
@@ -244,13 +244,13 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>5</xLocation>
 		<yLocation>0</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>5</xLocation>
 		<yLocation>1</yLocation>
 		<Color>BLUE</Color>
@@ -268,13 +268,13 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>5</xLocation>
 		<yLocation>4</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>5</xLocation>
 		<yLocation>5</yLocation>
 		<Color>BLUE</Color>
@@ -298,25 +298,25 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>6</xLocation>
 		<yLocation>1</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>1</CurrentState>
+		<CurrentState>0</CurrentState>
 		<xLocation>6</xLocation>
 		<yLocation>2</yLocation>
-		<Color>RED</Color>
+		<Color>YELLOW</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>6</xLocation>
 		<yLocation>3</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>6</xLocation>
 		<yLocation>4</yLocation>
 		<Color>BLUE</Color>
@@ -328,19 +328,19 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>6</xLocation>
 		<yLocation>6</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>6</xLocation>
 		<yLocation>7</yLocation>
 		<Color>BLUE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>7</xLocation>
 		<yLocation>0</yLocation>
 		<Color>BLUE</Color>
@@ -352,7 +352,7 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>7</xLocation>
 		<yLocation>2</yLocation>
 		<Color>BLUE</Color>
@@ -370,7 +370,7 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>7</xLocation>
 		<yLocation>5</yLocation>
 		<Color>BLUE</Color>
@@ -382,7 +382,7 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>2</CurrentState>
 		<xLocation>7</xLocation>
 		<yLocation>7</yLocation>
 		<Color>BLUE</Color>
