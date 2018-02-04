@@ -55,7 +55,7 @@ public abstract class Grid {
 		return positionsOfType;
 	}
 	
-	public ArrayList<int[]> getNextPositionsOfType(int type){
+	public List<int[]> getNextPositionsOfType(int type){
 		ArrayList<int[]> positionsOfType = new ArrayList<int[]>();
 		for(int i = 0; i < myGrid.length;i++) {
 			for(int j = 0; j < myGrid[0].length;j++) {
@@ -68,6 +68,17 @@ public abstract class Grid {
 	}
 	
 	public abstract List<CellOccupant> getNeighbors(CellOccupant cell);
+	
+	public CellOccupant getNeighborOfType(List<CellOccupant> neighbors, int type){
+		List<CellOccupant> neighborsOfType = new ArrayList<>();
+		for (CellOccupant current: neighbors) {
+			if (current.getCurrentState() == type && current.getNextState() == type) {
+				neighborsOfType.add(current);
+			}
+		}
+		int randomIndex = (int) Math.random()*neighborsOfType.size();
+		return neighborsOfType.get(randomIndex);
+	}
 	
 	public void printGrid() {
 		for(CellOccupant[] row : myGrid) {
