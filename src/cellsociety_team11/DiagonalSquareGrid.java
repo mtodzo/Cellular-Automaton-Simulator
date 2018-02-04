@@ -3,9 +3,9 @@ package cellsociety_team11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SquareGrid extends Grid {
+public class DiagonalSquareGrid extends Grid {
 
-	public SquareGrid(CellOccupant[][] grid) {
+	public DiagonalSquareGrid(CellOccupant[][] grid) {
 		super(grid);
 	}
 
@@ -16,9 +16,21 @@ public class SquareGrid extends Grid {
 			ArrayList<CellOccupant> neighbors = new ArrayList<>();
 			if (xLoc < this.getWidth()-1) {
 				neighbors.add(this.getOccupant(xLoc+1, yLoc));
+				if (yLoc != 0) {
+					neighbors.add(this.getOccupant(xLoc+1, yLoc-1));
+				}
+				if (yLoc != this.getLength()-1) {
+					neighbors.add(this.getOccupant(xLoc+1, yLoc+1));
+				}
 			}
 			if (xLoc !=0) {
 				neighbors.add(this.getOccupant(xLoc-1, yLoc));
+				if (yLoc != 0) {
+					neighbors.add(this.getOccupant(xLoc-1, yLoc-1));
+				}
+				if (yLoc != this.getLength()-1) {
+					neighbors.add(this.getOccupant(xLoc+1, yLoc+1));
+				}
 			}
 			if (yLoc != 0) {
 				neighbors.add(this.getOccupant(xLoc, yLoc-1));
@@ -28,4 +40,5 @@ public class SquareGrid extends Grid {
 			}
 			return neighbors;
 	}
+
 }

@@ -1,35 +1,40 @@
 package cellsociety_team11;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Grid {
 	private CellOccupant[][] myGrid;
 	
-	public Grid(int width, int height) {
-		myGrid = new CellOccupant[height][width];
+	public Grid(CellOccupant[][] grid) {
+		myGrid = grid;
 	}
 	
-	public CellOccupant[][] getMyGrid() {
+	public CellOccupant[][] getGrid() {
 		return myGrid;
 	}
-	public int getGridHeight() {
+	public int getLength() {
 		return myGrid.length;
 	}
 	
-	public int getGridWidth() {
+	public int getWidth() {
 		return myGrid[0].length;
 	}
-	
-	public void putInGrid(int x, int y, CellOccupant cell) {
+	/*
+	 * Sets the specified cell within myOccupants to hold the passed type
+	 */
+	public void setOccupant(int x, int y, CellOccupant cell) {
 		myGrid[x][y] = cell;
 	}
-	
-	public CellOccupant getFromGrid(int x, int y) {
+	/*
+	 * Returns the CellOccupant at the specified location
+	 */
+	public CellOccupant getOccupant(int x, int y) {
 		return myGrid[x][y];
 	}
 	
-	public ArrayList<CellOccupant> iterGrid() {
-		ArrayList<CellOccupant> allOccupants = new ArrayList<CellOccupant>();
+	public List<CellOccupant> iterGrid() {
+		List<CellOccupant> allOccupants = new ArrayList<CellOccupant>();
 		for(CellOccupant[] row : myGrid) {
 			for(CellOccupant elem : row) {
 				allOccupants.add(elem);
@@ -38,7 +43,7 @@ public abstract class Grid {
 		return allOccupants;
 	}
 	
-	public ArrayList<int[]> getPositionsOfType(int type){
+	public ArrayList<int[]> getCurrentPositionsOfType(int type){
 		ArrayList<int[]> positionsOfType = new ArrayList<int[]>();
 		for(int i = 0; i < myGrid.length;i++) {
 			for(int j = 0; j < myGrid[0].length;j++) {
@@ -50,7 +55,19 @@ public abstract class Grid {
 		return positionsOfType;
 	}
 	
-	public abstract ArrayList<CellOccupant> getNeighbors(CellOccupant cell);
+	public ArrayList<int[]> getNextPositionsOfType(int type){
+		ArrayList<int[]> positionsOfType = new ArrayList<int[]>();
+		for(int i = 0; i < myGrid.length;i++) {
+			for(int j = 0; j < myGrid[0].length;j++) {
+				if (myGrid[i][j].getNextState() == type) {
+					positionsOfType.add(myGrid[i][j].getCurrentLocation());
+				}
+			}
+		}
+		return positionsOfType;
+	}
+	
+	public abstract List<CellOccupant> getNeighbors(CellOccupant cell);
 	
 	public void printGrid() {
 		for(CellOccupant[] row : myGrid) {

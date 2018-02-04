@@ -23,9 +23,9 @@ public class LifeOccupant extends CellOccupant{
 	}
 
 	@Override
-	public void calculateNextState(ArrayList<CellOccupant> neighbors) {
+	public void calculateNextState(Grid grid) {
 		int liveNeighbors = 0;
-		for (CellOccupant neighbor: neighbors) {
+		for (CellOccupant neighbor: grid.getNeighbors(this)) {
 			if (neighbor.getCurrentState() == ALIVE) {
 				liveNeighbors++;
 			}

@@ -6,6 +6,7 @@ import javafx.scene.paint.Paint;
 
 public class SegOccupant extends CellOccupant {
 	private static double similarityNeeded = .4;
+	private static int EMPTY = 0;
 	public SegOccupant(int initState, int[] initLocation, Paint initColor) {
 		super(initState, initLocation, initColor);
 	}
@@ -15,18 +16,20 @@ public class SegOccupant extends CellOccupant {
 	 * Otherwise it does not change
 	 */
 	@Override
-	public void calculateNextState(ArrayList<CellOccupant> neighbors) {
+	public void calculateNextState(Grid grid) {
 		int similarCount = 0;
-		for (CellOccupant neighbor: neighbors) {
-			if (neighbor.getCurrentState() == this.getCurrentState()) similarCount++;
+		for (CellOccupant neighbor: grid.getNeighbors(this)) {
+			if (neighbor.getCurrentState() == this.getCurrentState()) { 
+				similarCount++;
+			}
 		}
-//		if ((double)similarCount/neighbors.size() < similarityNeeded) {
-//			int random = (int) Math.random()*emptyLocs.size();
-//			this.setNextLocation(emptyLocs.get(random));
-//		}
-		//else {
+		if ((double)similarCount/grid.getNeighbors(this).size() < similarityNeeded) {
+			int random = (int) Math.random()*grid.getNextPositionsOfType(EMPTY).size();
+			this.setNextLocation(grid.getNextPositionsOfType(EMPTY).get(random));
+		}
+		else {
 			this.noChange();
-		//}
+		}
 	}
 }
 
