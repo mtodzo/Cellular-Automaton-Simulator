@@ -66,7 +66,6 @@ public class Setup extends Application
 	 */
 	
 	//button functionality:
-	//change simulation animation rate
 	//change the exception handling
 	
 	/*
@@ -85,13 +84,9 @@ public class Setup extends Application
 	private static double MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
 	private static double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	private Timeline ANIMATION = new Timeline();
-	
-	private Simulation CURRENT_SIMULATION;
-	private String CURRENT_SIMULATION_TYPE;
-	private GridPane CURRENT_DISPLAY;
+
 	private BorderPane root;
-	private CellOccupant[][] CURRENT_CONFIGURATION;
-	private int BlockSize;
+	private DisplayGrid CURRENT_DISPLAY;
 	
 	private static String SimulationFileName = "";
 
@@ -111,10 +106,6 @@ public class Setup extends Application
 		primaryStage.show();
 		
 		makeFrames(primaryStage, FRAMES_PER_SECOND);
-		
-//		KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e->updateAll(SECOND_DELAY, primaryStage));
-//		ANIMATION.setCycleCount(Timeline.INDEFINITE);
-//		ANIMATION.getKeyFrames().add(frame);
 	}
 	
 	public void makeFrames(Stage primaryStage, int framesPerSecond)
@@ -150,13 +141,13 @@ public class Setup extends Application
 		root.setLeft(addButtons(prop, primaryStage));
 		root.setBottom(addTextFields(prop, primaryStage));
 		
-		fillSimulationArray(SimulationFileName);
+		CURRENT_DISPLAY = new  DisplayGrid(SimulationFileName);
+		CURRENT_DISPLAY.fillSimulationArray();
 		
-		Text SimulationType = new Text(CURRENT_SIMULATION_TYPE);
+		Text SimulationType = new Text(CURRENT_DISPLAY.getCURRENT_SIMULATION_TYPE());
 		root.setTop(SimulationType);
 		
-		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid(), BlockSize);
-		root.setCenter(CURRENT_DISPLAY);
+		root.setCenter(CURRENT_DISPLAY.displaySimulationConfiguration());
 		
 		return scene;
 	}
@@ -285,109 +276,12 @@ public class Setup extends Application
 		return controls;
 	}
 
-	private void fillSimulationArray(String SimulationFileName) 
-	{
-		try
-		{
-			File NEW_SIMULATION = new File("data/" + SimulationFileName);
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document sim = db.parse(NEW_SIMULATION);
-			sim.getDocumentElement().normalize();
-			
-			CURRENT_SIMULATION_TYPE = sim.getDocumentElement().getAttribute("type");
-			
-			NodeList SimulationProperties = sim.getElementsByTagName("Properties");
-			for (int i = 0; i < SimulationProperties.getLength(); i++)
-			{
-				Node PROPERTY = SimulationProperties.item(i);
-				if (PROPERTY.getNodeType() == Node.ELEMENT_NODE)
-				{
-					Element property = (Element) PROPERTY;
-					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
-					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
-					
-					BlockSize = 400/width;
-					CURRENT_CONFIGURATION = new CellOccupant[width][height];
-					
-				}
-			}
-			
-			NodeList CellOccupants = sim.getElementsByTagName("CellOccupant");
-			for (int i = 0; i < CellOccupants.getLength(); i++)
-			{
-				Node OCCUPANT = CellOccupants.item(i);
-				if (OCCUPANT.getNodeType() == Node.ELEMENT_NODE)
-				{
-					Element occupant = (Element) OCCUPANT;
-					int initState = Integer.parseInt(occupant.getElementsByTagName("CurrentState").item(0).getTextContent());
-					int xCor = Integer.parseInt(occupant.getElementsByTagName("xLocation").item(0).getTextContent());
-					int yCor = Integer.parseInt(occupant.getElementsByTagName("yLocation").item(0).getTextContent());
-					String COLOR = occupant.getElementsByTagName("Color").item(0).getTextContent();
-					int[] initLocation = new int[2];
-					initLocation[0] = xCor;
-					initLocation[1] = yCor;
-					Paint initColor = Color.valueOf(COLOR);
-					
-					CURRENT_CONFIGURATION[xCor][yCor] = createCellOccupant(CURRENT_SIMULATION_TYPE, initState,initLocation, initColor);
-				}
-			}
-			
-			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE);
-		}
-		catch(Exception e)
-		{
-			System.out.println("");
-			//e.printStackTrace();
-			//parser configuration exception
-		}
-	}
-
-	private CellOccupant createCellOccupant(String simulationType, int initState, int[] initLocation, Paint initColor)
-	{
-		if (simulationType.equals("SpreadingFire"))
-		{
-			return new FireOccupant(initState, initLocation, initColor);
-		}
-		else if (simulationType.equals("GameOfLife"))
-		{
-			return new LifeOccupant(initState, initLocation, initColor);
-		}
-		else if (simulationType.equals("Segregation"))
-		{
-			return new SegOccupant(initState, initLocation, initColor);
-		}
-		else
-		{
-			return new FireOccupant(initState, initLocation, initColor);
-		}
-		
-	}
-
-	private GridPane displaySimulationConfiguration(CellOccupant[][] CONFIGURATION, int BlockSize) 
-	{
-		GridPane SIMULATION_DISPLAY = new GridPane();
-		for (int i = 0; i < CONFIGURATION.length; i++)
-		{
-			for(int j = 0; j<CONFIGURATION[i].length; j++)
-			{
-				Rectangle r = new Rectangle(BlockSize, BlockSize);
-				r.setFill(CONFIGURATION[i][j].getCurrentPaint());
-				r.setStroke(Color.BLACK);
-				SIMULATION_DISPLAY.add(r, i, j);
-			}
-		}
-		return SIMULATION_DISPLAY;
-	}
-
 	private void updateAll(double secondDelay, Stage primaryStage)
 	{
-		CURRENT_SIMULATION.setNextStates();
-		CURRENT_SIMULATION.updateStates();
-		root.getChildren().remove(CURRENT_DISPLAY);
+		CURRENT_DISPLAY.getCURRENT_SIMULATION().setNextStates();
+		CURRENT_DISPLAY.getCURRENT_SIMULATION().updateStates();
 		
-		CURRENT_DISPLAY = displaySimulationConfiguration(CURRENT_SIMULATION.getOccupantGrid(), BlockSize);
-		root.setCenter(CURRENT_DISPLAY);
+		root.setCenter(CURRENT_DISPLAY.displaySimulationConfiguration());
 	}
 	
 	private void resetSimulation(Stage primaryStage)
