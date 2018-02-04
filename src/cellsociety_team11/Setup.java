@@ -121,8 +121,11 @@ public class Setup extends Application
 		
 		Scene scene = new Scene(root, width, height, myBackground);
 		
-		Properties prop = loadUIConfigurations();
+		Properties prop;
+		
+		prop = loadUIConfigurations();
 		root.setBottom(addTextFields(prop, primaryStage));
+		
 		return scene;	
 	}
 
@@ -147,7 +150,7 @@ public class Setup extends Application
 		return scene;
 	}
 	
-	private Properties loadUIConfigurations() 
+	private Properties loadUIConfigurations()
 	{
 		Properties prop = new Properties();
 		try
@@ -157,7 +160,9 @@ public class Setup extends Application
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			System.out.println("UI Configurations file not found");
+			//throw new InvalidFileException(".properties file is invalid");
+			//e.printStackTrace();
 		}
 		
 		return prop;
@@ -249,7 +254,7 @@ public class Setup extends Application
 					}
 			});
 		
-		Slider ANIMATION_RATE = new Slider(0,10,1);
+		Slider ANIMATION_RATE = new Slider(0,50,1);
 		ANIMATION_RATE.valueProperty().addListener(new ChangeListener<Number>() 
 				{
 			       @Override
@@ -317,7 +322,9 @@ public class Setup extends Application
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			System.out.println("");
+			//e.printStackTrace();
+			//parser configuration exception
 		}
 	}
 
