@@ -20,8 +20,9 @@ public class Simulation {
 	
 	public Simulation(CellOccupant[][] grid, String simType) {
 		Properties properties = new Properties();
-		InputStream in = this.getClass().getClassLoader().getResourceAsStream("SimlationGridTypes.properties");
+		//InputStream in = this.getClass().getClassLoader().getResourceAsStream("data/SimulationGridTypes.properties");
 		try {
+			InputStream in = new FileInputStream("data/SimulationGridTypes.properties");
 			properties.load(in);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -32,13 +33,11 @@ public class Simulation {
 			simulationToGridMap.put(key, properties.getProperty(key));
 		}
 		switch(simulationToGridMap.get(simType)) {
-		case "SpreadingFire": myGrid = new SquareGrid(grid);
+		case "SquareGrid": myGrid = new SquareGrid(grid);
 		break;
-		case "PredatorPrey": myGrid = new WrapAroundGrid(grid);
+		case "WrapAroundGrid": myGrid = new WrapAroundGrid(grid);
 		break;
-		case "GameOfLife": myGrid = new DiagonalSquareGrid(grid);
-		break;
-		case "Segregation": myGrid = new DiagonalSquareGrid(grid);
+		case "DiagonalNeighborsSquareGrid": myGrid = new DiagonalSquareGrid(grid);
 		break;
 		}
 		isRunning = true;

@@ -29,7 +29,7 @@ public class DiagonalSquareGrid extends Grid {
 					neighbors.add(this.getOccupant(xLoc-1, yLoc-1));
 				}
 				if (yLoc != this.getLength()-1) {
-					neighbors.add(this.getOccupant(xLoc+1, yLoc+1));
+					neighbors.add(this.getOccupant(xLoc-1, yLoc+1));
 				}
 			}
 			if (yLoc != 0) {
