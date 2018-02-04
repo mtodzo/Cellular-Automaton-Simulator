@@ -6,9 +6,9 @@ import javafx.scene.paint.Paint;
 public class WatorOccupant extends CellOccupant {
 	private int turnsAlive;
 	private int energyUnits;
-	private static final int FISH_TO_REPRODUCE = 2;
-	private static final int SHARK_TO_REPRODUCE = 4;
-	private static final int SHARK_TO_DIE = 2;
+	private static final int FISH_TO_REPRODUCE = 4;
+	private static final int SHARK_TO_REPRODUCE = 20;
+	private static final int SHARK_TO_DIE = 5;
 	private static final Paint[] typeColors = { Color.WHITE, Color.BLUE, Color.GREEN };
 	private static final int EMPTY_STATE = 0;
 	private static final int FISH_STATE = 1;
@@ -61,7 +61,6 @@ public class WatorOccupant extends CellOccupant {
 			if (neighborCell != null) {
 				// MOVE TO EMPTY NEIGHBOR, either we leave a fish behind or we dont
 				switchCells(this, neighborCell);
-				// System.out.println(turnsAlive);
 				if (neighborCell.turnsAlive >= FISH_TO_REPRODUCE) {
 					this.setNextState(FISH_STATE);
 					this.setNextPaint(typeColors[FISH_STATE]);
@@ -71,17 +70,13 @@ public class WatorOccupant extends CellOccupant {
 					neighborCell.incTurnsAlive();
 				}
 			}
-
 			else {
 				this.setNextState(this.getCurrentState());
 				this.incTurnsAlive();
 			}
 		} else if (this.getCurrentState() == SHARK_STATE && this.getNextState() == SHARK_STATE) {
-
 			WatorOccupant fishNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), FISH_STATE);
-
-			if (fishNeighbor != null) {
-				System.out.println("Shark has fish neighbor");
+			if (fishNeighbor != null) {				
 				switchCells(this, fishNeighbor);
 				fishNeighbor.resetEnergyUnits();
 				if (fishNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
@@ -90,22 +85,18 @@ public class WatorOccupant extends CellOccupant {
 					this.resetTurnsAlive();
 					this.resetEnergyUnits();
 					fishNeighbor.resetTurnsAlive();
-					// System.out.println("Shark eats fish and reproduces");
-
 				} else {
 					this.setNextState(EMPTY_STATE);
 					this.setNextPaint(typeColors[EMPTY_STATE]);
 					this.resetTurnsAlive();
 					this.resetEnergyUnits();
 					fishNeighbor.incTurnsAlive();
-					// System.out.println("Shark eats fish, no babies");
 				}
 
 			} else {
 				// move to empty
 				WatorOccupant emptyNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),
 						EMPTY_STATE);
-
 				if (emptyNeighbor != null) {
 					switchCells(this, emptyNeighbor);
 					if (emptyNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
@@ -114,19 +105,15 @@ public class WatorOccupant extends CellOccupant {
 						this.resetTurnsAlive();
 						this.resetEnergyUnits();
 						emptyNeighbor.resetTurnsAlive();
-						// System.out.println("SHARK MOVING and REPRODUCING");
-
 					} else {
 						this.setNextState(EMPTY_STATE);
 						this.setNextPaint(typeColors[EMPTY_STATE]);
 						this.resetTurnsAlive();
 						this.resetEnergyUnits();
 						emptyNeighbor.incTurnsAlive();
-						// System.out.println("SHARK JUST MOVING");
 					}
 					emptyNeighbor.decEnergyUnits();
 					if (emptyNeighbor.energyUnits <= 0) {
-						// System.out.println("SHARK DIES\n");
 						emptyNeighbor.setNextState(EMPTY_STATE);
 						emptyNeighbor.setNextPaint(typeColors[EMPTY_STATE]);
 						emptyNeighbor.resetEnergyUnits();
@@ -134,11 +121,9 @@ public class WatorOccupant extends CellOccupant {
 					}
 
 				} else {
-					// System.out.println("SHARK STUCK");
 					this.decEnergyUnits();
 					this.incTurnsAlive();
 					if (this.energyUnits <= 0) {
-						// System.out.println("SHARK DIES");
 						this.setNextState(EMPTY_STATE);
 						this.setNextPaint(typeColors[EMPTY_STATE]);
 						this.resetEnergyUnits();
@@ -161,7 +146,6 @@ public class WatorOccupant extends CellOccupant {
 	 * @param cellTwo
 	 */
 	private void switchCells(WatorOccupant cellOne, WatorOccupant cellTwo) {
-
 		int temp_state = cellOne.getCurrentState();
 		Paint temp_paint = cellOne.getCurrentPaint();
 		int temp_energy = cellOne.energyUnits;
@@ -176,7 +160,5 @@ public class WatorOccupant extends CellOccupant {
 		cellTwo.setNextPaint(temp_paint);
 		cellTwo.setEnergy(temp_energy);
 		cellTwo.setAlive(temp_turns);
-
 	}
-
 }
