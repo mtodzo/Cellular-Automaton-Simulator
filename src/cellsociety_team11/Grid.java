@@ -79,16 +79,4 @@ public abstract class Grid {
 		int randomIndex = (int) Math.random()*neighborsOfType.size();
 		return neighborsOfType.get(randomIndex);
 	}
-	
-	public void printGrid() {
-		for(CellOccupant[] row : myGrid) {
-			String buff = "";
-			for(CellOccupant occ : row) {
-				buff += occ.getCurrentState();
-				buff += "\t";
-			}
-			System.out.println(buff);
-		}
-		System.out.println("\n");
-	}
 }
