@@ -1,11 +1,10 @@
 package grids;
+import simulation.CellOccupant;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-
-import simulation.CellOccupant;
 
 public abstract class Grid {
 	private CellOccupant[][] myGrid;
@@ -64,7 +63,8 @@ public abstract class Grid {
 		for(int i = 0; i < myGrid.length;i++) {
 			for(int j = 0; j < myGrid[0].length;j++) {
 				if (myGrid[i][j].getNextState() == type) {
-					positionsOfType.add(myGrid[i][j].getCurrentLocation());
+					positionsOfType.add(new int[] {i,j});
+					//myGrid[i][j].getCurrentLocation());
 				}
 			}
 		}
@@ -89,3 +89,4 @@ public abstract class Grid {
 		return neighborsOfType.get(randomIndex);
 	}
 }
+
