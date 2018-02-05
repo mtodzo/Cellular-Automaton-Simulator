@@ -87,7 +87,6 @@ public class Simulation {
 	public void setNextStates() {
 		for (int y=0; y< myGrid.getLength(); y++) {
 			for (int x=0; x<myGrid.getWidth(); x++) {
-//				ArrayList<CellOccupant> neighbors = getNeighbors(myOccupants[x][y]);
 				myGrid.getOccupant(x, y).calculateNextState(myGrid);
 			}
 		}

@@ -2,11 +2,13 @@ package cellsociety_team11;
 
 import java.util.ArrayList;
 
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class SegOccupant extends CellOccupant {
-	private static double similarityNeeded = .4;
+	private static double similarityNeeded = .24;
 	private static int EMPTY = 0;
+	private static final Paint[] typeColors = { Color.WHITE, Color.RED, Color.BLUE, Color.ORANGE};
 	public SegOccupant(int initState, int[] initLocation, Paint initColor) {
 		super(initState, initLocation, initColor);
 	}
@@ -23,11 +25,17 @@ public class SegOccupant extends CellOccupant {
 				similarCount++;
 			}
 		}
-		if ((double)similarCount/grid.getNeighbors(this).size() < similarityNeeded) {
-			int random = (int) Math.random()*grid.getNextPositionsOfType(EMPTY).size();
+		if (this.getCurrentState() != EMPTY && (double)similarCount/grid.getNeighbors(this).size() < similarityNeeded) {
+			//this.setNextPaint(typeColors[3]);
+			int random = (int) Math.floor(Math.random()*grid.getNextPositionsOfType(EMPTY).size());
+			int [] emptyPos = grid.getNextPositionsOfType(EMPTY).get(random);
+			SegOccupant nextCell = (SegOccupant) grid.getOccupant(emptyPos[0], emptyPos[1]);
+			
+			nextCell.setNextState(this.getCurrentState());
+			nextCell.setNextPaint(this.getCurrentPaint());
+			
 			this.setNextState(EMPTY);
-			//this.setNextLocation(grid.getNextPositionsOfType(EMPTY).get(random));
-			grid.getOccupant(grid.getNextPositionsOfType(EMPTY).get(random)[0], grid.getNextPositionsOfType(EMPTY).get(random)[1]).setNextState(this.getCurrentState());;
+			this.setNextPaint(typeColors[this.getNextState()]);
 		}
 		else {
 			this.noChange();
