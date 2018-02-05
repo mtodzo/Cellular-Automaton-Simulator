@@ -1,9 +1,11 @@
-package cellsociety_team11;
+package grids;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import simulation.CellOccupant;
 
 public abstract class Grid {
 	private CellOccupant[][] myGrid;

@@ -1,4 +1,4 @@
-package cellsociety_team11;
+package setupGUI;
 
 import java.awt.event.MouseEvent;
 import java.io.File;
