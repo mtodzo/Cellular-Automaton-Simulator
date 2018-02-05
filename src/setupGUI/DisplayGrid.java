@@ -1,4 +1,4 @@
-package cellsociety_team11;
+package setupGUI;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +17,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import simulation.CellOccupant;
+import simulation.FireOccupant;
+import simulation.LifeOccupant;
+import simulation.SegOccupant;
+import simulation.Simulation;
+import simulation.WatorOccupant;
 
 public class DisplayGrid {
 	

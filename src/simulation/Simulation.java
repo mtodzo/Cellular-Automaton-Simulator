@@ -1,4 +1,4 @@
-package cellsociety_team11;
+package simulation;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,6 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import grids.DiagonalSquareGrid;
+import grids.Grid;
+import grids.SquareGrid;
+import grids.WrapAroundGrid;
 
 public class Simulation {
 	private boolean isRunning;
