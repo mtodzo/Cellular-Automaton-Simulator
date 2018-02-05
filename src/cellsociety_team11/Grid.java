@@ -1,7 +1,9 @@
 package cellsociety_team11;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public abstract class Grid {
 	private CellOccupant[][] myGrid;
@@ -55,7 +57,7 @@ public abstract class Grid {
 		return positionsOfType;
 	}
 	
-	public ArrayList<int[]> getNextPositionsOfType(int type){
+	public List<int[]> getNextPositionsOfType(int type){
 		ArrayList<int[]> positionsOfType = new ArrayList<int[]>();
 		for(int i = 0; i < myGrid.length;i++) {
 			for(int j = 0; j < myGrid[0].length;j++) {
@@ -69,15 +71,19 @@ public abstract class Grid {
 	
 	public abstract List<CellOccupant> getNeighbors(CellOccupant cell);
 	
-	public void printGrid() {
-		for(CellOccupant[] row : myGrid) {
-			String buff = "";
-			for(CellOccupant occ : row) {
-				buff += occ.getCurrentState();
-				buff += "\t";
+	public CellOccupant getNeighborOfType(List<CellOccupant> neighbors, int type){
+		List<CellOccupant> neighborsOfType = new ArrayList<>();
+		for (CellOccupant current: neighbors) {
+			if (current.getCurrentState() == type && current.getNextState() == type) {
+				neighborsOfType.add(current);
 			}
-			System.out.println(buff);
 		}
-		System.out.println("\n");
+		if(neighborsOfType.isEmpty()) {
+			return null;
+		}
+
+		Random r = new Random();
+		int randomIndex = r.nextInt(neighborsOfType.size());
+		return neighborsOfType.get(randomIndex);
 	}
 }

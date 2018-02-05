@@ -120,6 +120,10 @@ public class DisplayGrid {
 		{
 			return new FireOccupant(initState, initLocation, initColor);
 		}
+		else if (CURRENT_SIMULATION_TYPE.equals("Wator"))
+		{
+			return new WatorOccupant(initState, initLocation, initColor);
+		}
 		else if (CURRENT_SIMULATION_TYPE.equals("GameOfLife"))
 		{
 			return new LifeOccupant(initState, initLocation, initColor);
