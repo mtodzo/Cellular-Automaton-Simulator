@@ -21,7 +21,8 @@ import javafx.stage.Stage;
 public class DisplayGrid {
 	
 	private String CURRENT_SIMULATION_TYPE;
-	private int BlockSize;
+	private int BlockSizeX;
+	private int BlockSizeY;
 	private CellOccupant[][] CURRENT_CONFIGURATION;
 	private Simulation CURRENT_SIMULATION;
 	private String SimulationFileName;
@@ -70,7 +71,8 @@ public class DisplayGrid {
 					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
 					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
 					
-					BlockSize = 400/width;
+					BlockSizeX = 400/width;
+					BlockSizeY = 400/height;
 					CURRENT_CONFIGURATION = new CellOccupant[width][height];
 					
 				}
@@ -144,7 +146,7 @@ public class DisplayGrid {
 		{
 			for(int j = 0; j<CURRENT_CONFIGURATION[i].length; j++)
 			{
-				Rectangle r = new Rectangle(BlockSize, BlockSize);
+				Rectangle r = new Rectangle(BlockSizeX, BlockSizeY);
 				r.setFill(CURRENT_CONFIGURATION[i][j].getCurrentPaint());
 				r.setStroke(Color.BLACK);
 				SIMULATION_DISPLAY.add(r, i, j);
