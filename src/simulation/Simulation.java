@@ -31,7 +31,9 @@ public class Simulation {
 			properties.load(in);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Could not load .properties file into Properties object");
+			return;
+			//e.printStackTrace();
 		}
 		simulationToGridMap = new HashMap<>();
 		for (String key: properties.stringPropertyNames()) {
