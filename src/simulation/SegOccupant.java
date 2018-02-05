@@ -1,4 +1,5 @@
-package cellsociety_team11;
+package simulation;
+import grids.Grid;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -43,4 +44,3 @@ public class SegOccupant extends CellOccupant {
 		}
 	}
 }
-

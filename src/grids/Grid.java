@@ -1,4 +1,5 @@
-package cellsociety_team11;
+package grids;
+import simulation.CellOccupant;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,3 +88,4 @@ public abstract class Grid {
 		return neighborsOfType.get(randomIndex);
 	}
 }
+
