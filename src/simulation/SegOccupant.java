@@ -1,8 +1,6 @@
 package simulation;
-
-import java.util.ArrayList;
-
 import grids.Grid;
+
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -26,21 +24,23 @@ public class SegOccupant extends CellOccupant {
 				similarCount++;
 			}
 		}
-		if (this.getCurrentState() != EMPTY && (double)similarCount/grid.getNeighbors(this).size() < similarityNeeded) {
-			//this.setNextPaint(typeColors[3]);
+		if (this.getCurrentState() != EMPTY && (double)similarCount/grid.getNeighbors(this).size() < similarityNeeded) {			
 			int random = (int) Math.floor(Math.random()*grid.getNextPositionsOfType(EMPTY).size());
 			int [] emptyPos = grid.getNextPositionsOfType(EMPTY).get(random);
+
 			SegOccupant nextCell = (SegOccupant) grid.getOccupant(emptyPos[0], emptyPos[1]);
+			
+			int tempState = nextCell.getCurrentState();
+			Paint tempPaint = nextCell.getCurrentPaint();
 			
 			nextCell.setNextState(this.getCurrentState());
 			nextCell.setNextPaint(this.getCurrentPaint());
 			
-			this.setNextState(EMPTY);
-			this.setNextPaint(typeColors[this.getNextState()]);
+			this.setNextState(tempState);
+			this.setNextPaint(tempPaint);
 		}
 		else {
 			this.noChange();
 		}
 	}
 }
-

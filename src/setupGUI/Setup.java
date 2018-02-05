@@ -52,7 +52,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
+import simulation.CellOccupant;
 
 public class Setup extends Application
 {
@@ -109,7 +109,9 @@ public class Setup extends Application
 		Properties prop;
 		
 		prop = loadUIConfigurations(primaryStage);
+		
 		root.setBottom(addTextFields(prop, primaryStage));
+		
 		
 		return scene;	
 	}
@@ -265,9 +267,27 @@ public class Setup extends Application
 	private void updateAll(double secondDelay, Stage primaryStage)
 	{
 		CURRENT_DISPLAY.getCURRENT_SIMULATION().setNextStates();
+		for (int i = 0; i < CURRENT_DISPLAY.getCURRENT_CONFIGURATION().length; i++)
+		{
+			for (int j = 0; j < CURRENT_DISPLAY.getCURRENT_CONFIGURATION()[i].length; j++)
+			{
+				CellOccupant temp = CURRENT_DISPLAY.getCURRENT_CONFIGURATION()[i][j];
+				System.out.println("New cell - before update");
+				System.out.println(temp.getCurrentLocation()[0]);
+				System.out.println(temp.getCurrentLocation()[1]);
+				System.out.println("states");
+				System.out.println(temp.getCurrentState());
+				System.out.println(temp.getNextState());
+				System.out.println("next location");
+				System.out.println(temp.getNextLocation()[0]);
+				System.out.println(temp.getNextLocation()[1]);
+				System.out.println();
+			}
+		}
 		CURRENT_DISPLAY.getCURRENT_SIMULATION().updateStates();
-		
+	
 		root.setCenter(CURRENT_DISPLAY.displaySimulationConfiguration());
+		
 	}
 	
 	private void resetSimulation(Stage primaryStage)
