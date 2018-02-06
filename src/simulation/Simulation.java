@@ -25,12 +25,10 @@ public class Simulation {
 	
 	public Simulation(CellOccupant[][] grid, String simType) {
 		Properties properties = new Properties();
-		//InputStream in = this.getClass().getClassLoader().getResourceAsStream("data/SimulationGridTypes.properties");
 		try {
 			InputStream in = new FileInputStream("data/SimulationGridTypes.properties");
 			properties.load(in);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Could not load .properties file into Properties object");
 			return;
 			//e.printStackTrace();

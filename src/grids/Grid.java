@@ -64,13 +64,12 @@ public abstract class Grid {
 			for(int j = 0; j < myGrid[0].length;j++) {
 				if (myGrid[i][j].getNextState() == type) {
 					positionsOfType.add(new int[] {i,j});
-					//myGrid[i][j].getCurrentLocation());
 				}
 			}
 		}
 		return positionsOfType;
 	}
-	
+
 	public abstract List<CellOccupant> getNeighbors(CellOccupant cell);
 	
 	public CellOccupant getNeighborOfType(List<CellOccupant> neighbors, int type){

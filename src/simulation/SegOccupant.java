@@ -30,14 +30,19 @@ public class SegOccupant extends CellOccupant {
 
 			SegOccupant nextCell = (SegOccupant) grid.getOccupant(emptyPos[0], emptyPos[1]);
 			
-			int tempState = nextCell.getCurrentState();
-			Paint tempPaint = nextCell.getCurrentPaint();
+			//int tempState = nextCell.getCurrentState();
+			//Paint tempPaint = nextCell.getCurrentPaint();
 			
 			nextCell.setNextState(this.getCurrentState());
 			nextCell.setNextPaint(this.getCurrentPaint());
 			
-			this.setNextState(tempState);
-			this.setNextPaint(tempPaint);
+			/*Hey belanie. I thought that this would fix it since I'm no longer relying on the current state
+			 * of the nextCell but just always setting the nextState of the cell being moved to EMPTY.
+			 * Even with the cells with updated nextStates getting cycled back in, I drew it out and feel like
+			 * it should work
+			 */
+			this.setNextState(EMPTY);
+			this.setNextPaint(typeColors[EMPTY]);
 		}
 		else {
 			this.noChange();
