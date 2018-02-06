@@ -1,7 +1,9 @@
-package cellsociety_team11;
+package grids;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import simulation.CellOccupant;
 
 public class WrapAroundGrid extends Grid {
 

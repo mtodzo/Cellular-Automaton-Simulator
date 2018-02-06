@@ -1,9 +1,11 @@
-package cellsociety_team11;
+package setupGUI;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -14,18 +16,28 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import simulation.CellOccupant;
+import simulation.FireOccupant;
+import simulation.LifeOccupant;
+import simulation.SegOccupant;
+import simulation.Simulation;
+import simulation.WatorOccupant;
 
 public class DisplayGrid {
 	
 	private String CURRENT_SIMULATION_TYPE;
-	private int BlockSize;
+	private int BlockSizeX;
+	private int BlockSizeY;
 	private CellOccupant[][] CURRENT_CONFIGURATION;
 	private Simulation CURRENT_SIMULATION;
 	private String SimulationFileName;
+	private Stage primaryStage;
 	
-	public DisplayGrid(String smf)
+	public DisplayGrid(String smf, Stage ps)
 	{
 		SimulationFileName = smf;
+		primaryStage = ps;
 	}
 	
 	public String getCURRENT_SIMULATION_TYPE() 
@@ -65,7 +77,8 @@ public class DisplayGrid {
 					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
 					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
 					
-					BlockSize = 400/width;
+					BlockSizeX = 400/width;
+					BlockSizeY = 400/height;
 					CURRENT_CONFIGURATION = new CellOccupant[width][height];
 					
 				}
@@ -93,11 +106,17 @@ public class DisplayGrid {
 			
 			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE);
 		}
+		catch(ParserConfigurationException e)
+		{
+			System.out.println("Could not parse through XML configuration file.");
+			primaryStage.close();
+			return;
+		}
 		catch(Exception e)
 		{
-			System.out.println("");
-			//e.printStackTrace();
-			//parser configuration exception
+			System.out.println("Could not load XML file");
+			primaryStage.close();
+			return;
 		}
 	}
 
@@ -133,7 +152,7 @@ public class DisplayGrid {
 		{
 			for(int j = 0; j<CURRENT_CONFIGURATION[i].length; j++)
 			{
-				Rectangle r = new Rectangle(BlockSize, BlockSize);
+				Rectangle r = new Rectangle(BlockSizeX, BlockSizeY);
 				r.setFill(CURRENT_CONFIGURATION[i][j].getCurrentPaint());
 				r.setStroke(Color.BLACK);
 				SIMULATION_DISPLAY.add(r, i, j);

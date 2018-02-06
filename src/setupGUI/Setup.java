@@ -1,4 +1,4 @@
-package cellsociety_team11;
+package setupGUI;
 
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -52,29 +52,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
+import simulation.CellOccupant;
 
 public class Setup extends Application
 {
-	/*
-	 * Display the current states of the 2D grid and animate the simulation from its initial state until the user
-	 * stops it. Allow users to load a new configuration file, which stops the current simulation and starts the new 
-	 * one. The display size of an individual cell should be calculated each time by the grid's total size, but the
-	 * size of the visualization window should not change. Allow users to pause and resume the simulation, as 
-	 * well as step forward through it.Allow users to speed up or slow down the simulation's animation rate.
-	 * Any text displayed in the user interface should be set using resource files, not hard-coded.
-	 */
-	
-	//button functionality:
-	//change the exception handling
-	
-	/*
-	 * Read in an XML formatted file that contains the initial settings for a simulation. The file contains three parts:
-	 * name of the kind of simulation it represents, as well as a title for this simulation and this simulation's author
-	 * settings for global configuration parameters specific to the simulation dimensions of the grid and the initial
-	 * configuration of the states for the cells in the grid
-	 */
-	
+	//exception handling
 	private Scene SCENE;
 	private final String TITLE = "CA Simulations";
 	private static final int WIDTH = 600;
@@ -125,8 +107,10 @@ public class Setup extends Application
 		
 		Properties prop;
 		
-		prop = loadUIConfigurations();
+		prop = loadUIConfigurations(primaryStage);
+		
 		root.setBottom(addTextFields(prop, primaryStage));
+		
 		
 		return scene;	
 	}
@@ -137,11 +121,11 @@ public class Setup extends Application
 		
 		Scene scene = new Scene(root, width, height, myBackground);
 		
-		Properties prop = loadUIConfigurations();
+		Properties prop = loadUIConfigurations(primaryStage);
 		root.setLeft(addButtons(prop, primaryStage));
 		root.setBottom(addTextFields(prop, primaryStage));
 		
-		CURRENT_DISPLAY = new  DisplayGrid(SimulationFileName);
+		CURRENT_DISPLAY = new  DisplayGrid(SimulationFileName, primaryStage);
 		CURRENT_DISPLAY.fillSimulationArray();
 		
 		Text SimulationType = new Text(CURRENT_DISPLAY.getCURRENT_SIMULATION_TYPE());
@@ -152,7 +136,7 @@ public class Setup extends Application
 		return scene;
 	}
 	
-	private Properties loadUIConfigurations()
+	private Properties loadUIConfigurations(Stage primaryStage)
 	{
 		Properties prop = new Properties();
 		try
@@ -160,13 +144,16 @@ public class Setup extends Application
 			InputStream configs = new FileInputStream("data/UserInterfaceConfigurations.properties");
 			prop.load(configs);	
 		}
-		catch (Exception e)
+		catch (FileNotFoundException e)
 		{
 			System.out.println("UI Configurations file not found");
-			//throw new InvalidFileException(".properties file is invalid");
-			//e.printStackTrace();
+			primaryStage.close();
 		}
-		
+		catch(IOException e)
+		{
+			System.out.println("Could not load .properties file into Properties object");
+			primaryStage.close();
+		}
 		return prop;
 	}
 
@@ -279,9 +266,11 @@ public class Setup extends Application
 	private void updateAll(double secondDelay, Stage primaryStage)
 	{
 		CURRENT_DISPLAY.getCURRENT_SIMULATION().setNextStates();
+			
 		CURRENT_DISPLAY.getCURRENT_SIMULATION().updateStates();
-		
+	
 		root.setCenter(CURRENT_DISPLAY.displaySimulationConfiguration());
+		
 	}
 	
 	private void resetSimulation(Stage primaryStage)

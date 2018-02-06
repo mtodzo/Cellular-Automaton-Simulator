@@ -1,4 +1,4 @@
-package cellsociety_team11;
+package simulation;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,6 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import grids.DiagonalSquareGrid;
+import grids.Grid;
+import grids.SquareGrid;
+import grids.WrapAroundGrid;
 
 public class Simulation {
 	private boolean isRunning;
@@ -20,13 +25,13 @@ public class Simulation {
 	
 	public Simulation(CellOccupant[][] grid, String simType) {
 		Properties properties = new Properties();
-		//InputStream in = this.getClass().getClassLoader().getResourceAsStream("data/SimulationGridTypes.properties");
 		try {
 			InputStream in = new FileInputStream("data/SimulationGridTypes.properties");
 			properties.load(in);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Could not load .properties file into Properties object");
+			return;
+			//e.printStackTrace();
 		}
 		simulationToGridMap = new HashMap<>();
 		for (String key: properties.stringPropertyNames()) {
@@ -87,7 +92,6 @@ public class Simulation {
 	public void setNextStates() {
 		for (int y=0; y< myGrid.getLength(); y++) {
 			for (int x=0; x<myGrid.getWidth(); x++) {
-//				ArrayList<CellOccupant> neighbors = getNeighbors(myOccupants[x][y]);
 				myGrid.getOccupant(x, y).calculateNextState(myGrid);
 			}
 		}

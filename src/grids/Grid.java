@@ -1,4 +1,5 @@
-package cellsociety_team11;
+package grids;
+import simulation.CellOccupant;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,13 +63,13 @@ public abstract class Grid {
 		for(int i = 0; i < myGrid.length;i++) {
 			for(int j = 0; j < myGrid[0].length;j++) {
 				if (myGrid[i][j].getNextState() == type) {
-					positionsOfType.add(myGrid[i][j].getCurrentLocation());
+					positionsOfType.add(new int[] {i,j});
 				}
 			}
 		}
 		return positionsOfType;
 	}
-	
+
 	public abstract List<CellOccupant> getNeighbors(CellOccupant cell);
 	
 	public CellOccupant getNeighborOfType(List<CellOccupant> neighbors, int type){
@@ -86,16 +87,5 @@ public abstract class Grid {
 		int randomIndex = r.nextInt(neighborsOfType.size());
 		return neighborsOfType.get(randomIndex);
 	}
-	
-	public void printGrid() {
-		for(CellOccupant[] row : myGrid) {
-			String buff = "";
-			for(CellOccupant occ : row) {
-				buff += occ.getCurrentState();
-				buff += "\t";
-			}
-			System.out.println(buff);
-		}
-		System.out.println("\n");
-	}
 }
+

@@ -1,7 +1,8 @@
-package cellsociety_team11;
+package simulation;
 
 import java.util.ArrayList;
 
+import grids.Grid;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
