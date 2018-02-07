@@ -72,10 +72,11 @@ public class Setup extends Application
 	 * Display a graph of the populations of all of the "kinds" of cells over the time of the simulation
 	 * Allow users to interact with the simulation dynamically to change the values of its parameters
 	 * Allow users to interact with the simulation dynamically to create or change a state at a grid location
-	 * Allow users to run multiple simulations at the same time so they can compare the results side by side 
+	 * DONE: Allow users to run multiple simulations at the same time so they can compare the results side by side 
 	 * 	(i.e., do not use tabs like a browser).
 	 */
 	//exception handling
+	//make separate classes for buttons?
 	private Scene SCENE;
 	private final String TITLE = "CA Simulations";
 	private static final int WIDTH = 600;
