@@ -23,6 +23,7 @@ import simulation.LifeOccupant;
 import simulation.SegOccupant;
 import simulation.Simulation;
 import simulation.WatorOccupant;
+import simulation.RPSOccupant;
 
 public class DisplayGrid {
 	
@@ -125,6 +126,10 @@ public class DisplayGrid {
 		if (CURRENT_SIMULATION_TYPE.equals("SpreadingFire"))
 		{
 			return new FireOccupant(initState, initLocation, initColor);
+		}
+		else if (CURRENT_SIMULATION_TYPE.equals("RPS"))
+		{
+			return new RPSOccupant(initState, initLocation, initColor);
 		}
 		else if (CURRENT_SIMULATION_TYPE.equals("Wator"))
 		{
