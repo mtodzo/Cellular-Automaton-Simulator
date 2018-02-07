@@ -55,7 +55,26 @@ import javafx.util.Duration;
 import simulation.CellOccupant;
 
 public class Setup extends Application
-{
+{	
+	/*
+	 * Allow users to save the current state of the simulation as an XML configuration file
+	 * Implement error checking for incorrect file data
+	 * Allow simulations initial configuration to be set by list of specific locations and states, 
+	 * 	completely randomly based on a total number of locations to occupy, or randomly based on 
+	 * 	probability/concentration distributions
+	 * Allow simulations to be "styled", such as (but not necessarily limited to): kind of grid to use,
+	 * 	both by shapes and by edges, size of each grid location (instead of it being calculated, requires 
+	 * 	that scrolling is implemented), whether or not grid locations should be outlined (i.e., to be able
+	 * 	to "see" the grid or not), color of cell or patch states (at least support empty to represent a water
+	 * 	world or space world, etc.), shape of cells or patches within the grid's shape (i.e., circles, rectangles,
+	 * 	or arbitrary images), neighbors to consider (i.e., cardinal directions, diagonal directions, or all directions)
+	 * 	with appropriate error checking (e.g., hexagonal grids do not have cardinal directions)
+	 * Display a graph of the populations of all of the "kinds" of cells over the time of the simulation
+	 * Allow users to interact with the simulation dynamically to change the values of its parameters
+	 * Allow users to interact with the simulation dynamically to create or change a state at a grid location
+	 * Allow users to run multiple simulations at the same time so they can compare the results side by side 
+	 * 	(i.e., do not use tabs like a browser).
+	 */
 	//exception handling
 	private Scene SCENE;
 	private final String TITLE = "CA Simulations";
@@ -177,7 +196,26 @@ public class Setup extends Application
 							}
 						}
 				});
-		controls.getChildren().add(CHOOSER);
+		FileChooser SECOND_SIMULATION = new FileChooser();
+		Button SECOND = new Button(prop.getProperty("SecondChooserText"));
+		SECOND.setOnAction(new EventHandler<ActionEvent>()
+				{
+					public void handle (ActionEvent e)
+						{
+							SECOND_SIMULATION.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
+							File path = new File("./data");
+							SECOND_SIMULATION.setInitialDirectory(path);
+							File file = CHOOSE_SIMULATION.showOpenDialog(primaryStage);
+							if (file != null)
+							{
+								Stage secondStage = new Stage();
+								SimulationFileName = file.getName();
+								resetSimulation(secondStage);
+							}
+						}
+				});
+		
+		controls.getChildren().addAll(CHOOSER,SECOND);
 		controls.setSpacing(10);
 		return controls;
 		
