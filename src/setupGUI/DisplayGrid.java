@@ -35,11 +35,13 @@ public class DisplayGrid {
 	private Simulation CURRENT_SIMULATION;
 	private String SimulationFileName;
 	private Stage primaryStage;
+	private boolean showGridLines;
 	
 	public DisplayGrid(String smf, Stage ps)
 	{
 		SimulationFileName = smf;
 		primaryStage = ps;
+		showGridLines = false;
 	}
 	
 	public String getCURRENT_SIMULATION_TYPE() 
@@ -55,6 +57,11 @@ public class DisplayGrid {
 	public Simulation getCURRENT_SIMULATION() 
 	{
 		return CURRENT_SIMULATION;
+	}
+	
+	public void setShowGridLines(boolean val)
+	{
+		showGridLines = val;
 	}
 
 	public void fillSimulationArray() 
@@ -161,7 +168,10 @@ public class DisplayGrid {
 			{
 				Rectangle r = new Rectangle(BlockSizeX, BlockSizeY);
 				r.setFill(CURRENT_CONFIGURATION[i][j].getCurrentPaint());
-				r.setStroke(Color.BLACK);
+				if(showGridLines == true)
+				{
+					r.setStroke(Color.BLACK);
+				}
 				SIMULATION_DISPLAY.add(r, i, j);
 			}
 		}
