@@ -23,7 +23,7 @@ public class PopulationGraph
 		
 		CURRENT_GRID = currentGrid;
 		NUMBER_POPULATIONS = CURRENT_GRID.getCURRENT_SIMULATION().getNumPopulations();
-		POPULATION_DATA = new HashMap<Integer, ArrayList<Integer>>();
+		POPULATION_DATA = new HashMap<>();
 		for(int j = 0; j < NUMBER_POPULATIONS; j++)
 		{
 			POPULATION_DATA.put(j, new ArrayList<Integer>());
@@ -54,7 +54,7 @@ public class PopulationGraph
 
 		LineChart lineChart = new LineChart(xAxis, yAxis);
 		
-		ArrayList<XYChart.Series> data = new ArrayList<XYChart.Series>();
+		List<XYChart.Series> data = new ArrayList<>();
 		
 		for(int i = 0; i < NUMBER_POPULATIONS; i++)
 		{
@@ -66,7 +66,6 @@ public class PopulationGraph
 		{
 			for(int j = 0; j< POPULATION_DATA.get(k).size(); j++)
 			{
-				int sum = POPULATION_DATA.get(k).get(j);
 				data.get(k).getData().add(new XYChart.Data(j, POPULATION_DATA.get(k).get(j)));
 			}
 		}

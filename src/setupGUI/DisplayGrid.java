@@ -36,6 +36,7 @@ public class DisplayGrid {
 	private String SimulationFileName;
 	private Stage primaryStage;
 	private boolean showGridLines;
+	private int DISPLAY_SIZE = 400;
 	
 	public DisplayGrid(String smf, Stage ps)
 	{
@@ -87,32 +88,14 @@ public class DisplayGrid {
 					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
 					numPopulations = Integer.parseInt(property.getElementsByTagName("NumPopulations").item(0).getTextContent());
 					
-					BlockSizeX = 400/width;
-					BlockSizeY = 400/height;
+					BlockSizeX = DISPLAY_SIZE/width;
+					BlockSizeY = DISPLAY_SIZE/height;
 					CURRENT_CONFIGURATION = new CellOccupant[width][height];
 					
 				}
 			}
 			
-			NodeList CellOccupants = sim.getElementsByTagName("CellOccupant");
-			for (int i = 0; i < CellOccupants.getLength(); i++)
-			{
-				Node OCCUPANT = CellOccupants.item(i);
-				if (OCCUPANT.getNodeType() == Node.ELEMENT_NODE)
-				{
-					Element occupant = (Element) OCCUPANT;
-					int initState = Integer.parseInt(occupant.getElementsByTagName("CurrentState").item(0).getTextContent());
-					int xCor = Integer.parseInt(occupant.getElementsByTagName("xLocation").item(0).getTextContent());
-					int yCor = Integer.parseInt(occupant.getElementsByTagName("yLocation").item(0).getTextContent());
-					String COLOR = occupant.getElementsByTagName("Color").item(0).getTextContent();
-					int[] initLocation = new int[2];
-					initLocation[0] = xCor;
-					initLocation[1] = yCor;
-					Paint initColor = Color.valueOf(COLOR);
-					
-					CURRENT_CONFIGURATION[xCor][yCor] = createCellOccupant(initState,initLocation, initColor);
-				}
-			}
+			fillConfiguration(sim);
 			
 			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE, numPopulations);
 		}
@@ -127,6 +110,29 @@ public class DisplayGrid {
 			System.out.println("Could not load XML file");
 			primaryStage.close();
 			return;
+		}
+	}
+
+	private void fillConfiguration(Document sim) 
+	{
+		NodeList CellOccupants = sim.getElementsByTagName("CellOccupant");
+		for (int i = 0; i < CellOccupants.getLength(); i++)
+		{
+			Node OCCUPANT = CellOccupants.item(i);
+			if (OCCUPANT.getNodeType() == Node.ELEMENT_NODE)
+			{
+				Element occupant = (Element) OCCUPANT;
+				int initState = Integer.parseInt(occupant.getElementsByTagName("CurrentState").item(0).getTextContent());
+				int xCor = Integer.parseInt(occupant.getElementsByTagName("xLocation").item(0).getTextContent());
+				int yCor = Integer.parseInt(occupant.getElementsByTagName("yLocation").item(0).getTextContent());
+				String COLOR = occupant.getElementsByTagName("Color").item(0).getTextContent();
+				int[] initLocation = new int[2];
+				initLocation[0] = xCor;
+				initLocation[1] = yCor;
+				Paint initColor = Color.valueOf(COLOR);
+				
+				CURRENT_CONFIGURATION[xCor][yCor] = createCellOccupant(initState,initLocation, initColor);
+			}
 		}
 	}
 
@@ -168,7 +174,7 @@ public class DisplayGrid {
 			{
 				Rectangle r = new Rectangle(BlockSizeX, BlockSizeY);
 				r.setFill(CURRENT_CONFIGURATION[i][j].getCurrentPaint());
-				if(showGridLines == true)
+				if(showGridLines)
 				{
 					r.setStroke(Color.BLACK);
 				}

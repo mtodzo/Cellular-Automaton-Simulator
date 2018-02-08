@@ -57,19 +57,24 @@ import simulation.CellOccupant;
 
 public class Setup extends Application
 {	
-	private Scene SCENE;
-	private final String TITLE = "CA Simulations";
+	//private Scene SCENE;
+	private static final String TITLE = "CA Simulations";
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 700;
 	private static final Paint BACKGROUND = Color.WHITE;
 	private static int FRAMES_PER_SECOND = 1;
-	private static double MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
 	private static double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	private Timeline ANIMATION = new Timeline();
 
 	private BorderPane root;
 	private DisplayGrid CURRENT_DISPLAY;
 	private PopulationGraph CURRENT_POPULATION_GRAPH;
+	private String filterType = "XML Files";
+	private String filterExtension= "*.xml";
+	private String dataFilePath = "/data";
+	private double maxAnimationSpeed = 10;
+	private double animationSpeedStep = 0.1;
+	private int SPACING = 10;
 	
 	private static String SimulationFileName = "";
 
@@ -78,13 +83,14 @@ public class Setup extends Application
 	{
 		if (SimulationFileName.equals(""))
 		{
-			SCENE = openingScene(WIDTH, HEIGHT, BACKGROUND, primaryStage);
+			Scene SCENE = openingScene(WIDTH, HEIGHT, BACKGROUND, primaryStage);
+			primaryStage.setScene(SCENE);
 		}
 		else
 		{
-			SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage, SimulationFileName);
+			Scene SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage, SimulationFileName);
+			primaryStage.setScene(SCENE);
 		}
-		primaryStage.setScene(SCENE);
 		primaryStage.setTitle(TITLE);
 		primaryStage.show();
 		
@@ -172,8 +178,8 @@ public class Setup extends Application
 				{
 					public void handle (ActionEvent e)
 						{
-							CHOOSE_SIMULATION.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
-							File path = new File("./data");
+							CHOOSE_SIMULATION.getExtensionFilters().add(new ExtensionFilter(filterType, filterExtension));
+							File path = new File(dataFilePath);
 							CHOOSE_SIMULATION.setInitialDirectory(path);
 							File file = CHOOSE_SIMULATION.showOpenDialog(primaryStage);
 							if (file != null)
@@ -189,8 +195,8 @@ public class Setup extends Application
 				{
 					public void handle (ActionEvent e)
 						{
-							SECOND_SIMULATION.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
-							File path = new File("./data");
+							SECOND_SIMULATION.getExtensionFilters().add(new ExtensionFilter(filterType, filterExtension));
+							File path = new File(dataFilePath);
 							SECOND_SIMULATION.setInitialDirectory(path);
 							File file = CHOOSE_SIMULATION.showOpenDialog(primaryStage);
 							if (file != null)
@@ -203,7 +209,7 @@ public class Setup extends Application
 				});
 		
 		controls.getChildren().addAll(CHOOSER,SECOND);
-		controls.setSpacing(10);
+		controls.setSpacing(SPACING);
 		return controls;
 		
 	}
@@ -270,7 +276,7 @@ public class Setup extends Application
 		
 		Text INFO = new Text("Frames Per Second:");
 		Text RATE = new Text();
-		Slider ANIMATION_RATE = new Slider(0.1,10, FRAMES_PER_SECOND);
+		Slider ANIMATION_RATE = new Slider(animationSpeedStep, maxAnimationSpeed, FRAMES_PER_SECOND);
 		ANIMATION_RATE.valueProperty().addListener(new ChangeListener<Number>() 
 				{
 			       @Override
@@ -294,7 +300,7 @@ public class Setup extends Application
 				});
 		
 		controls.getChildren().addAll(START,PAUSE, STOP, STEP, INFO, ANIMATION_RATE, RATE, GRID_LINES);
-		controls.setSpacing(10);
+		controls.setSpacing(SPACING);
 		return controls;
 	}
 
