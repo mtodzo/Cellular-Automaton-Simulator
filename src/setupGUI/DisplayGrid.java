@@ -30,6 +30,7 @@ public class DisplayGrid {
 	private String CURRENT_SIMULATION_TYPE;
 	private int BlockSizeX;
 	private int BlockSizeY;
+	private int numPopulations;
 	private CellOccupant[][] CURRENT_CONFIGURATION;
 	private Simulation CURRENT_SIMULATION;
 	private String SimulationFileName;
@@ -77,6 +78,7 @@ public class DisplayGrid {
 					Element property = (Element) PROPERTY;
 					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
 					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
+					numPopulations = Integer.parseInt(property.getElementsByTagName("NumPopulations").item(0).getTextContent());
 					
 					BlockSizeX = 400/width;
 					BlockSizeY = 400/height;
@@ -105,7 +107,7 @@ public class DisplayGrid {
 				}
 			}
 			
-			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE);
+			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE, numPopulations);
 		}
 		catch(ParserConfigurationException e)
 		{

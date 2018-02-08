@@ -79,8 +79,8 @@ public class Setup extends Application
 	//make separate classes for buttons?
 	private Scene SCENE;
 	private final String TITLE = "CA Simulations";
-	private static final int WIDTH = 600;
-	private static final int HEIGHT = 500;
+	private static final int WIDTH = 800;
+	private static final int HEIGHT = 700;
 	private static final Paint BACKGROUND = Color.WHITE;
 	private static int FRAMES_PER_SECOND = 1;
 	private static double MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
@@ -89,6 +89,7 @@ public class Setup extends Application
 
 	private BorderPane root;
 	private DisplayGrid CURRENT_DISPLAY;
+	private PopulationGraph CURRENT_POPULATION_GRAPH;
 	
 	private static String SimulationFileName = "";
 
@@ -148,10 +149,15 @@ public class Setup extends Application
 		CURRENT_DISPLAY = new  DisplayGrid(SimulationFileName, primaryStage);
 		CURRENT_DISPLAY.fillSimulationArray();
 		
+		CURRENT_POPULATION_GRAPH = new PopulationGraph(CURRENT_DISPLAY);
+		CURRENT_POPULATION_GRAPH.updatePopulationGraph();
+		
 		Text SimulationType = new Text(CURRENT_DISPLAY.getCURRENT_SIMULATION_TYPE());
 		root.setTop(SimulationType);
 		
-		root.setCenter(CURRENT_DISPLAY.displaySimulationConfiguration());
+		VBox displays = new VBox();
+		displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
+		root.setCenter(displays);
 		
 		return scene;
 	}
@@ -307,8 +313,12 @@ public class Setup extends Application
 		CURRENT_DISPLAY.getCURRENT_SIMULATION().setNextStates();
 			
 		CURRENT_DISPLAY.getCURRENT_SIMULATION().updateStates();
+		
+		CURRENT_POPULATION_GRAPH.updatePopulationGraph();
 	
-		root.setCenter(CURRENT_DISPLAY.displaySimulationConfiguration());
+		VBox displays = new VBox();
+		displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
+		root.setCenter(displays);
 		
 	}
 	
