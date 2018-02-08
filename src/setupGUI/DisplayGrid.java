@@ -30,15 +30,18 @@ public class DisplayGrid {
 	private String CURRENT_SIMULATION_TYPE;
 	private int BlockSizeX;
 	private int BlockSizeY;
+	private int numPopulations;
 	private CellOccupant[][] CURRENT_CONFIGURATION;
 	private Simulation CURRENT_SIMULATION;
 	private String SimulationFileName;
 	private Stage primaryStage;
+	private boolean showGridLines;
 	
 	public DisplayGrid(String smf, Stage ps)
 	{
 		SimulationFileName = smf;
 		primaryStage = ps;
+		showGridLines = false;
 	}
 	
 	public String getCURRENT_SIMULATION_TYPE() 
@@ -54,6 +57,11 @@ public class DisplayGrid {
 	public Simulation getCURRENT_SIMULATION() 
 	{
 		return CURRENT_SIMULATION;
+	}
+	
+	public void setShowGridLines(boolean val)
+	{
+		showGridLines = val;
 	}
 
 	public void fillSimulationArray() 
@@ -77,6 +85,7 @@ public class DisplayGrid {
 					Element property = (Element) PROPERTY;
 					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
 					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
+					numPopulations = Integer.parseInt(property.getElementsByTagName("NumPopulations").item(0).getTextContent());
 					
 					BlockSizeX = 400/width;
 					BlockSizeY = 400/height;
@@ -105,7 +114,7 @@ public class DisplayGrid {
 				}
 			}
 			
-			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE);
+			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE, numPopulations);
 		}
 		catch(ParserConfigurationException e)
 		{
@@ -159,7 +168,10 @@ public class DisplayGrid {
 			{
 				Rectangle r = new Rectangle(BlockSizeX, BlockSizeY);
 				r.setFill(CURRENT_CONFIGURATION[i][j].getCurrentPaint());
-				r.setStroke(Color.BLACK);
+				if(showGridLines == true)
+				{
+					r.setStroke(Color.BLACK);
+				}
 				SIMULATION_DISPLAY.add(r, i, j);
 			}
 		}
