@@ -13,7 +13,7 @@ public class WrapAroundGrid extends Grid {
 	
 	@Override
 	public List<CellOccupant> getNeighbors(CellOccupant cell) {
-		List<CellOccupant> neighbors = new ArrayList<CellOccupant>();
+		List<CellOccupant> neighbors = new ArrayList<>();
 		int[] toAdd = {-1,1};
 		for(int i : toAdd) {
 			int xGet = cell.getCurrentLocation()[0] + i;
@@ -24,8 +24,6 @@ public class WrapAroundGrid extends Grid {
 				xGet = 0;
 			}
 			neighbors.add(this.getOccupant(xGet, cell.getCurrentLocation()[1]));
-		}
-		for(int i : toAdd) {
 			int yGet = cell.getCurrentLocation()[1] + i;
 			
 			if(yGet < 0) {

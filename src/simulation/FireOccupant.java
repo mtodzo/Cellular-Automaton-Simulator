@@ -10,6 +10,10 @@ public class FireOccupant extends CellOccupant {
 	private int turnsOnFire;
 
 	private static final double PROB_CATCH_FIRE = .15;
+	private static final int maxTurnsOnFire = 5;
+	private static final int EMPTY = 0;
+	private static final int TREE = 1;
+	private static final int FIRE = 2;
 
 	private static final Paint[] typeColors = {Color.YELLOW, Color.GREEN, Color.RED};
 
@@ -42,14 +46,14 @@ public class FireOccupant extends CellOccupant {
 	 */		
 	@Override
 	public void calculateNextState(Grid grid) {
-		if(this.getCurrentState() == 0) {
+		if(this.getCurrentState() == EMPTY) {
 			// no changes, might not be necessary
 			this.noChange();
-		} else if (this.getCurrentState() == 1) {
+		} else if (this.getCurrentState() == TREE) {
 			if(neighborOnFire(grid.getNeighbors(this))) {
 				if(Math.random() < PROB_CATCH_FIRE) {
-					this.setNextState(2);
-					this.setNextPaint(typeColors[2]);
+					this.setNextState(FIRE);
+					this.setNextPaint(typeColors[FIRE]);
 				} else {
 					this.noChange();
 				}
@@ -57,9 +61,9 @@ public class FireOccupant extends CellOccupant {
 				this.noChange();
 			}
 		} else {
-			if (getTurnsOnFire() == 5) {
-				this.setNextState(0);
-				this.setNextPaint(typeColors[0]);
+			if (getTurnsOnFire() == maxTurnsOnFire) {
+				this.setNextState(EMPTY);
+				this.setNextPaint(typeColors[EMPTY]);
 			} else {
 				this.updateTurnsOnFire();
 				this.noChange();
@@ -75,7 +79,7 @@ public class FireOccupant extends CellOccupant {
 	 */
 	private boolean neighborOnFire(List<CellOccupant> neighborsList) {
 		for(CellOccupant neighbor : neighborsList) {
-			if (neighbor.getCurrentState() == 2) {
+			if (neighbor.getCurrentState() == FIRE) {
 				return true;
 			}
 		}
