@@ -36,7 +36,7 @@ public class DisplayGrid {
 	private String SimulationFileName;
 	private Stage primaryStage;
 	private boolean showGridLines;
-	private int DISPLAY_SIZE = 400;
+	private static final int DISPLAY_SIZE = 400;
 	
 	public DisplayGrid(String smf, Stage ps)
 	{

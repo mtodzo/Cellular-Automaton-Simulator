@@ -16,3 +16,5 @@ Modularity:
 In order to reduce the dependencies in the Setup class we are going to make a Button class that handles creating buttons and their functionality. Also, we are still working on the XML class so we will fix the modularity issues after it is functioning.
 
 ### General Refactoring
+
+We decided to create an interface in order to protect the Grid class.

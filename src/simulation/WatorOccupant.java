@@ -68,7 +68,7 @@ public class WatorOccupant extends CellOccupant {
 
 	private void changeSharkState(Grid grid) 
 	{
-		WatorOccupant fishNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), FISH_STATE);
+		WatorOccupant fishNeighbor = (WatorOccupant) grid.getNeighborOfType(this, FISH_STATE);
 		if (fishNeighbor != null) {				
 			switchCells(this, fishNeighbor);
 			fishNeighbor.resetEnergyUnits();
@@ -90,7 +90,7 @@ public class WatorOccupant extends CellOccupant {
 		else 
 		{
 			// move to empty
-			WatorOccupant emptyNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),
+			WatorOccupant emptyNeighbor = (WatorOccupant) grid.getNeighborOfType(this,
 					EMPTY_STATE);
 			if (emptyNeighbor != null) {
 				switchCells(this, emptyNeighbor);
@@ -130,7 +130,7 @@ public class WatorOccupant extends CellOccupant {
 
 	private void changeFishState(Grid grid) 
 	{
-		WatorOccupant neighborCell = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), EMPTY_STATE);
+		WatorOccupant neighborCell = (WatorOccupant) grid.getNeighborOfType(this, EMPTY_STATE);
 		if (neighborCell != null) {
 			// MOVE TO EMPTY NEIGHBOR, either we leave a fish behind or we dont
 			switchCells(this, neighborCell);

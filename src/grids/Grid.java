@@ -2,11 +2,12 @@ package grids;
 import simulation.CellOccupant;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Grid {
+public abstract class Grid implements CellGridAccess,DisplayGridAccess {
 	private CellOccupant[][] myGrid;
 	
 	public Grid(CellOccupant[][] grid) {
@@ -59,7 +60,7 @@ public abstract class Grid {
 	}
 	
 	public List<int[]> getNextPositionsOfType(int type){
-		List<int[]> positionsOfType = new ArrayList<int[]>();
+		List<int[]> positionsOfType = new ArrayList<>();
 		for(int i = 0; i < myGrid.length;i++) {
 			for(int j = 0; j < myGrid[0].length;j++) {
 				if (myGrid[i][j].getNextState() == type) {
@@ -72,11 +73,12 @@ public abstract class Grid {
 
 	public abstract List<CellOccupant> getNeighbors(CellOccupant cell);
 	
-	public CellOccupant getNeighborOfType(List<CellOccupant> neighbors, int type){
+	public CellOccupant getNeighborOfType(CellOccupant current, int type){
+		List<CellOccupant> neighbors = this.getNeighbors(current);
 		List<CellOccupant> neighborsOfType = new ArrayList<>();
-		for (CellOccupant current: neighbors) {
-			if (current.getCurrentState() == type && current.getNextState() == type) {
-				neighborsOfType.add(current);
+		for (CellOccupant neighbor: neighbors) {
+			if (neighbor.getCurrentState() == type && neighbor.getNextState() == type) {
+				neighborsOfType.add(neighbor);
 			}
 		}
 		if(neighborsOfType.isEmpty()) {

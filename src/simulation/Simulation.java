@@ -14,7 +14,7 @@ import grids.Grid;
 import grids.SquareGrid;
 import grids.WrapAroundGrid;
 
-public class Simulation {
+public class Simulation{
 	private boolean isRunning;
 	private String mySimulationType;
 	//private CellOccupant[][] myOccupants;

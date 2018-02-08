@@ -13,11 +13,11 @@ import javafx.scene.paint.Paint;
 */
 
 public class LifeOccupant extends CellOccupant{
-	private static int DEAD = 0;
-	private static int ALIVE = 1;
-	private static int minLiveNeighbors = 2;
-	private static int numToReproduce = 3;
-	private static int maxLiveNeighbors  = 3;
+	private static final int DEAD = 0;
+	private static final int ALIVE = 1;
+	private static final int minLiveNeighbors = 2;
+	private static final int numToReproduce = 3;
+	private static final int maxLiveNeighbors  = 3;
 	private static final Paint[] typeColors = {Color.BLUE, Color.RED};
 	public LifeOccupant(int initState, int[] initLocation, Paint initColor) {
 		super(initState,initLocation,initColor);

@@ -69,12 +69,12 @@ public class Setup extends Application
 	private BorderPane root;
 	private DisplayGrid CURRENT_DISPLAY;
 	private PopulationGraph CURRENT_POPULATION_GRAPH;
-	private String filterType = "XML Files";
-	private String filterExtension= "*.xml";
-	private String dataFilePath = "/data";
-	private double maxAnimationSpeed = 10;
-	private double animationSpeedStep = 0.1;
-	private int SPACING = 10;
+	private static final String filterType = "XML Files";
+	private static final String filterExtension= "*.xml";
+	private static final String dataFilePath = "/data";
+	private static final double maxAnimationSpeed = 10;
+	private static final double animationSpeedStep = 0.1;
+	private static final int SPACING = 10;
 	
 	private static String SimulationFileName = "";
 

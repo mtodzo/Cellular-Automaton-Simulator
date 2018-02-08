@@ -5,8 +5,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class SegOccupant extends CellOccupant {
-	private static double similarityNeeded = .24;
-	private static int EMPTY = 0;
+	private static final double similarityNeeded = .24;
+	private static final int EMPTY = 0;
 	private static final Paint[] typeColors = { Color.WHITE, Color.RED, Color.BLUE, Color.ORANGE};
 	public SegOccupant(int initState, int[] initLocation, Paint initColor) {
 		super(initState, initLocation, initColor);
