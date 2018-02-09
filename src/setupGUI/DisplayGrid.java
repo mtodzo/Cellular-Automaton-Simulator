@@ -109,6 +109,7 @@ public class DisplayGrid {
 		{
 			System.out.println("Could not load XML file");
 			primaryStage.close();
+			e.printStackTrace();
 			return;
 		}
 	}

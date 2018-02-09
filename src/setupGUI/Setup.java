@@ -210,7 +210,39 @@ public class Setup extends Application
 		
 		controls.getChildren().addAll(CHOOSER,SECOND);
 		controls.setSpacing(SPACING);
-		return controls;
+		
+		HBox randomSim = new HBox();
+		TextField newRandomXML = new TextField();
+		newRandomXML.setPromptText(prop.getProperty("XMLText"));
+		TextField simType = new TextField();
+		simType.setPromptText(prop.getProperty("PromptSimType"));
+		TextField xSize = new TextField();
+		xSize.setPromptText(prop.getProperty("PromptXSize"));
+		TextField ySize = new TextField();
+		ySize.setPromptText(prop.getProperty("PromptYSize"));
+		Button CREATE = new Button(prop.getProperty("RandomText"));
+		CREATE.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle (ActionEvent e)
+				{
+				 if (newRandomXML.getText() != null && !newRandomXML.getText().isEmpty() && simType.getText() != null && !simType.getText().isEmpty() && xSize.getText() != null && !xSize.getText().isEmpty() && ySize.getText() != null && !ySize.getText().isEmpty() )
+				 {
+					 ANIMATION.pause();
+					 XMLCreation currentConfigs = new XMLCreation(newRandomXML.getText());
+					 currentConfigs.createRandomXML(simType.getText(), Integer.parseInt(xSize.getText()),Integer.parseInt(ySize.getText()));
+					 SimulationFileName = newRandomXML.getText() + ".xml";
+					 resetSimulation(primaryStage);
+				 }
+				}
+		});
+		randomSim.getChildren().addAll(newRandomXML,simType,xSize,ySize,CREATE);
+		randomSim.setSpacing(SPACING);
+		
+		VBox result = new VBox();
+		result.getChildren().addAll(randomSim, controls);
+		result.setSpacing(SPACING);
+		
+		return result;
 		
 	}
 
