@@ -25,7 +25,7 @@ public class XMLCreation
 		fileName = name;
 	}
 
-	public void createRandomXML()
+	public void createRandomXML(String simulationType, int xSize, int ySize)
 	{
 
 	}
@@ -45,7 +45,7 @@ public class XMLCreation
 
 			Element simulation = newXML.createElement("Simulation");
 			simulation.setAttribute("type", simulationType);
-
+			newXML.appendChild(simulation);
 			Element properties = newXML.createElement("Properties");
 			simulation.appendChild(properties);
 			Element width = newXML.createElement("Width");
