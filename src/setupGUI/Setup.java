@@ -31,6 +31,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -55,20 +56,25 @@ import javafx.util.Duration;
 import simulation.CellOccupant;
 
 public class Setup extends Application
-{
-	//exception handling
-	private Scene SCENE;
-	private final String TITLE = "CA Simulations";
-	private static final int WIDTH = 600;
-	private static final int HEIGHT = 500;
+{	
+	//private Scene SCENE;
+	private static final String TITLE = "CA Simulations";
+	private static final int WIDTH = 800;
+	private static final int HEIGHT = 700;
 	private static final Paint BACKGROUND = Color.WHITE;
 	private static int FRAMES_PER_SECOND = 1;
-	private static double MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
 	private static double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 	private Timeline ANIMATION = new Timeline();
 
 	private BorderPane root;
 	private DisplayGrid CURRENT_DISPLAY;
+	private PopulationGraph CURRENT_POPULATION_GRAPH;
+	private String filterType = "XML Files";
+	private String filterExtension= "*.xml";
+	private String dataFilePath = "./data";
+	private double maxAnimationSpeed = 10;
+	private double animationSpeedStep = 0.1;
+	private int SPACING = 10;
 	
 	private static String SimulationFileName = "";
 
@@ -77,13 +83,14 @@ public class Setup extends Application
 	{
 		if (SimulationFileName.equals(""))
 		{
-			SCENE = openingScene(WIDTH, HEIGHT, BACKGROUND, primaryStage);
+			Scene SCENE = openingScene(WIDTH, HEIGHT, BACKGROUND, primaryStage);
+			primaryStage.setScene(SCENE);
 		}
 		else
 		{
-			SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage, SimulationFileName);
+			Scene SCENE = setupScene(WIDTH, HEIGHT, BACKGROUND, primaryStage, SimulationFileName);
+			primaryStage.setScene(SCENE);
 		}
-		primaryStage.setScene(SCENE);
 		primaryStage.setTitle(TITLE);
 		primaryStage.show();
 		
@@ -128,10 +135,15 @@ public class Setup extends Application
 		CURRENT_DISPLAY = new  DisplayGrid(SimulationFileName, primaryStage);
 		CURRENT_DISPLAY.fillSimulationArray();
 		
+		CURRENT_POPULATION_GRAPH = new PopulationGraph(CURRENT_DISPLAY);
+		CURRENT_POPULATION_GRAPH.updatePopulationGraph();
+		
 		Text SimulationType = new Text(CURRENT_DISPLAY.getCURRENT_SIMULATION_TYPE());
 		root.setTop(SimulationType);
 		
-		root.setCenter(CURRENT_DISPLAY.displaySimulationConfiguration());
+		VBox displays = new VBox();
+		displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
+		root.setCenter(displays);
 		
 		return scene;
 	}
@@ -166,8 +178,8 @@ public class Setup extends Application
 				{
 					public void handle (ActionEvent e)
 						{
-							CHOOSE_SIMULATION.getExtensionFilters().add(new ExtensionFilter("XML Files", "*.xml"));
-							File path = new File("./data");
+							CHOOSE_SIMULATION.getExtensionFilters().add(new ExtensionFilter(filterType, filterExtension));
+							File path = new File(dataFilePath);
 							CHOOSE_SIMULATION.setInitialDirectory(path);
 							File file = CHOOSE_SIMULATION.showOpenDialog(primaryStage);
 							if (file != null)
@@ -177,8 +189,27 @@ public class Setup extends Application
 							}
 						}
 				});
-		controls.getChildren().add(CHOOSER);
-		controls.setSpacing(10);
+		FileChooser SECOND_SIMULATION = new FileChooser();
+		Button SECOND = new Button(prop.getProperty("SecondChooserText"));
+		SECOND.setOnAction(new EventHandler<ActionEvent>()
+				{
+					public void handle (ActionEvent e)
+						{
+							SECOND_SIMULATION.getExtensionFilters().add(new ExtensionFilter(filterType, filterExtension));
+							File path = new File(dataFilePath);
+							SECOND_SIMULATION.setInitialDirectory(path);
+							File file = CHOOSE_SIMULATION.showOpenDialog(primaryStage);
+							if (file != null)
+							{
+								Stage secondStage = new Stage();
+								SimulationFileName = file.getName();
+								resetSimulation(secondStage);
+							}
+						}
+				});
+		
+		controls.getChildren().addAll(CHOOSER,SECOND);
+		controls.setSpacing(SPACING);
 		return controls;
 		
 	}
@@ -243,9 +274,9 @@ public class Setup extends Application
 					}
 			});
 		
-		Text INFO = new Text("Frames Per Second:");
+		Text INFO = new Text(prop.getProperty("FrameText"));
 		Text RATE = new Text();
-		Slider ANIMATION_RATE = new Slider(0.1,10, FRAMES_PER_SECOND);
+		Slider ANIMATION_RATE = new Slider(animationSpeedStep, maxAnimationSpeed, FRAMES_PER_SECOND);
 		ANIMATION_RATE.valueProperty().addListener(new ChangeListener<Number>() 
 				{
 			       @Override
@@ -258,8 +289,36 @@ public class Setup extends Application
 				});
 		RATE.setText(ANIMATION_RATE.valueProperty().getValue().toString());
 		
-		controls.getChildren().addAll(START,PAUSE, STOP, STEP, INFO, ANIMATION_RATE, RATE);
-		controls.setSpacing(10);
+		CheckBox GRID_LINES = new CheckBox(prop.getProperty("GridLinesText"));
+		GRID_LINES.selectedProperty().addListener((ObservableValue<? extends Boolean> ov,
+				Boolean old_val, Boolean new_val) -> 
+				{
+					CURRENT_DISPLAY.setShowGridLines(new_val);
+					VBox displays = new VBox();
+					displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
+					root.setCenter(displays);
+				});
+		
+		TextField newXML = new TextField();
+		newXML.setPromptText(prop.getProperty("XMLText"));
+		Button CREATE = new Button(prop.getProperty("CreateText"));
+		CREATE.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle (ActionEvent e)
+				{
+				 if (newXML.getText() != null && !newXML.getText().isEmpty())
+				 {
+					 ANIMATION.pause();
+					 XMLCreation currentConfigs = new XMLCreation(newXML.getText());
+					 currentConfigs.currentGridToXML(CURRENT_DISPLAY);
+				 }
+				}
+		});
+		HBox newFile = new HBox();
+		newFile.getChildren().addAll(newXML,CREATE);
+		
+		controls.getChildren().addAll(START,PAUSE, STOP, STEP, INFO, ANIMATION_RATE, RATE, GRID_LINES, newFile);
+		controls.setSpacing(SPACING);
 		return controls;
 	}
 
@@ -268,8 +327,12 @@ public class Setup extends Application
 		CURRENT_DISPLAY.getCURRENT_SIMULATION().setNextStates();
 			
 		CURRENT_DISPLAY.getCURRENT_SIMULATION().updateStates();
+		
+		CURRENT_POPULATION_GRAPH.updatePopulationGraph();
 	
-		root.setCenter(CURRENT_DISPLAY.displaySimulationConfiguration());
+		VBox displays = new VBox();
+		displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
+		root.setCenter(displays);
 		
 	}
 	

@@ -37,7 +37,7 @@ public abstract class Grid {
 	}
 	
 	public List<CellOccupant> iterGrid() {
-		List<CellOccupant> allOccupants = new ArrayList<CellOccupant>();
+		List<CellOccupant> allOccupants = new ArrayList<>();
 		for(CellOccupant[] row : myGrid) {
 			for(CellOccupant elem : row) {
 				allOccupants.add(elem);
@@ -46,8 +46,8 @@ public abstract class Grid {
 		return allOccupants;
 	}
 	
-	public ArrayList<int[]> getCurrentPositionsOfType(int type){
-		ArrayList<int[]> positionsOfType = new ArrayList<int[]>();
+	public List<int[]> getCurrentPositionsOfType(int type){
+		List<int[]> positionsOfType = new ArrayList<>();
 		for(int i = 0; i < myGrid.length;i++) {
 			for(int j = 0; j < myGrid[0].length;j++) {
 				if (myGrid[i][j].getCurrentState() == type) {
@@ -59,7 +59,7 @@ public abstract class Grid {
 	}
 	
 	public List<int[]> getNextPositionsOfType(int type){
-		ArrayList<int[]> positionsOfType = new ArrayList<int[]>();
+		List<int[]> positionsOfType = new ArrayList<int[]>();
 		for(int i = 0; i < myGrid.length;i++) {
 			for(int j = 0; j < myGrid[0].length;j++) {
 				if (myGrid[i][j].getNextState() == type) {

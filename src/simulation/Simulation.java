@@ -22,8 +22,9 @@ public class Simulation {
 	//private List<int[]> myEmptyLocations;
 	//private static final int EMPTY = 0;
 	private Map<String, String> simulationToGridMap;
+	private int numPopulations;
 	
-	public Simulation(CellOccupant[][] grid, String simType) {
+	public Simulation(CellOccupant[][] grid, String simType, int populations) {
 		Properties properties = new Properties();
 		try {
 			InputStream in = new FileInputStream("data/SimulationGridTypes.properties");
@@ -46,6 +47,7 @@ public class Simulation {
 		break;
 		}
 		isRunning = true;
+		numPopulations = populations;
 	}
 	
 	/*
@@ -104,5 +106,24 @@ public class Simulation {
 				myGrid.getOccupant(x, y).setCurrentPaint();
 			}
 		}
-	}	
+	}
+	
+	public int[] getPopulationNumbers()
+	{
+		int[] result = new int[numPopulations];
+		for (int y=0; y< myGrid.getLength(); y++) 
+		{
+			for (int x=0; x<myGrid.getWidth(); x++)
+			{
+				int state = myGrid.getOccupant(x, y).getCurrentState();
+				result[state]++;
+			}
+		}
+		return result;
+	}
+	
+	public int getNumPopulations()
+	{
+		return numPopulations;
+	}
 }
