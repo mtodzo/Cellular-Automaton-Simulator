@@ -21,5 +21,7 @@ public abstract class UserInteraction
 	}
 	
 	public abstract void buttonEvent();
+	
+	public abstract void buttonEvent(int num);
 
 }
