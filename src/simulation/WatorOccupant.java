@@ -56,82 +56,96 @@ public class WatorOccupant extends CellOccupant {
 	 */
 	@Override
 	public void calculateNextState(Grid grid) {
+		if (this.getCurrentState() == FISH_STATE && this.getNextState() == FISH_STATE) 
+		{
+			changeFishState(grid);
+		} 
+		else if (this.getCurrentState() == SHARK_STATE && this.getNextState() == SHARK_STATE) 
+		{
+			changeSharkState(grid);	
+		}
+	}
 
-		if (this.getCurrentState() == FISH_STATE && this.getNextState() == FISH_STATE) {
-			WatorOccupant neighborCell = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), EMPTY_STATE);
-			if (neighborCell != null) {
-				// MOVE TO EMPTY NEIGHBOR, either we leave a fish behind or we dont
-				switchCells(this, neighborCell);
-				if (neighborCell.turnsAlive >= FISH_TO_REPRODUCE) {
-					this.setNextState(FISH_STATE);
-					this.setNextPaint(typeColors[FISH_STATE]);
-					this.resetTurnsAlive();
-					neighborCell.resetTurnsAlive();
-				} else {
-					neighborCell.incTurnsAlive();
-				}
+	private void changeSharkState(Grid grid) 
+	{
+		WatorOccupant fishNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), FISH_STATE);
+		if (fishNeighbor != null) {				
+			switchCells(this, fishNeighbor);
+			fishNeighbor.resetEnergyUnits();
+			if (fishNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
+				this.setNextState(SHARK_STATE);
+				this.setNextPaint(typeColors[SHARK_STATE]);
+				this.resetTurnsAlive();
+				this.resetEnergyUnits();
+				fishNeighbor.resetTurnsAlive();
+			} else {
+				this.setNextState(EMPTY_STATE);
+				this.setNextPaint(typeColors[EMPTY_STATE]);
+				this.resetTurnsAlive();
+				this.resetEnergyUnits();
+				fishNeighbor.incTurnsAlive();
 			}
-			else {
-				this.setNextState(this.getCurrentState());
-				this.incTurnsAlive();
-			}
-		} else if (this.getCurrentState() == SHARK_STATE && this.getNextState() == SHARK_STATE) {
-			WatorOccupant fishNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), FISH_STATE);
-			if (fishNeighbor != null) {				
-				switchCells(this, fishNeighbor);
-				fishNeighbor.resetEnergyUnits();
-				if (fishNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
+
+		}
+		else 
+		{
+			// move to empty
+			WatorOccupant emptyNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),
+					EMPTY_STATE);
+			if (emptyNeighbor != null) {
+				switchCells(this, emptyNeighbor);
+				if (emptyNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
 					this.setNextState(SHARK_STATE);
 					this.setNextPaint(typeColors[SHARK_STATE]);
 					this.resetTurnsAlive();
 					this.resetEnergyUnits();
-					fishNeighbor.resetTurnsAlive();
+					emptyNeighbor.resetTurnsAlive();
 				} else {
 					this.setNextState(EMPTY_STATE);
 					this.setNextPaint(typeColors[EMPTY_STATE]);
 					this.resetTurnsAlive();
 					this.resetEnergyUnits();
-					fishNeighbor.incTurnsAlive();
+					emptyNeighbor.incTurnsAlive();
+				}
+				emptyNeighbor.decEnergyUnits();
+				if (emptyNeighbor.energyUnits <= 0) {
+					emptyNeighbor.setNextState(EMPTY_STATE);
+					emptyNeighbor.setNextPaint(typeColors[EMPTY_STATE]);
+					emptyNeighbor.resetEnergyUnits();
+					emptyNeighbor.resetTurnsAlive();
 				}
 
 			} else {
-				// move to empty
-				WatorOccupant emptyNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),
-						EMPTY_STATE);
-				if (emptyNeighbor != null) {
-					switchCells(this, emptyNeighbor);
-					if (emptyNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
-						this.setNextState(SHARK_STATE);
-						this.setNextPaint(typeColors[SHARK_STATE]);
-						this.resetTurnsAlive();
-						this.resetEnergyUnits();
-						emptyNeighbor.resetTurnsAlive();
-					} else {
-						this.setNextState(EMPTY_STATE);
-						this.setNextPaint(typeColors[EMPTY_STATE]);
-						this.resetTurnsAlive();
-						this.resetEnergyUnits();
-						emptyNeighbor.incTurnsAlive();
-					}
-					emptyNeighbor.decEnergyUnits();
-					if (emptyNeighbor.energyUnits <= 0) {
-						emptyNeighbor.setNextState(EMPTY_STATE);
-						emptyNeighbor.setNextPaint(typeColors[EMPTY_STATE]);
-						emptyNeighbor.resetEnergyUnits();
-						emptyNeighbor.resetTurnsAlive();
-					}
-
-				} else {
-					this.decEnergyUnits();
-					this.incTurnsAlive();
-					if (this.energyUnits <= 0) {
-						this.setNextState(EMPTY_STATE);
-						this.setNextPaint(typeColors[EMPTY_STATE]);
-						this.resetEnergyUnits();
-						this.resetTurnsAlive();
-					}
+				this.decEnergyUnits();
+				this.incTurnsAlive();
+				if (this.energyUnits <= 0) {
+					this.setNextState(EMPTY_STATE);
+					this.setNextPaint(typeColors[EMPTY_STATE]);
+					this.resetEnergyUnits();
+					this.resetTurnsAlive();
 				}
 			}
+		}
+	}
+
+	private void changeFishState(Grid grid) 
+	{
+		WatorOccupant neighborCell = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), EMPTY_STATE);
+		if (neighborCell != null) {
+			// MOVE TO EMPTY NEIGHBOR, either we leave a fish behind or we dont
+			switchCells(this, neighborCell);
+			if (neighborCell.turnsAlive >= FISH_TO_REPRODUCE) {
+				this.setNextState(FISH_STATE);
+				this.setNextPaint(typeColors[FISH_STATE]);
+				this.resetTurnsAlive();
+				neighborCell.resetTurnsAlive();
+			} else {
+				neighborCell.incTurnsAlive();
+			}
+		}
+		else {
+			this.setNextState(this.getCurrentState());
+			this.incTurnsAlive();
 		}
 	}
 
