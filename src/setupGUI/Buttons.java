@@ -1,14 +1,18 @@
 package setupGUI;
 
+import java.util.Properties;
+
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
-public abstract class UserInteraction 
+public abstract class Buttons 
 {
 	private Button myButton;
 	
-	public UserInteraction(String text)
+	public Buttons(String text)
 	{
 		myButton = new Button(text);
 		myButton.setOnAction(new EventHandler<ActionEvent>()
@@ -20,8 +24,13 @@ public abstract class UserInteraction
 		});
 	}
 	
+	public Button getMyButton()
+	{
+		return myButton;
+	}
+	
 	public abstract void buttonEvent();
 	
-	public abstract void buttonEvent(int num);
+	public abstract void buttonEvent(Properties prop, Timeline animation, Stage primaryStage);
 
 }
