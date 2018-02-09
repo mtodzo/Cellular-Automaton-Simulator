@@ -71,7 +71,7 @@ public class Setup extends Application
 	private PopulationGraph CURRENT_POPULATION_GRAPH;
 	private String filterType = "XML Files";
 	private String filterExtension= "*.xml";
-	private String dataFilePath = "/data";
+	private String dataFilePath = "./data";
 	private double maxAnimationSpeed = 10;
 	private double animationSpeedStep = 0.1;
 	private int SPACING = 10;
@@ -274,7 +274,7 @@ public class Setup extends Application
 					}
 			});
 		
-		Text INFO = new Text("Frames Per Second:");
+		Text INFO = new Text(prop.getProperty("FrameText"));
 		Text RATE = new Text();
 		Slider ANIMATION_RATE = new Slider(animationSpeedStep, maxAnimationSpeed, FRAMES_PER_SECOND);
 		ANIMATION_RATE.valueProperty().addListener(new ChangeListener<Number>() 
@@ -289,7 +289,7 @@ public class Setup extends Application
 				});
 		RATE.setText(ANIMATION_RATE.valueProperty().getValue().toString());
 		
-		CheckBox GRID_LINES = new CheckBox("Show GridLines");
+		CheckBox GRID_LINES = new CheckBox(prop.getProperty("GridLinesText"));
 		GRID_LINES.selectedProperty().addListener((ObservableValue<? extends Boolean> ov,
 				Boolean old_val, Boolean new_val) -> 
 				{
@@ -299,7 +299,25 @@ public class Setup extends Application
 					root.setCenter(displays);
 				});
 		
-		controls.getChildren().addAll(START,PAUSE, STOP, STEP, INFO, ANIMATION_RATE, RATE, GRID_LINES);
+		TextField newXML = new TextField();
+		newXML.setPromptText(prop.getProperty("XMLText"));
+		Button CREATE = new Button(prop.getProperty("CreateText"));
+		CREATE.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle (ActionEvent e)
+				{
+				 if (newXML.getText() != null && !newXML.getText().isEmpty())
+				 {
+					 ANIMATION.pause();
+					 XMLCreation currentConfigs = new XMLCreation(newXML.getText());
+					 currentConfigs.currentGridToXML(CURRENT_DISPLAY);
+				 }
+				}
+		});
+		HBox newFile = new HBox();
+		newFile.getChildren().addAll(newXML,CREATE);
+		
+		controls.getChildren().addAll(START,PAUSE, STOP, STEP, INFO, ANIMATION_RATE, RATE, GRID_LINES, newFile);
 		controls.setSpacing(SPACING);
 		return controls;
 	}
