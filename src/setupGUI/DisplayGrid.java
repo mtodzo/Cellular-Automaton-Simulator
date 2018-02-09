@@ -24,6 +24,7 @@ import simulation.SegOccupant;
 import simulation.Simulation;
 import simulation.WatorOccupant;
 import simulation.RPSOccupant;
+import simulation.LangtonOccupant;
 
 public class DisplayGrid {
 	
@@ -100,8 +101,9 @@ public class DisplayGrid {
 					initLocation[0] = xCor;
 					initLocation[1] = yCor;
 					Paint initColor = Color.valueOf(COLOR);
-					
+					System.out.println("HERE 1");
 					CURRENT_CONFIGURATION[xCor][yCor] = createCellOccupant(initState,initLocation, initColor);
+					System.out.println("HERE");
 				}
 			}
 			
@@ -126,6 +128,10 @@ public class DisplayGrid {
 		if (CURRENT_SIMULATION_TYPE.equals("SpreadingFire"))
 		{
 			return new FireOccupant(initState, initLocation, initColor);
+		}
+		else if (CURRENT_SIMULATION_TYPE.equals("Langton"))
+		{
+			return new LangtonOccupant(initState, initLocation, initColor);
 		}
 		else if (CURRENT_SIMULATION_TYPE.equals("RPS"))
 		{
