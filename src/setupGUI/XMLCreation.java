@@ -1,7 +1,13 @@
 package setupGUI;
 
+import java.io.File;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -39,9 +45,9 @@ public class XMLCreation
 
 			Element simulation = newXML.createElement("Simulation");
 			simulation.setAttribute("type", simulationType);
-			newXML.appendChild(simulation);
+
 			Element properties = newXML.createElement("Properties");
-			newXML.appendChild(properties);
+			simulation.appendChild(properties);
 			Element width = newXML.createElement("Width");
 			width.setTextContent(sizeX);
 			properties.appendChild(width);
@@ -57,39 +63,31 @@ public class XMLCreation
 				for (int j=0; j < currentGrid.getCURRENT_CONFIGURATION()[i].length; j++)
 				{
 					Element cellOccupant = newXML.createElement("CellOccupant");
+					simulation.appendChild(cellOccupant);
+					Element currentState = newXML.createElement("CurrentState");
+					currentState.setTextContent(Integer.toString(currentGrid.getCURRENT_CONFIGURATION()[i][j].getCurrentState()));
+					cellOccupant.appendChild(currentState);
+					Element xLocation = newXML.createElement("xLocation");
+					xLocation.setTextContent(Integer.toString(i));
+					cellOccupant.appendChild(xLocation);
+					Element yLocation = newXML.createElement("yLocation");
+					yLocation.setTextContent(Integer.toString(j));
+					cellOccupant.appendChild(yLocation);
+					Element color = newXML.createElement("Color");
+					color.setTextContent(currentGrid.getCURRENT_CONFIGURATION()[i][j].getCurrentPaint().toString());
+					cellOccupant.appendChild(color);
 				}	
 			}
-
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		    Transformer transformer = transformerFactory.newTransformer();
+		    DOMSource source = new DOMSource(newXML);
+		    StreamResult result = new StreamResult(new File("./data/"+ fileName + ".xml"));
+		    transformer.transform(source, result);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		//		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		//	    DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-		//	    Document doc = docBuilder.newDocument();
-		//	    Element rootElement = doc.createElement("CONFIGURATION");
-		//	    doc.appendChild(rootElement);
-		//	    Element browser = doc.createElement("BROWSER");
-		//	    browser.appendChild(doc.createTextNode("chrome"));
-		//	    rootElement.appendChild(browser);
-		//	    Element base = doc.createElement("BASE");
-		//	    base.appendChild(doc.createTextNode("http:fut"));
-		//	    rootElement.appendChild(base);
-		//	    Element employee = doc.createElement("EMPLOYEE");
-		//	    rootElement.appendChild(employee);
-		//	    Element empName = doc.createElement("EMP_NAME");
-		//	    empName.appendChild(doc.createTextNode("Anhorn, Irene"));
-		//	    employee.appendChild(empName);
-		//	    Element actDate = doc.createElement("ACT_DATE");
-		//	    actDate.appendChild(doc.createTextNode("20131201"));
-		//	    employee.appendChild(actDate);
-		//	    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		//	    Transformer transformer = transformerFactory.newTransformer();
-		//	    DOMSource source = new DOMSource(doc);
-		//	    StreamResult result = new StreamResult(new File("/Users/myXml/ScoreDetail.xml"));
-		//	    transformer.transform(source, result);
-		//	    System.out.println("File saved!");
 
 	}
 
