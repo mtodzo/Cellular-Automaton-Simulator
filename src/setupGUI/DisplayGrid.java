@@ -77,7 +77,6 @@ public class DisplayGrid {
 			sim.getDocumentElement().normalize();
 			
 			CURRENT_SIMULATION_TYPE = sim.getDocumentElement().getAttribute("type");
-			
 			NodeList SimulationProperties = sim.getElementsByTagName("Properties");
 			for (int i = 0; i < SimulationProperties.getLength(); i++)
 			{
