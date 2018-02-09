@@ -19,6 +19,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import simulation.CellOccupant;
 import simulation.FireOccupant;
+import simulation.LangtonOccupant;
 import simulation.LifeOccupant;
 import simulation.SegOccupant;
 import simulation.Simulation;
@@ -141,6 +142,10 @@ public class DisplayGrid {
 		if (CURRENT_SIMULATION_TYPE.equals("SpreadingFire"))
 		{
 			return new FireOccupant(initState, initLocation, initColor);
+		}
+		else if (CURRENT_SIMULATION_TYPE.equals("Langton"))
+		{	
+			return new LangtonOccupant(initState, initLocation, initColor);
 		}
 		else if (CURRENT_SIMULATION_TYPE.equals("RPS"))
 		{
