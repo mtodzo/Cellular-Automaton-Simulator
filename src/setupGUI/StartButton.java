@@ -39,27 +39,10 @@ public class StartButton extends Buttons
 				else
 				{
 					b.setText(prop.getProperty("StartText"));
-					resetSimulation(primaryStage);
+					//resetSimulation(primaryStage);
 				}
 			}
 		});
-		Button START = new Button(prop.getProperty("StartText"));
-		START.setOnAction(new EventHandler<ActionEvent>()
-				{
-				public void handle (ActionEvent e)
-					{
-						if (START.getText().equals(prop.getProperty("StartText")))
-						{
-							ANIMATION.play();
-							START.setText(prop.getProperty("ResetText"));
-						}
-						else
-						{
-							START.setText(prop.getProperty("StartText"));
-							resetSimulation(primaryStage);
-						}
-					}
-				});
 		
 	}
 

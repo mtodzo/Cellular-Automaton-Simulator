@@ -3,6 +3,7 @@
 		<Width>10</Width>
 		<Height>10</Height>
 		<NumPopulations>3</NumPopulations>
+		<Colors>YELLOW,GREEN,RED</Colors>
 	</Properties>
 	<CellOccupant>
 		<CurrentState>1</CurrentState>

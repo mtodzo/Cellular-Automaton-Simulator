@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import grids.DiagonalSquareGrid;
 import grids.Grid;
 import grids.SquareGrid;
 import grids.WrapAroundGrid;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class Simulation {
 	private boolean isRunning;
@@ -23,8 +26,9 @@ public class Simulation {
 	//private static final int EMPTY = 0;
 	private Map<String, String> simulationToGridMap;
 	private int numPopulations;
+	private Paint[] popColors;
 	
-	public Simulation(CellOccupant[][] grid, String simType, int populations) {
+	public Simulation(CellOccupant[][] grid, String simType, int population, Paint[] colors) {
 		Properties properties = new Properties();
 		try {
 			InputStream in = new FileInputStream("data/SimulationGridTypes.properties");
@@ -47,7 +51,31 @@ public class Simulation {
 		break;
 		}
 		isRunning = true;
-		numPopulations = populations;
+		numPopulations = population;
+		Properties second = new Properties();
+		if (colors[0] == null)
+		{
+			try
+			{
+				InputStream input = new FileInputStream("data/SimulationColors.properties");
+				second.load(input);
+				
+				List<String> colorsList = Arrays.asList(second.getProperty(simType).split(","));
+				for (int j = 0; j<colorsList.size(); j++)
+				{
+					colors[j] = Color.valueOf(colorsList.get(j));
+				}
+				popColors = colors;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			popColors = colors;
+		}	
 	}
 	
 	/*
