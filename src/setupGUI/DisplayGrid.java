@@ -1,10 +1,13 @@
 package setupGUI;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -94,7 +97,6 @@ public class DisplayGrid {
 					simColors = new Paint[numPopulations];
 					if(property.getElementsByTagName("Colors").item(0).getTextContent().length() != 0)
 					{
-						System.out.println("got here:");
 						List<String> colorsList = Arrays.asList(property.getElementsByTagName("Colors").item(0).getTextContent().split(","));
 						for (int j = 0; j<colorsList.size(); j++)
 						{
@@ -109,7 +111,7 @@ public class DisplayGrid {
 				}
 			}
 			
-			fillConfiguration(sim);
+			fillConfiguration(sim, simColors);
 			
 			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE, numPopulations, simColors);
 		}
@@ -128,8 +130,27 @@ public class DisplayGrid {
 		}
 	}
 
-	private void fillConfiguration(Document sim) 
+	private void fillConfiguration(Document sim, Paint[] colors) 
 	{
+		Properties second = new Properties();
+		if (colors[0] == null)
+		{
+			try
+			{
+				InputStream input = new FileInputStream("data/SimulationColors.properties");
+				second.load(input);
+				
+				List<String> colorsList = Arrays.asList(second.getProperty(CURRENT_SIMULATION_TYPE).split(","));
+				for (int j = 0; j<colors.length; j++)
+				{
+					colors[j] = Color.valueOf(colorsList.get(j));
+				}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 		NodeList CellOccupants = sim.getElementsByTagName("CellOccupant");
 		for (int i = 0; i < CellOccupants.getLength(); i++)
 		{
