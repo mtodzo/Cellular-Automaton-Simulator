@@ -10,13 +10,13 @@ public class WatorOccupant extends CellOccupant {
 	private static final int FISH_TO_REPRODUCE = 4;
 	private static final int SHARK_TO_REPRODUCE = 20;
 	private static final int SHARK_TO_DIE = 5;
-	private static final Paint[] typeColors = { Color.WHITE, Color.BLUE, Color.GREEN };
+
 	private static final int EMPTY_STATE = 0;
 	private static final int FISH_STATE = 1;
 	private static final int SHARK_STATE = 2;
 
-	public WatorOccupant(int initState, int[] initLocation, Paint initColor) {
-		super(initState, initLocation, initColor);
+	public WatorOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
+		super(initState, initLocation, initColor, colors);
 		// 1 for initially fire
 		turnsAlive = 0;
 		// nextAlive = turnsAlive;
@@ -74,13 +74,13 @@ public class WatorOccupant extends CellOccupant {
 			fishNeighbor.resetEnergyUnits();
 			if (fishNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
 				this.setNextState(SHARK_STATE);
-				this.setNextPaint(typeColors[SHARK_STATE]);
+				this.setNextPaint(this.getTypeColors()[SHARK_STATE]);
 				this.resetTurnsAlive();
 				this.resetEnergyUnits();
 				fishNeighbor.resetTurnsAlive();
 			} else {
 				this.setNextState(EMPTY_STATE);
-				this.setNextPaint(typeColors[EMPTY_STATE]);
+				this.setNextPaint(this.getTypeColors()[EMPTY_STATE]);
 				this.resetTurnsAlive();
 				this.resetEnergyUnits();
 				fishNeighbor.incTurnsAlive();
@@ -96,13 +96,13 @@ public class WatorOccupant extends CellOccupant {
 				switchCells(this, emptyNeighbor);
 				if (emptyNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
 					this.setNextState(SHARK_STATE);
-					this.setNextPaint(typeColors[SHARK_STATE]);
+					this.setNextPaint(this.getTypeColors()[SHARK_STATE]);
 					this.resetTurnsAlive();
 					this.resetEnergyUnits();
 					emptyNeighbor.resetTurnsAlive();
 				} else {
 					this.setNextState(EMPTY_STATE);
-					this.setNextPaint(typeColors[EMPTY_STATE]);
+					this.setNextPaint(this.getTypeColors()[EMPTY_STATE]);
 					this.resetTurnsAlive();
 					this.resetEnergyUnits();
 					emptyNeighbor.incTurnsAlive();
@@ -110,7 +110,7 @@ public class WatorOccupant extends CellOccupant {
 				emptyNeighbor.decEnergyUnits();
 				if (emptyNeighbor.energyUnits <= 0) {
 					emptyNeighbor.setNextState(EMPTY_STATE);
-					emptyNeighbor.setNextPaint(typeColors[EMPTY_STATE]);
+					emptyNeighbor.setNextPaint(this.getTypeColors()[EMPTY_STATE]);
 					emptyNeighbor.resetEnergyUnits();
 					emptyNeighbor.resetTurnsAlive();
 				}
@@ -120,7 +120,7 @@ public class WatorOccupant extends CellOccupant {
 				this.incTurnsAlive();
 				if (this.energyUnits <= 0) {
 					this.setNextState(EMPTY_STATE);
-					this.setNextPaint(typeColors[EMPTY_STATE]);
+					this.setNextPaint(this.getTypeColors()[EMPTY_STATE]);
 					this.resetEnergyUnits();
 					this.resetTurnsAlive();
 				}
@@ -136,7 +136,7 @@ public class WatorOccupant extends CellOccupant {
 			switchCells(this, neighborCell);
 			if (neighborCell.turnsAlive >= FISH_TO_REPRODUCE) {
 				this.setNextState(FISH_STATE);
-				this.setNextPaint(typeColors[FISH_STATE]);
+				this.setNextPaint(this.getTypeColors()[FISH_STATE]);
 				this.resetTurnsAlive();
 				neighborCell.resetTurnsAlive();
 			} else {

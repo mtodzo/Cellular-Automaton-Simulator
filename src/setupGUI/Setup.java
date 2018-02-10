@@ -7,7 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Scanner;
@@ -210,7 +212,48 @@ public class Setup extends Application
 		
 		controls.getChildren().addAll(CHOOSER,SECOND);
 		controls.setSpacing(SPACING);
-		return controls;
+		
+		HBox randomSim = new HBox();
+		TextField newRandomXML = new TextField();
+		newRandomXML.setPromptText(prop.getProperty("XMLText"));
+		TextField simType = new TextField();
+		simType.setPromptText(prop.getProperty("PromptSimType"));
+		TextField xSize = new TextField();
+		xSize.setPromptText(prop.getProperty("PromptXSize"));
+		TextField ySize = new TextField();
+		ySize.setPromptText(prop.getProperty("PromptYSize"));
+		TextField colors = new TextField();
+		colors.setPromptText(prop.getProperty("PromptColors"));
+		Button CREATE = new Button(prop.getProperty("RandomText"));
+		CREATE.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle (ActionEvent e)
+				{
+				 if (newRandomXML.getText() != null && !newRandomXML.getText().isEmpty() && simType.getText() != null && !simType.getText().isEmpty() && xSize.getText() != null && !xSize.getText().isEmpty() && ySize.getText() != null && !ySize.getText().isEmpty() && colors.getText() != null && !colors.getText().isEmpty() )
+				 {
+					 ANIMATION.pause();
+					 XMLCreation currentConfigs = new XMLCreation(newRandomXML.getText());
+
+					 List<String> colorsList = Arrays.asList(colors.getText().split(","));
+					 String[] colors = new String[colorsList.size()];
+					 for (int j = 0; j<colorsList.size(); j++)
+					 {
+						 colors[j] = colorsList.get(j);
+					 }
+					 currentConfigs.createRandomXML(simType.getText(), Integer.parseInt(xSize.getText()),Integer.parseInt(ySize.getText()),colors);
+					 SimulationFileName = newRandomXML.getText() + ".xml";
+					 resetSimulation(primaryStage);
+				 }
+				}
+		});
+		randomSim.getChildren().addAll(newRandomXML,simType,xSize,ySize, colors);
+		randomSim.setSpacing(SPACING);
+		
+		VBox result = new VBox();
+		result.getChildren().addAll(randomSim, CREATE, controls);
+		result.setSpacing(SPACING);
+		
+		return result;
 		
 	}
 

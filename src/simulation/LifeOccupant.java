@@ -18,9 +18,9 @@ public class LifeOccupant extends CellOccupant{
 	private static int minLiveNeighbors = 2;
 	private static int numToReproduce = 3;
 	private static int maxLiveNeighbors  = 3;
-	private static final Paint[] typeColors = {Color.BLUE, Color.RED};
-	public LifeOccupant(int initState, int[] initLocation, Paint initColor) {
-		super(initState,initLocation,initColor);
+
+	public LifeOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
+		super(initState,initLocation,initColor, colors);
 	}
 
 	@Override
@@ -33,15 +33,15 @@ public class LifeOccupant extends CellOccupant{
 		}
 		if (this.getCurrentState() == ALIVE && liveNeighbors < minLiveNeighbors) {
 			this.setNextState(DEAD);
-			this.setNextPaint(typeColors[DEAD]);
+			this.setNextPaint(this.getTypeColors()[DEAD]);
 		}
 		else if (this.getCurrentState() == DEAD && liveNeighbors >= numToReproduce) {
 			this.setNextState(ALIVE);
-			this.setNextPaint(typeColors[ALIVE]);
+			this.setNextPaint(this.getTypeColors()[ALIVE]);
 		}
 		else if (this.getCurrentState() == ALIVE && liveNeighbors >= maxLiveNeighbors) {
 			this.setNextState(DEAD);
-			this.setNextPaint(typeColors[DEAD]);
+			this.setNextPaint(this.getTypeColors()[DEAD]);
 		}
 		else {
 			this.noChange();

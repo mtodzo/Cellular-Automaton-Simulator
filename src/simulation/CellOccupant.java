@@ -11,16 +11,25 @@ public abstract class CellOccupant{
 	private int[] nextLocation;
 	private Paint currentColor;
 	private Paint nextColor;
-	
-	public CellOccupant(int initState, int[] initLocation, Paint initColor) {
+	private Paint[] typeColors; 
+
+	public CellOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
 		currentState = initState;
 		currentLocation = initLocation;
 		currentColor = initColor;
 		nextState = currentState;
 		nextLocation = currentLocation;
 		nextColor = currentColor;
+		typeColors = colors;
 	}
 	
+	
+	
+	public Paint[] getTypeColors() 
+	{
+		return typeColors;
+	}
+
 	// get current paint
 	public Paint getCurrentPaint() {
 		return currentColor;
