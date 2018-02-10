@@ -229,7 +229,7 @@ public class Setup extends Application
 		{
 			public void handle (ActionEvent e)
 				{
-				 if (newRandomXML.getText() != null && !newRandomXML.getText().isEmpty() && simType.getText() != null && !simType.getText().isEmpty() && xSize.getText() != null && !xSize.getText().isEmpty() && ySize.getText() != null && !ySize.getText().isEmpty() && colors.getText() != null && !colors.getText().isEmpty() )
+				 if (newRandomXML.getText() != null && !newRandomXML.getText().isEmpty() && simType.getText() != null && !simType.getText().isEmpty() && xSize.getText() != null && !xSize.getText().isEmpty() && ySize.getText() != null && !ySize.getText().isEmpty() && colors.getText() != null)
 				 {
 					 ANIMATION.pause();
 					 XMLCreation currentConfigs = new XMLCreation(newRandomXML.getText());

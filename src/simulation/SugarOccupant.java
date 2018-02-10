@@ -23,8 +23,8 @@ public class SugarOccupant extends CellOccupant{
 	private int mySugarMetabolism = 2;
 	
 	
-	public SugarOccupant(int initState, int[] initLocation, Paint initColor) {
-		super(initState, initLocation, initColor);
+	public SugarOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
+		super(initState, initLocation, initColor, colors);
 	}
 
 	@Override

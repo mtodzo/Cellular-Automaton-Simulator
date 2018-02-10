@@ -40,8 +40,8 @@ public class LangtonOccupant extends CellOccupant {
 		}
 	}
 
-	public LangtonOccupant(int initState, int[] initLocation, Paint initColor) {
-		super(initState, initLocation, initColor);
+	public LangtonOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
+		super(initState, initLocation, initColor, colors);
 		// TODO Auto-generated constructor stub
 		setRules();
 	}

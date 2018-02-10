@@ -29,6 +29,7 @@ import simulation.LangtonOccupant;
 import simulation.LifeOccupant;
 import simulation.SegOccupant;
 import simulation.Simulation;
+import simulation.SugarOccupant;
 import simulation.WatorOccupant;
 import simulation.RPSOccupant;
 
@@ -100,6 +101,7 @@ public class DisplayGrid {
 						List<String> colorsList = Arrays.asList(property.getElementsByTagName("Colors").item(0).getTextContent().split(","));
 						for (int j = 0; j<colorsList.size(); j++)
 						{
+							System.out.println(colorsList.get(j));
 							simColors[j] = Color.valueOf(colorsList.get(j));
 						}
 					}
@@ -197,6 +199,10 @@ public class DisplayGrid {
 		else if (CURRENT_SIMULATION_TYPE.equals("Segregation"))
 		{
 			return new SegOccupant(initState, initLocation, initColor, simColors);
+		}
+		else if(CURRENT_SIMULATION_TYPE.equals("SugarScape"))
+		{
+			return new SugarOccupant(initState, initLocation, initColor, simColors);
 		}
 		else
 		{
