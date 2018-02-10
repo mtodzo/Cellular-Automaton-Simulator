@@ -15,10 +15,10 @@ public class FireOccupant extends CellOccupant {
 	private static final int TREE = 1;
 	private static final int FIRE = 2;
 
-	private static final Paint[] typeColors = {Color.YELLOW, Color.GREEN, Color.RED};
+	//private static Paint[] typeColors; // = {Color.YELLOW, Color.GREEN, Color.RED};
 
-	public FireOccupant(int initState, int[] initLocation, Paint initColor) {
-		super(initState, initLocation, initColor);
+	public FireOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
+		super(initState, initLocation, initColor, colors);
 		// 1 for initially fire 
 		turnsOnFire = 0;
 	}
@@ -53,7 +53,7 @@ public class FireOccupant extends CellOccupant {
 			if(neighborOnFire(grid.getNeighbors(this))) {
 				if(Math.random() < PROB_CATCH_FIRE) {
 					this.setNextState(FIRE);
-					this.setNextPaint(typeColors[FIRE]);
+					this.setNextPaint(this.getTypeColors()[FIRE]);
 				} else {
 					this.noChange();
 				}
@@ -63,7 +63,7 @@ public class FireOccupant extends CellOccupant {
 		} else {
 			if (getTurnsOnFire() == maxTurnsOnFire) {
 				this.setNextState(EMPTY);
-				this.setNextPaint(typeColors[EMPTY]);
+				this.setNextPaint(this.getTypeColors()[EMPTY]);
 			} else {
 				this.updateTurnsOnFire();
 				this.noChange();

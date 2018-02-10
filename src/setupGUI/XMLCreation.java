@@ -15,6 +15,8 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javafx.scene.paint.Paint;
+
 public class XMLCreation 
 {
 	private String sizeX;
@@ -29,7 +31,7 @@ public class XMLCreation
 		fileName = name;
 	}
 
-	public void createRandomXML(String simulationType, int xSize, int ySize)
+	public void createRandomXML(String simulationType, int xSize, int ySize, String[] colors)
 	{
 		Properties prop = new Properties();
 		try
@@ -57,6 +59,14 @@ public class XMLCreation
 			Element numPopulation = newXML.createElement("NumPopulations");
 			numPopulation.setTextContent(Integer.toString(numStates));
 			properties.appendChild(numPopulation);
+			Element simColors = newXML.createElement("Colors");
+			String allColors = "";
+			for (String s: colors)
+			{
+				allColors += s + ",";
+			}
+			simColors.setTextContent(allColors.substring(0, allColors.length()-2));
+			properties.appendChild(simColors);
 
 			for (int i=0; i< xSize; i++) 
 			{
@@ -73,9 +83,9 @@ public class XMLCreation
 					Element yLocation = newXML.createElement("yLocation");
 					yLocation.setTextContent(Integer.toString(j));
 					cellOccupant.appendChild(yLocation);
-					Element color = newXML.createElement("Color");
-					color.setTextContent("BLUE"); //MAKE ARRAYS OF COLORS
-					cellOccupant.appendChild(color);
+//					Element color = newXML.createElement("Color");
+//					color.setTextContent(colors[Integer.parseInt(currentState.getTextContent())]); //MAKE ARRAYS OF COLORS
+//					cellOccupant.appendChild(color);
 				}	
 			}
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();

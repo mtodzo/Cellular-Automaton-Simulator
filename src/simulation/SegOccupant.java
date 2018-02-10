@@ -7,9 +7,9 @@ import javafx.scene.paint.Paint;
 public class SegOccupant extends CellOccupant {
 	private static double similarityNeeded = .24;
 	private static int EMPTY = 0;
-	private static final Paint[] typeColors = { Color.WHITE, Color.RED, Color.BLUE, Color.ORANGE};
-	public SegOccupant(int initState, int[] initLocation, Paint initColor) {
-		super(initState, initLocation, initColor);
+
+	public SegOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
+		super(initState, initLocation, initColor, colors);
 	}
 	/*
 	 * Calculates the percentage of similar neighbors
@@ -37,7 +37,7 @@ public class SegOccupant extends CellOccupant {
 			nextCell.setNextPaint(this.getCurrentPaint());
 			
 			this.setNextState(EMPTY);
-			this.setNextPaint(typeColors[EMPTY]);
+			this.setNextPaint(this.getTypeColors()[EMPTY]);
 		}
 //		else {
 //			this.noChange();
