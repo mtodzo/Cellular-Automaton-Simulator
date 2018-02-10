@@ -3,7 +3,7 @@ package simulation;
 import grids.Grid;
 import javafx.scene.paint.Paint;
 
-public abstract class CellOccupant {
+public abstract class CellOccupant{
 
 	private int currentState;
 	private int nextState;
