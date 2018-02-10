@@ -17,22 +17,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class LangtonOccupant extends CellOccupant {
-
-	//private Map<Integer, Map<List<Integer>, Integer>> rulesMap = new HashMap<>();
 	
-	//private HashMap<ArrayList<Integer>, Integer>[] rulesMap = new HashMap<ArrayList<Integer>,Integer>[8]; 
-	
-	//private List< Map< List<Integer>, Integer > > rulesMap = new ArrayList< HashMap<ArrayList<Integer>, Integer > >();
-	//private List<Map<String, String>> listofwhatever = new ArrayList<Map<String,String>>();
-	
-	private static final int NUM_STATES = 8;
-	
+	private static final int NUM_STATES = 8;	
 	private LangtonRules[] myStateRules= new LangtonRules[NUM_STATES];
-	
-	private Paint[] stateColors = {Color.BLACK, 
-			Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW,
-			Color.PINK, Color.WHITE, Color.CYAN};
-	
 	
 	private void setRules() {
 		for(int i = 0; i < NUM_STATES; i++) {
@@ -40,8 +27,8 @@ public class LangtonOccupant extends CellOccupant {
 		}
 	}
 
-	public LangtonOccupant(int initState, int[] initLocation, Paint initColor) {
-		super(initState, initLocation, initColor);
+	public LangtonOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
+		super(initState, initLocation, initColor, colors);
 		setRules();
 	}
 
@@ -56,7 +43,7 @@ public class LangtonOccupant extends CellOccupant {
 			int nextState = myStateRules[this.getCurrentState()].getNextState(neighborsStates);
 			if(nextState != -1) {
 				this.setNextState(nextState);
-				this.setNextPaint(stateColors[nextState]);
+				this.setNextPaint(this.getTypeColors()[nextState]);
 			} else {
 				System.out.println("NO RULE FOR STATE: " + this.getCurrentState() + " with neighbors: " + neighborsStates.toString());
 				this.setNextState(this.getCurrentState());

@@ -159,7 +159,7 @@ public class DisplayGrid {
 		}
 		else if (CURRENT_SIMULATION_TYPE.equals("Langton"))
 		{	
-			return new LangtonOccupant(initState, initLocation, initColor);
+			return new LangtonOccupant(initState, initLocation, initColor, simColors);
 		}
 		else if (CURRENT_SIMULATION_TYPE.equals("RPS"))
 		{
