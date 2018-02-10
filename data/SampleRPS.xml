@@ -2,6 +2,7 @@
 	<Properties>
 		<Width>30</Width>
 		<Height>30</Height>
+		<NumPopulations>4</NumPopulations>
 	</Properties>
 	<CellOccupant>
 		<CurrentState>1</CurrentState>

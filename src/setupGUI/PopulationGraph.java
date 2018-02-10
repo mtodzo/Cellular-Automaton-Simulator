@@ -23,6 +23,7 @@ public class PopulationGraph
 		
 		CURRENT_GRID = currentGrid;
 		NUMBER_POPULATIONS = CURRENT_GRID.getCURRENT_SIMULATION().getNumPopulations();
+		
 		POPULATION_DATA = new HashMap<>();
 		for(int j = 0; j < NUMBER_POPULATIONS; j++)
 		{
