@@ -52,30 +52,7 @@ public class Simulation {
 		}
 		isRunning = true;
 		numPopulations = population;
-		Properties second = new Properties();
-		if (colors[0] == null)
-		{
-			try
-			{
-				InputStream input = new FileInputStream("data/SimulationColors.properties");
-				second.load(input);
-				
-				List<String> colorsList = Arrays.asList(second.getProperty(simType).split(","));
-				for (int j = 0; j<colorsList.size(); j++)
-				{
-					colors[j] = Color.valueOf(colorsList.get(j));
-				}
-				popColors = colors;
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		else
-		{
-			popColors = colors;
-		}	
+		popColors = colors;	
 	}
 	
 	/*
