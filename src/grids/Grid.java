@@ -46,11 +46,11 @@ public abstract class Grid {
 		return allOccupants;
 	}
 	
-	public List<int[]> getCurrentPositionsOfType(int type){
+	public List<int[]> getCurrentAndNextPositionsOfType(int type){
 		List<int[]> positionsOfType = new ArrayList<>();
 		for(int i = 0; i < myGrid.length;i++) {
 			for(int j = 0; j < myGrid[0].length;j++) {
-				if (myGrid[i][j].getCurrentState() == type) {
+				if (myGrid[i][j].getCurrentState() == type && myGrid[i][j].getNextState() == type) {
 					positionsOfType.add(myGrid[i][j].getCurrentLocation());
 				}
 			}

@@ -2,6 +2,9 @@ package setupGUI;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,6 +41,7 @@ public class DisplayGrid {
 	private Stage primaryStage;
 	private boolean showGridLines;
 	private int DISPLAY_SIZE = 400;
+	private Paint[] simColors;
 	
 	public DisplayGrid(String smf, Stage ps)
 	{
@@ -87,6 +91,16 @@ public class DisplayGrid {
 					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
 					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
 					numPopulations = Integer.parseInt(property.getElementsByTagName("NumPopulations").item(0).getTextContent());
+					simColors = new Paint[numPopulations];
+					if(property.getElementsByTagName("Colors").item(0).getTextContent().length() != 0)
+					{
+						System.out.println("got here:");
+						List<String> colorsList = Arrays.asList(property.getElementsByTagName("Colors").item(0).getTextContent().split(","));
+						for (int j = 0; j<colorsList.size(); j++)
+						{
+							simColors[j] = Color.valueOf(colorsList.get(j));
+						}
+					}
 					
 					BlockSizeX = DISPLAY_SIZE/width;
 					BlockSizeY = DISPLAY_SIZE/height;
@@ -97,7 +111,7 @@ public class DisplayGrid {
 			
 			fillConfiguration(sim);
 			
-			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE, numPopulations);
+			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE, numPopulations, simColors);
 		}
 		catch(ParserConfigurationException e)
 		{
@@ -109,6 +123,7 @@ public class DisplayGrid {
 		{
 			System.out.println("Could not load XML file");
 			primaryStage.close();
+			e.printStackTrace();
 			return;
 		}
 	}
@@ -125,11 +140,11 @@ public class DisplayGrid {
 				int initState = Integer.parseInt(occupant.getElementsByTagName("CurrentState").item(0).getTextContent());
 				int xCor = Integer.parseInt(occupant.getElementsByTagName("xLocation").item(0).getTextContent());
 				int yCor = Integer.parseInt(occupant.getElementsByTagName("yLocation").item(0).getTextContent());
-				String COLOR = occupant.getElementsByTagName("Color").item(0).getTextContent();
+				//String COLOR = occupant.getElementsByTagName("Color").item(0).getTextContent();
 				int[] initLocation = new int[2];
 				initLocation[0] = xCor;
 				initLocation[1] = yCor;
-				Paint initColor = Color.valueOf(COLOR);
+				Paint initColor = simColors[initState];
 				
 				CURRENT_CONFIGURATION[xCor][yCor] = createCellOccupant(initState,initLocation, initColor);
 			}
@@ -140,7 +155,7 @@ public class DisplayGrid {
 	{
 		if (CURRENT_SIMULATION_TYPE.equals("SpreadingFire"))
 		{
-			return new FireOccupant(initState, initLocation, initColor);
+			return new FireOccupant(initState, initLocation, initColor, simColors);
 		}
 		else if (CURRENT_SIMULATION_TYPE.equals("Langton"))
 		{	
@@ -148,23 +163,23 @@ public class DisplayGrid {
 		}
 		else if (CURRENT_SIMULATION_TYPE.equals("RPS"))
 		{
-			return new RPSOccupant(initState, initLocation, initColor);
+			return new RPSOccupant(initState, initLocation, initColor, simColors);
 		}
 		else if (CURRENT_SIMULATION_TYPE.equals("Wator"))
 		{
-			return new WatorOccupant(initState, initLocation, initColor);
+			return new WatorOccupant(initState, initLocation, initColor, simColors);
 		}
 		else if (CURRENT_SIMULATION_TYPE.equals("GameOfLife"))
 		{
-			return new LifeOccupant(initState, initLocation, initColor);
+			return new LifeOccupant(initState, initLocation, initColor, simColors);
 		}
 		else if (CURRENT_SIMULATION_TYPE.equals("Segregation"))
 		{
-			return new SegOccupant(initState, initLocation, initColor);
+			return new SegOccupant(initState, initLocation, initColor, simColors);
 		}
 		else
 		{
-			return new FireOccupant(initState, initLocation, initColor);
+			return new FireOccupant(initState, initLocation, initColor, simColors);
 		}
 		
 	}

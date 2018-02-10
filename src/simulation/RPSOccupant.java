@@ -17,8 +17,8 @@ public class RPSOccupant extends CellOccupant {
 	
 	private int gradientLevel;
 		
-	public RPSOccupant(int initState, int[] initLocation, Paint initColor) {
-		super(initState, initLocation, initColor);
+	public RPSOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
+		super(initState, initLocation, initColor, colors);
 		// TODO Auto-generated constructor stub
 		gradientLevel = 0;
 	}
