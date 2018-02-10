@@ -17,22 +17,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class LangtonOccupant extends CellOccupant {
-
-	//private Map<Integer, Map<List<Integer>, Integer>> rulesMap = new HashMap<>();
 	
-	//private HashMap<ArrayList<Integer>, Integer>[] rulesMap = new HashMap<ArrayList<Integer>,Integer>[8]; 
-	
-	//private List< Map< List<Integer>, Integer > > rulesMap = new ArrayList< HashMap<ArrayList<Integer>, Integer > >();
-	//private List<Map<String, String>> listofwhatever = new ArrayList<Map<String,String>>();
-	
-	private static final int NUM_STATES = 8;
-	
+	private static final int NUM_STATES = 8;	
 	private LangtonRules[] myStateRules= new LangtonRules[NUM_STATES];
-	
-	private Paint[] stateColors = {Color.BLACK, 
-			Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW,
-			Color.PINK, Color.WHITE, Color.CYAN};
-	
 	
 	private void setRules() {
 		for(int i = 0; i < NUM_STATES; i++) {
@@ -40,53 +27,29 @@ public class LangtonOccupant extends CellOccupant {
 		}
 	}
 
-	public LangtonOccupant(int initState, int[] initLocation, Paint initColor) {
-		super(initState, initLocation, initColor);
-		// TODO Auto-generated constructor stub
+	public LangtonOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
+		super(initState, initLocation, initColor, colors);
 		setRules();
 	}
 
 	@Override
 	public void calculateNextState(Grid grid) {
-		// TODO Auto-generated method stub
 		List<Integer> neighborsStates = new ArrayList<>();
 		List<CellOccupant> neighbors = grid.getNeighbors(this);
 		for(CellOccupant neighbor : neighbors) {
 			neighborsStates.add(neighbor.getCurrentState());
 		}
-		//Collections.sort(neighborsStates);
-		
 		if(sumList(neighborsStates) >0) {
 			int nextState = myStateRules[this.getCurrentState()].getNextState(neighborsStates);
 			if(nextState != -1) {
 				this.setNextState(nextState);
-				this.setNextPaint(stateColors[nextState]);
+				this.setNextPaint(this.getTypeColors()[nextState]);
 			} else {
 				System.out.println("NO RULE FOR STATE: " + this.getCurrentState() + " with neighbors: " + neighborsStates.toString());
 				this.setNextState(this.getCurrentState());
 				this.setNextPaint(this.getCurrentPaint());
 			}
 		}
-		
-		
-//		if(!(rulesMap.isEmpty()) && sumList(neighborsStates) >0) {
-//			if(!(rulesMap.get(this.getCurrentState()).containsKey(neighborsStates))) {
-//				System.out.println("NO RULE FOR STATE: " + this.getCurrentState() + " with neighbors: " + neighborsStates.toString());
-//				this.setNextState(this.getCurrentState());
-//				this.setNextPaint(this.getCurrentPaint());
-//			} else {
-//				
-//				this.setNextState(rulesMap.get(this.getCurrentState()).get(neighborsStates));
-//				this.setNextPaint(stateColors[this.getNextState()]);
-//				if(this.getCurrentState() != this.getNextState()) {
-//					System.out.println("CHANGED STATE FROM: " + this.getCurrentState() + " TO " + this.getNextState() );	
-//				}
-//			}	
-//		} else if (rulesMap.isEmpty()){
-//			System.out.println("ERROR: rules map is empty");
-//			this.setNextState(this.getCurrentState());
-//			this.setNextPaint(this.getCurrentPaint());
-//		}
 	}
 	
 	// to reduce time by eliminating meaningless calculations
