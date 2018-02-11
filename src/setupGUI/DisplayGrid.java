@@ -47,6 +47,7 @@ public class DisplayGrid {
 	private boolean showGridLines;
 	private int DISPLAY_SIZE = 400;
 	private Paint[] simColors;
+	private String cellShape;
 	
 	public DisplayGrid(String smf, Stage ps)
 	{
@@ -110,6 +111,9 @@ public class DisplayGrid {
 							simColors[j] = Color.valueOf(colorsList.get(j));
 						}
 					}
+					
+					cellShape = property.getElementsByTagName("Shape").item(0).getTextContent();
+					
 					
 					BlockSizeX = DISPLAY_SIZE/width;
 					BlockSizeY = DISPLAY_SIZE/height;
@@ -241,12 +245,22 @@ public class DisplayGrid {
 
 	public Pane displaySimulationConfiguration() throws LoadGridException 
 	{
+		Pane SIMULATION_DISPLAY;
+		if (cellShape.equals("HEXAGON")) {
+			SIMULATION_DISPLAY = new Pane();
+			SIMULATION_DISPLAY.setPrefSize(DISPLAY_SIZE,DISPLAY_SIZE+100);
+			hexagonConfiguration(SIMULATION_DISPLAY);
+		}
+		
+		else {
+			SIMULATION_DISPLAY = new GridPane();
+			rectangleConfiguration((GridPane) SIMULATION_DISPLAY);
+			
+		}
 //		GridPane SIMULATION_DISPLAY = new GridPane();
 //		rectangleConfiguration(SIMULATION_DISPLAY);
 		
-		Pane SIMULATION_DISPLAY = new Pane();
-		SIMULATION_DISPLAY.setPrefSize(DISPLAY_SIZE,DISPLAY_SIZE+100);
-		hexagonConfiguration(SIMULATION_DISPLAY);
+		
 		
 		return SIMULATION_DISPLAY;
 	}
