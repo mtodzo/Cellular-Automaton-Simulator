@@ -11,11 +11,12 @@ import javafx.scene.paint.Paint;
  */
 public class SugarOccupant extends CellOccupant{
 	private static final int PATCH = 0;
-	private static final int AGENT = 0;
+	private static final int AGENT = 1;
 	private static final int SUGAR_GROW_BACK_RATE = 1;
-	private static final Paint [] colorGradient = {Color.WHITE, Color.CORNSILK, Color.LIGHTSALMON, Color.ORANGE, Color.DARKORANGE, Color.RED}; 
+	private static final Paint [] PATCH_PAINT = {Color.WHITE, Color.CORNSILK, Color.LIGHTSALMON, Color.ORANGE, Color.DARKORANGE, Color.RED};
+	private static final Paint AGENT_PAINT = Color.BLACK;
 	
-	private int myPatchSugar = 0;
+	private int myPatchSugar = 3;
 	private int mySugarCapacity = 5;
 	
 	private int myVision = 3;
@@ -25,6 +26,16 @@ public class SugarOccupant extends CellOccupant{
 	
 	public SugarOccupant(int initState, int[] initLocation, Paint initColor) {
 		super(initState, initLocation, initColor);
+		if (initState == PATCH) {
+			this.setNextPaint(PATCH_PAINT[myPatchSugar]);
+			this.setCurrentPaint();
+		}
+		else {
+			this.setNextPaint(AGENT_PAINT);
+			this.setCurrentPaint();
+		}
+		
+		
 	}
 
 	@Override
@@ -50,7 +61,7 @@ public class SugarOccupant extends CellOccupant{
 		this.myVision = 0;
 		this.mySugarMetabolism = 0;
 		
-		nextPatch.setNextPaint(colorGradient[nextPatch.myPatchSugar]);
+		nextPatch.setNextPaint(AGENT_PAINT);
 		nextPatch.myAgentSugar -= nextPatch.mySugarMetabolism;
 		checkAgentState(nextPatch);
 	}
@@ -58,6 +69,7 @@ public class SugarOccupant extends CellOccupant{
 	private void checkAgentState(SugarOccupant agent) {
 		if (agent.myAgentSugar == 0) {
 			agent.setNextState(PATCH);
+			agent.setNextPaint(PATCH_PAINT[agent.myPatchSugar]);
 			agent.mySugarMetabolism = 0;
 			agent.myVision = 0;
 		}
@@ -88,7 +100,7 @@ public class SugarOccupant extends CellOccupant{
 		else {
 			this.myPatchSugar = this.mySugarCapacity;
 		}
-		this.setNextPaint(colorGradient[this.myPatchSugar]);
+		this.setNextPaint(PATCH_PAINT[this.myPatchSugar]);
 	}
 
 }
