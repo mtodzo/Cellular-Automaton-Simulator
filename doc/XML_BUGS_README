@@ -1,0 +1,9 @@
+explanation for intentional bugs in xml files intended to test programs error checking. 
+
+version		problem
+1			invalid input (color spelled wrong)			
+2			no simulation name
+3			first cell has X index out of bounds
+4			two cells in the same position, so one cell is missing, both different states/colors
+5			only 24 cells, should have 25
+6			cell has invalid state

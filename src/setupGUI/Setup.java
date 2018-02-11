@@ -1,27 +1,13 @@
 package setupGUI;
 
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.Random;
-import java.util.Scanner;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -29,37 +15,24 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import simulation.CellOccupant;
 
 public class Setup extends Application
 {	
-	//private Scene SCENE;
 	private static final String TITLE = "CA Simulations";
 	private static final int WIDTH = 900;
 	private static final int HEIGHT = 700;
@@ -135,19 +108,27 @@ public class Setup extends Application
 		root.setBottom(addTextFields(prop, primaryStage));
 		
 		CURRENT_DISPLAY = new  DisplayGrid(SimulationFileName, primaryStage);
-		CURRENT_DISPLAY.fillSimulationArray();
-		
-		CURRENT_POPULATION_GRAPH = new PopulationGraph(CURRENT_DISPLAY);
-		CURRENT_POPULATION_GRAPH.updatePopulationGraph();
-		
-		Text SimulationType = new Text(CURRENT_DISPLAY.getCURRENT_SIMULATION_TYPE());
-		root.setTop(SimulationType);
-		
-		VBox displays = new VBox();
-		displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
-		root.setCenter(displays);
-		
+		try 
+		{
+			CURRENT_DISPLAY.fillSimulationArray();
+			
+			CURRENT_POPULATION_GRAPH = new PopulationGraph(CURRENT_DISPLAY);
+			CURRENT_POPULATION_GRAPH.updatePopulationGraph();
+			
+			Text SimulationType = new Text(CURRENT_DISPLAY.getCURRENT_SIMULATION_TYPE());
+			root.setTop(SimulationType);
+			
+			VBox displays = new VBox();
+			displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
+			root.setCenter(displays);
+			
+		}
+		catch(LoadGridException e)
+		{
+			hardReset(primaryStage);
+		}
 		return scene;
+		
 	}
 	
 	private Properties loadUIConfigurations(Stage primaryStage)
@@ -338,7 +319,14 @@ public class Setup extends Application
 				{
 					CURRENT_DISPLAY.setShowGridLines(new_val);
 					VBox displays = new VBox();
-					displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
+					try 
+					{
+						displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
+					}
+					catch(LoadGridException e)
+					{
+						hardReset(primaryStage);
+					}
 					root.setCenter(displays);
 				});
 		
@@ -367,6 +355,8 @@ public class Setup extends Application
 
 	private void updateAll(double secondDelay, Stage primaryStage)
 	{
+		try 
+		{
 		CURRENT_DISPLAY.getCURRENT_SIMULATION().setNextStates();
 			
 		CURRENT_DISPLAY.getCURRENT_SIMULATION().updateStates();
@@ -376,7 +366,21 @@ public class Setup extends Application
 		VBox displays = new VBox();
 		displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
 		root.setCenter(displays);
-		
+		}
+		catch(Exception e) {
+			try {
+				throw new LoadGridException("Load a file before running it");
+			} catch (LoadGridException e1) {
+				hardReset(primaryStage);
+			}
+			
+		}
+	}
+	
+	private void hardReset(Stage primaryStage)
+	{
+		Setup.SimulationFileName = "";
+		resetSimulation(primaryStage);
 	}
 	
 	private void resetSimulation(Stage primaryStage)

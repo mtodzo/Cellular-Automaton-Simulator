@@ -6,16 +6,14 @@ import grids.Grid;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-/*
- * if state is Agent --> will also need to display agent (or we can just set the whole cell to a color that is the agent color)
- */
 public class SugarOccupant extends CellOccupant{
 	private static final int PATCH = 0;
-	private static final int AGENT = 0;
+	private static final int AGENT = 1;
 	private static final int SUGAR_GROW_BACK_RATE = 1;
-	private static final Paint [] colorGradient = {Color.WHITE, Color.CORNSILK, Color.LIGHTSALMON, Color.ORANGE, Color.DARKORANGE, Color.RED}; 
+	private static final Paint [] PATCH_PAINT = {Color.WHITE, Color.CORNSILK, Color.LIGHTSALMON, Color.ORANGE, Color.DARKORANGE, Color.RED};
+	private static final Paint AGENT_PAINT = Color.BLACK;
 	
-	private int myPatchSugar = 0;
+	private int myPatchSugar = 3;
 	private int mySugarCapacity = 5;
 	
 	private int myVision = 3;
@@ -25,39 +23,57 @@ public class SugarOccupant extends CellOccupant{
 	
 	public SugarOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
 		super(initState, initLocation, initColor, colors);
+		if (initState == PATCH) {
+			this.setNextPaint(PATCH_PAINT[myPatchSugar]);
+			this.setCurrentPaint();
+		}
+		else {
+			this.setNextPaint(AGENT_PAINT);
+			this.setCurrentPaint();
+			this.myAgentSugar = this.myPatchSugar;
+			this.myPatchSugar = 0;
+		}		
 	}
 
 	@Override
 	public void calculateNextState(Grid grid) {
-		if (this.getCurrentState() == PATCH) {
+		if (this.getCurrentState() == PATCH && this.getNextState() == PATCH) {
 			patchNextState();
 		}
-		else {
+		else if (this.getCurrentState() == AGENT) {
 			agentNextState(grid);
 		}
 	}
 
 	private void agentNextState(Grid grid) {
 		SugarOccupant nextPatch = findMaxPatchInVision(grid.getCurrentAndNextPositionsOfType(PATCH), grid);
-		nextPatch.setNextState(AGENT);
-		nextPatch.myAgentSugar = this.myAgentSugar;
-		nextPatch.myAgentSugar += nextPatch.myPatchSugar;
-		nextPatch.myPatchSugar = 0;
-		nextPatch.myVision = this.myVision;
-		nextPatch.mySugarMetabolism = this.mySugarMetabolism;
-		
-		this.myAgentSugar = 0;
-		this.myVision = 0;
-		this.mySugarMetabolism = 0;
-		
-		nextPatch.setNextPaint(colorGradient[nextPatch.myPatchSugar]);
-		nextPatch.myAgentSugar -= nextPatch.mySugarMetabolism;
-		checkAgentState(nextPatch);
+		if(nextPatch == this) {
+			this.noChange();
+		}
+		else {
+			nextPatch.setNextState(AGENT);
+			nextPatch.myAgentSugar = this.myAgentSugar;
+			nextPatch.myAgentSugar += nextPatch.myPatchSugar;
+			nextPatch.myPatchSugar = 0;
+			nextPatch.myVision = this.myVision;
+			nextPatch.mySugarMetabolism = this.mySugarMetabolism;
+			
+			this.myAgentSugar = 0;
+			this.myVision = 0;
+			this.mySugarMetabolism = 0;
+			this.setNextState(PATCH);
+			this.setNextPaint(PATCH_PAINT[this.myPatchSugar]);
+			
+			nextPatch.setNextPaint(AGENT_PAINT);
+			nextPatch.myAgentSugar -= nextPatch.mySugarMetabolism;
+			checkAgentState(nextPatch);
+		}
 	}
 
 	private void checkAgentState(SugarOccupant agent) {
 		if (agent.myAgentSugar == 0) {
 			agent.setNextState(PATCH);
+			agent.setNextPaint(PATCH_PAINT[agent.myPatchSugar]);
 			agent.mySugarMetabolism = 0;
 			agent.myVision = 0;
 		}
@@ -67,17 +83,40 @@ public class SugarOccupant extends CellOccupant{
 	private SugarOccupant findMaxPatchInVision(List<int[]> allPatches, Grid grid) {
 		int max = this.myPatchSugar;
 		int distance = 0;
+		int currentDistance;
+		int currentSugar;
 		SugarOccupant maxPatch = this; 
 		for (int [] patch: allPatches) {
-			if (patch[0] == this.getCurrentLocation()[0] && Math.abs(patch[0] - this.getCurrentLocation()[0]) <= this.myVision ||
-					patch[1] == this.getCurrentLocation()[1] && Math.abs(patch[1] - this.getCurrentLocation()[1]) <= this.myVision) {
+			if (patch[0] == this.getCurrentLocation()[0] && Math.abs(patch[1] - this.getCurrentLocation()[1]) <= this.myVision ||
+					patch[1] == this.getCurrentLocation()[1] && Math.abs(patch[0] - this.getCurrentLocation()[0]) <= this.myVision) {
 				SugarOccupant current = (SugarOccupant) grid.getOccupant(patch[0], patch[1]);
-				if (current.myPatchSugar > max || (current.myPatchSugar == max && Math.abs(patch[0] - this.getCurrentLocation()[0]) < distance)) {
-					max = current.myPatchSugar;
+				if (patch[0] == 0 && patch[1] == 2) {
+					System.out.println(current.myPatchSugar);
+				}
+				currentSugar = current.myPatchSugar;
+				if ((patch[0] == this.getCurrentLocation()[0])){
+					currentDistance = Math.abs(patch[1] - this.getCurrentLocation()[1]);
+					if (patch[1] < this.getCurrentLocation()[1] && current.getNextPaint() != current.getCurrentPaint()) {
+						currentSugar -= SUGAR_GROW_BACK_RATE;
+					}
+				}
+				else {
+					currentDistance = Math.abs(patch[0] - this.getCurrentLocation()[0]);
+					if (patch[0] < this.getCurrentLocation()[0] && current.getNextPaint() != current.getCurrentPaint()) {
+						currentSugar -= SUGAR_GROW_BACK_RATE;
+					}
+				} 
+				if (patch[0] == 0 && patch[1] == 2) {
+					System.out.println(currentSugar);
+				}
+				if (currentSugar > max || (currentSugar == max && currentDistance < distance)) {
+					max = currentSugar;
 					maxPatch = current;
+					distance = currentDistance;
 				}
 			}
 		}
+		System.out.println();
 		return maxPatch;
 	}
 
@@ -88,7 +127,7 @@ public class SugarOccupant extends CellOccupant{
 		else {
 			this.myPatchSugar = this.mySugarCapacity;
 		}
-		this.setNextPaint(colorGradient[this.myPatchSugar]);
+		this.setNextPaint(PATCH_PAINT[this.myPatchSugar]);
 	}
 
 }
