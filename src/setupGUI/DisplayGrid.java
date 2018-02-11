@@ -159,6 +159,10 @@ public class DisplayGrid {
 			{
 				Element occupant = (Element) OCCUPANT;
 				int initState = Integer.parseInt(occupant.getElementsByTagName("CurrentState").item(0).getTextContent());
+				if(initState < 0 || initState > this.numPopulations -1) {
+					throw new LoadGridException("INPUT CELL HAS IMPOSSIBLE STATE");
+				}
+				
 				int xCor = Integer.parseInt(occupant.getElementsByTagName("xLocation").item(0).getTextContent());
 				int yCor = Integer.parseInt(occupant.getElementsByTagName("yLocation").item(0).getTextContent());
 				
@@ -166,7 +170,6 @@ public class DisplayGrid {
 					throw new LoadGridException("INPUT CELL HAS COORDINATES OUTSIDE OF THE GRID");
 				}
 				
-				//String COLOR = occupant.getElementsByTagName("Color").item(0).getTextContent();
 				int[] initLocation = new int[2];
 				initLocation[0] = xCor;
 				initLocation[1] = yCor;
