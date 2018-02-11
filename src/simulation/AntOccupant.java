@@ -1,19 +1,148 @@
 package simulation;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import grids.Grid;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class AntOccupant extends CellOccupant{
+	
+	private static final int PATCH = 0;
+	private static final int ANT = 1;
+	private static final int FOOD_SOURCE = 2;
+	private static final int NEST = 3;
+	private static final Paint [] FOOD_PHEROMONE_PAINT = {Color.BLACK, Color.LIGHTGREEN, Color.MEDIUMAQUAMARINE, Color.GREENYELLOW, Color.CHARTREUSE, Color.FORESTGREEN};
+	private static final Paint FOOD_ANT_PAINT = Color.RED;
+	private static final Paint NO_FOOD_ANT_PAINT = Color.ORANGE;
+	private static final Paint FOOD_PAINT = Color.BLUE;
+	private static final Paint NEST_PAINT = Color.BROWN;
+	private static final int PHEROMONE_DECREASE = 1;
+	private static final int MAX_PHEROMONES = 8;
 
+	private int patchHomePheromones;
+	private int patchFoodPheromones;
+//	private int antHomePheromones;
+//	private int antFoodPheromones;
+	private boolean hasFood;
+	
+	
 	public AntOccupant(int initState, int[] initLocation, Paint initColor) {
 		super(initState, initLocation, initColor);
-		// TODO Auto-generated constructor stub
+		patchHomePheromones = 0;
+		patchFoodPheromones = 0;
+//		antHomePheromones = MAX_PHEROMONES;
+//		antFoodPheromones = 0;
+		hasFood = false;
+		
+		if (initState == PATCH) {
+			this.setNextPaint(FOOD_PHEROMONE_PAINT[this.patchFoodPheromones]);
+			this.setCurrentPaint();
+		}
+		else if (initState == ANT) {
+			this.setNextPaint(NO_FOOD_ANT_PAINT);
+			this.setCurrentPaint();
+		}
+		else if (initState == FOOD_SOURCE) {
+			this.setNextPaint(FOOD_PAINT);
+			this.setCurrentPaint();
+		}
+		else {
+			this.setNextPaint(NEST_PAINT);
+			this.setCurrentPaint();
+			this.patchHomePheromones = MAX_PHEROMONES;
+		}
+		
 	}
 
 	@Override
 	public void calculateNextState(Grid grid) {
-		// TODO Auto-generated method stub
+		if (this.getCurrentState() == ANT) {
+			List<CellOccupant> neighbors = grid.getNeighbors(this);
+				findNextAntLoc(neighbors);
+		}
+		else if (this.getCurrentState() == PATCH) {
+			updatePatch();
+		}
 		
 	}
 
+	private void updatePatch() {
+		this.patchFoodPheromones -= PHEROMONE_DECREASE;
+		this.patchHomePheromones -= PHEROMONE_DECREASE;
+		this.setNextPaint(FOOD_PHEROMONE_PAINT[this.patchFoodPheromones]);
+	}
+
+	private void findNextAntLoc(List<CellOccupant> neighbors) {
+		int maxNeighborFoodPheromones = 0;
+		int maxNeighborHomePheromones = 0;
+		List<AntOccupant> patchNeighbors = new ArrayList<>();
+		AntOccupant nextPatch = this;
+		for (CellOccupant patch: neighbors) {
+			if (patch.getCurrentState() != ANT && patch.getNextState() != ANT) {
+				AntOccupant current = (AntOccupant) patch;
+				patchNeighbors.add(current);
+				if(this.hasFood && current.patchHomePheromones >= maxNeighborHomePheromones) {
+					nextPatch = current;
+				}
+				else if (!this.hasFood && current.patchFoodPheromones >= maxNeighborFoodPheromones) {
+					nextPatch = current;
+				}
+				maxNeighborFoodPheromones = Math.max(maxNeighborFoodPheromones, current.patchFoodPheromones);
+				maxNeighborFoodPheromones = Math.max(maxNeighborHomePheromones, current.patchHomePheromones);
+			}
+		}
+		if (maxNeighborFoodPheromones == 0) {
+			Random randy = new Random();
+			nextPatch = patchNeighbors.get(randy.nextInt(patchNeighbors.size()));
+		}
+		if (nextPatch.getCurrentState() == PATCH) {
+			moveAnt(nextPatch, maxNeighborFoodPheromones, maxNeighborHomePheromones);
+		}
+		else if (this.hasFood) {
+			antReachedNest(nextPatch);
+		}
+		else if (!this.hasFood) {
+			antReachedFood(nextPatch);
+		}
+		
+	}
+	
+	private void antReachedFood(AntOccupant nextPatch) {
+		this.hasFood = true;
+		this.setNextPaint(FOOD_ANT_PAINT);
+		nextPatch.setNextState(PATCH);
+		nextPatch.patchFoodPheromones = MAX_PHEROMONES - 2;
+		nextPatch.setNextPaint(FOOD_PHEROMONE_PAINT[nextPatch.patchFoodPheromones]);
+	}
+
+	private void antReachedNest(AntOccupant nextPatch) {
+		this.hasFood = false;
+		this.setNextPaint(NO_FOOD_ANT_PAINT);
+		
+	}
+
+	private void moveAnt(AntOccupant nextPatch, int maxFood, int maxHome) {
+		if (nextPatch.getCurrentState() != FOOD_SOURCE && !this.hasFood && maxHome-2 > 0) {
+			this.patchHomePheromones = maxHome-2;
+		}
+		else if (nextPatch.getCurrentState() != NEST && this.hasFood && maxHome-2 > 0) {
+			this.patchFoodPheromones = maxFood-2;
+		}
+		nextPatch.hasFood = this.hasFood;
+		if(this.hasFood) {
+			nextPatch.setNextPaint(FOOD_ANT_PAINT);
+		}
+		else {
+			nextPatch.setNextPaint(NO_FOOD_ANT_PAINT);
+		}
+		nextPatch.setNextState(ANT);
+		
+		this.hasFood = false;
+		this.setNextState(PATCH);
+		this.setNextPaint(FOOD_PHEROMONE_PAINT[this.patchFoodPheromones]);
+	}
 }
