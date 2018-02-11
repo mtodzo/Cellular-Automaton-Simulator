@@ -201,10 +201,14 @@ public class XMLCreation
 			}
 			simColors.setTextContent(allColors.substring(0, allColors.length()-1));
 			properties.appendChild(simColors);
+			
+			int totalCells = xSize*ySize;
+			
 			List<String> possibleStates = new ArrayList<>();
 			for(int i=0; i<percentages.length; i++)
 			{
-				for(int j = 0; j < (xSize*ySize)*(percentages[i]/100); j++)
+				double num = percentages[i]/100.0;
+				for(double j = 0.0; j < totalCells*num; j++)
 				{
 					possibleStates.add(Integer.toString(i));
 				}
