@@ -1,4 +1,4 @@
-package setupGUI;
+package userInterface;
 
 import java.util.Properties;
 

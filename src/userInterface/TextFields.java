@@ -1,4 +1,4 @@
-package setupGUI;
+package userInterface;
 
 import java.util.List;
 import java.util.Properties;
@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import setupGUI.DisplayGrid;
+import setupGUI.Setup;
 
 public abstract class TextFields 
 {

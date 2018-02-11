@@ -30,6 +30,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import userInterface.Buttons;
+import userInterface.CreateXML;
+import userInterface.PauseButton;
+import userInterface.RandomXML;
+import userInterface.StartButton;
+import userInterface.StopButton;
+import userInterface.TextFields;
 
 public class Setup extends Application
 {	
@@ -210,9 +217,7 @@ public class Setup extends Application
 		VBox controls = new VBox();
 	
 		Buttons START = new StartButton(prop.getProperty("StartText"),prop,ANIMATION, primaryStage);
-		
 		Buttons PAUSE = new PauseButton(prop.getProperty("PauseText"),prop, ANIMATION, primaryStage);
-		
 		Buttons STOP = new StopButton(prop.getProperty("StopText"),prop, ANIMATION, primaryStage);
 		
 		Button STEP = new Button(prop.getProperty("StepText"));
@@ -222,7 +227,7 @@ public class Setup extends Application
 					{
 						ANIMATION.pause();
 						updateAll(SECOND_DELAY, primaryStage);
-						//PAUSE.setText(prop.getProperty("ResumeText"));
+						PAUSE.getMyButton().setText(prop.getProperty("ResumeText"));
 					}
 			});
 		
@@ -255,7 +260,7 @@ public class Setup extends Application
 //					{
 //						hardReset(primaryStage);
 //					}
-//					root.setCenter(displays);
+					root.setCenter(displays);
 				});
 		
 		TextFields newXML = new CreateXML(prop.getProperty("XMLText"), prop, ANIMATION, primaryStage, SimulationFileName, CURRENT_DISPLAY);

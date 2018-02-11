@@ -1,4 +1,4 @@
-package setupGUI;
+package userInterface;
 
 import java.util.Properties;
 
@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import setupGUI.Setup;
 
 public abstract class Buttons 
 {

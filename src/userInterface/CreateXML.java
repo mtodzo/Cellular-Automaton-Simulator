@@ -1,4 +1,4 @@
-package setupGUI;
+package userInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,8 @@ import javafx.animation.Timeline;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import setupGUI.DisplayGrid;
+import setupGUI.XMLCreation;
 
 public class CreateXML extends TextFields{
 
