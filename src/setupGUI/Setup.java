@@ -194,44 +194,11 @@ public class Setup extends Application
 		controls.getChildren().addAll(CHOOSER,SECOND);
 		controls.setSpacing(SPACING);
 		
-		HBox randomSim = new HBox();
-		TextField newRandomXML = new TextField();
-		newRandomXML.setPromptText(prop.getProperty("XMLText"));
-		TextField simType = new TextField();
-		simType.setPromptText(prop.getProperty("PromptSimType"));
-		TextField xSize = new TextField();
-		xSize.setPromptText(prop.getProperty("PromptXSize"));
-		TextField ySize = new TextField();
-		ySize.setPromptText(prop.getProperty("PromptYSize"));
-		TextField colors = new TextField();
-		colors.setPromptText(prop.getProperty("PromptColors"));
-		Button CREATE = new Button(prop.getProperty("RandomText"));
-		CREATE.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle (ActionEvent e)
-				{
-				 if (newRandomXML.getText() != null && !newRandomXML.getText().isEmpty() && simType.getText() != null && !simType.getText().isEmpty() && xSize.getText() != null && !xSize.getText().isEmpty() && ySize.getText() != null && !ySize.getText().isEmpty() && colors.getText() != null)
-				 {
-					 ANIMATION.pause();
-					 XMLCreation currentConfigs = new XMLCreation(newRandomXML.getText());
-
-					 List<String> colorsList = Arrays.asList(colors.getText().split(","));
-					 String[] colors = new String[colorsList.size()];
-					 for (int j = 0; j<colorsList.size(); j++)
-					 {
-						 colors[j] = colorsList.get(j);
-					 }
-					 currentConfigs.createRandomXML(simType.getText(), Integer.parseInt(xSize.getText()),Integer.parseInt(ySize.getText()),colors);
-					 SimulationFileName = newRandomXML.getText() + ".xml";
-					 resetSimulation(primaryStage);
-				 }
-				}
-		});
-		randomSim.getChildren().addAll(newRandomXML,simType,xSize,ySize, colors);
-		randomSim.setSpacing(SPACING);
+		TextFields randomSim = new RandomXML(prop.getProperty("RandomText"), prop, ANIMATION, primaryStage, SimulationFileName, CURRENT_DISPLAY);
+		randomSim.getMyNode().setSpacing(SPACING);
 		
 		VBox result = new VBox();
-		result.getChildren().addAll(randomSim, CREATE, controls);
+		result.getChildren().addAll(randomSim.getMyNode(), randomSim.getMyButton(), controls);
 		result.setSpacing(SPACING);
 		
 		return result;
@@ -241,51 +208,12 @@ public class Setup extends Application
 	private javafx.scene.Node addButtons(Properties prop, Stage primaryStage) 
 	{
 		VBox controls = new VBox();
+	
+		Buttons START = new StartButton(prop.getProperty("StartText"),prop,ANIMATION, primaryStage);
 		
-		Button START = new Button(prop.getProperty("StartText"));
-		START.setOnAction(new EventHandler<ActionEvent>()
-				{
-				public void handle (ActionEvent e)
-					{
-						if (START.getText().equals(prop.getProperty("StartText")))
-						{
-							ANIMATION.play();
-							START.setText(prop.getProperty("ResetText"));
-						}
-						else
-						{
-							START.setText(prop.getProperty("StartText"));
-							resetSimulation(primaryStage);
-						}
-					}
-				});
+		Buttons PAUSE = new PauseButton(prop.getProperty("PauseText"),prop, ANIMATION, primaryStage);
 		
-		Button PAUSE = new Button(prop.getProperty("PauseText"));
-		PAUSE.setOnAction(new EventHandler<ActionEvent>()
-			{
-				public void handle (ActionEvent e)
-					{
-						if (PAUSE.getText().equals(prop.getProperty("PauseText")))
-						{
-							ANIMATION.pause();
-							PAUSE.setText(prop.getProperty("ResumeText"));
-						}
-						else
-						{
-							ANIMATION.play();
-							PAUSE.setText(prop.getProperty("PauseText"));
-						}
-					}
-			});
-		
-		Button STOP = new Button(prop.getProperty("StopText"));
-		STOP.setOnAction(new EventHandler<ActionEvent>()
-				{
-				public void handle (ActionEvent e)
-					{
-						ANIMATION.stop();
-					}
-				});
+		Buttons STOP = new StopButton(prop.getProperty("StopText"),prop, ANIMATION, primaryStage);
 		
 		Button STEP = new Button(prop.getProperty("StepText"));
 		STEP.setOnAction(new EventHandler<ActionEvent>()
@@ -294,7 +222,7 @@ public class Setup extends Application
 					{
 						ANIMATION.pause();
 						updateAll(SECOND_DELAY, primaryStage);
-						PAUSE.setText(prop.getProperty("ResumeText"));
+						//PAUSE.setText(prop.getProperty("ResumeText"));
 					}
 			});
 		
@@ -319,36 +247,22 @@ public class Setup extends Application
 				{
 					CURRENT_DISPLAY.setShowGridLines(new_val);
 					VBox displays = new VBox();
-					try 
-					{
+//					try 
+//					{
 						displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
-					}
-					catch(LoadGridException e)
-					{
-						hardReset(primaryStage);
-					}
-					root.setCenter(displays);
+//					}
+//					catch(LoadGridException e)
+//					{
+//						hardReset(primaryStage);
+//					}
+//					root.setCenter(displays);
 				});
 		
-		TextField newXML = new TextField();
-		newXML.setPromptText(prop.getProperty("XMLText"));
-		Button CREATE = new Button(prop.getProperty("CreateText"));
-		CREATE.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle (ActionEvent e)
-				{
-				 if (newXML.getText() != null && !newXML.getText().isEmpty())
-				 {
-					 ANIMATION.pause();
-					 XMLCreation currentConfigs = new XMLCreation(newXML.getText());
-					 currentConfigs.currentGridToXML(CURRENT_DISPLAY);
-				 }
-				}
-		});
-		HBox newFile = new HBox();
-		newFile.getChildren().addAll(newXML,CREATE);
+		TextFields newXML = new CreateXML(prop.getProperty("XMLText"), prop, ANIMATION, primaryStage, SimulationFileName, CURRENT_DISPLAY);
+		newXML.getMyNode().getChildren().add(newXML.getMyButton());
+		newXML.getMyNode().setSpacing(SPACING);
 		
-		controls.getChildren().addAll(START,PAUSE, STOP, STEP, INFO, ANIMATION_RATE, RATE, GRID_LINES, newFile);
+		controls.getChildren().addAll(START.getMyButton(),PAUSE.getMyButton(), STOP.getMyButton(), STEP, INFO, ANIMATION_RATE, RATE, GRID_LINES, newXML.getMyNode());
 		controls.setSpacing(SPACING);
 		return controls;
 	}

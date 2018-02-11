@@ -241,10 +241,10 @@ public class DisplayGrid {
 
 	public Pane displaySimulationConfiguration() 
 	{
-		GridPane SIMULATION_DISPLAY = new GridPane();
-		rectangleConfiguration(SIMULATION_DISPLAY);
+//		GridPane SIMULATION_DISPLAY = new GridPane();
+//		rectangleConfiguration(SIMULATION_DISPLAY);
 		
-		//Pane SIMULATION_DISPLAY = new Pane();
+		Pane SIMULATION_DISPLAY = new Pane();
 		SIMULATION_DISPLAY.setPrefSize(DISPLAY_SIZE,DISPLAY_SIZE+100);
 		hexagonConfiguration(SIMULATION_DISPLAY);
 		

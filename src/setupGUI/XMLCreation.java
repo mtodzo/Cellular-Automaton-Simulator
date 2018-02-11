@@ -3,6 +3,8 @@ package setupGUI;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -163,8 +165,79 @@ public class XMLCreation
 
 	}
 
-	public void createWithPopulationPercentages(int[] percentages)
+	public void createWithPopulationPercentages(String simulationType, int xSize, int ySize, String[] colors, int[] percentages)
 	{
+		Properties prop = new Properties();
+		try
+		{
+			InputStream configs = new FileInputStream(propertiesFile);
+			prop.load(configs);	
+			
+			int numStates = Integer.parseInt(prop.getProperty(simulationType));
+			
+			DocumentBuilderFactory df = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = df.newDocumentBuilder();
+			Document newXML = db.newDocument();
 
+			Element simulation = newXML.createElement("Simulation");
+			simulation.setAttribute("type", simulationType);
+			newXML.appendChild(simulation);
+			Element properties = newXML.createElement("Properties");
+			simulation.appendChild(properties);
+			Element width = newXML.createElement("Width");
+			width.setTextContent(Integer.toString(xSize));
+			properties.appendChild(width);
+			Element height = newXML.createElement("Height");
+			height.setTextContent(Integer.toString(ySize));
+			properties.appendChild(height);
+			Element numPopulation = newXML.createElement("NumPopulations");
+			numPopulation.setTextContent(Integer.toString(numStates));
+			properties.appendChild(numPopulation);
+			Element simColors = newXML.createElement("Colors");
+			String allColors = "";
+			for (String s: colors)
+			{
+				allColors += s + ",";
+			}
+			simColors.setTextContent(allColors.substring(0, allColors.length()-1));
+			properties.appendChild(simColors);
+			List<String> possibleStates = new ArrayList<>();
+			for(int i=0; i<percentages.length; i++)
+			{
+				for(int j = 0; j < (xSize*ySize)*(percentages[i]/100); j++)
+				{
+					possibleStates.add(Integer.toString(i));
+				}
+			}
+
+			for (int i=0; i< xSize; i++) 
+			{
+				for (int j=0; j < ySize; j++)
+				{
+					Element cellOccupant = newXML.createElement("CellOccupant");
+					simulation.appendChild(cellOccupant);
+					Element currentState = newXML.createElement("CurrentState");
+					int random = (int) Math.floor(Math.random() * possibleStates.size());
+					currentState.setTextContent(possibleStates.get(random));
+					possibleStates.remove(random);
+					cellOccupant.appendChild(currentState);
+					Element xLocation = newXML.createElement("xLocation");
+					xLocation.setTextContent(Integer.toString(i));
+					cellOccupant.appendChild(xLocation);
+					Element yLocation = newXML.createElement("yLocation");
+					yLocation.setTextContent(Integer.toString(j));
+					cellOccupant.appendChild(yLocation);
+				}	
+			}
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		    Transformer transformer = transformerFactory.newTransformer();
+		    DOMSource source = new DOMSource(newXML);
+		    StreamResult result = new StreamResult(new File("./data/"+ fileName + ".xml"));
+		    transformer.transform(source, result);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
