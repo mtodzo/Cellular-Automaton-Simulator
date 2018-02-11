@@ -241,19 +241,19 @@ public class DisplayGrid {
 
 	public Pane displaySimulationConfiguration() 
 	{
-//		GridPane SIMULATION_DISPLAY = new GridPane();
-//		rectangleConfiguration(SIMULATION_DISPLAY);
+		GridPane SIMULATION_DISPLAY = new GridPane();
+		rectangleConfiguration(SIMULATION_DISPLAY);
 		
-		Pane SIMULATION_DISPLAY = new Pane();
+		//Pane SIMULATION_DISPLAY = new Pane();
 		SIMULATION_DISPLAY.setPrefSize(DISPLAY_SIZE,DISPLAY_SIZE+100);
 		hexagonConfiguration(SIMULATION_DISPLAY);
 		
 		return SIMULATION_DISPLAY;
 	}
 
-	private void rectangleConfiguration(GridPane simDisplay) 
+	private void rectangleConfiguration(GridPane simDisplay)
 	{
-		for (int i = 0; i < CURRENT_CONFIGURATION.length; i++)
+		try
 		{
 			for (int i = 0; i < CURRENT_CONFIGURATION.length; i++)
 			{
@@ -265,16 +265,16 @@ public class DisplayGrid {
 					{
 						r.setStroke(Color.BLACK);
 					}
-					SIMULATION_DISPLAY.add(r, i, j);
+					simDisplay.add(r, i, j);
 				}
 			}
 		}
-		catch(Exception e) {
+		catch(Exception e) 
+		{
 			throw new LoadGridException("Load a Simulation First");
-		}
-		return SIMULATION_DISPLAY;
+		}	
 	}
-	
+
 	private void hexagonConfiguration(Pane simDisplay)
 	{
 		//int blockSizeX = 3*BlockSizeX/4;
