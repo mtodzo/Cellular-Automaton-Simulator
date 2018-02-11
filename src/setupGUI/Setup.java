@@ -61,7 +61,7 @@ public class Setup extends Application
 {	
 	//private Scene SCENE;
 	private static final String TITLE = "CA Simulations";
-	private static final int WIDTH = 800;
+	private static final int WIDTH = 900;
 	private static final int HEIGHT = 700;
 	private static final Paint BACKGROUND = Color.WHITE;
 	private static int FRAMES_PER_SECOND = 1;

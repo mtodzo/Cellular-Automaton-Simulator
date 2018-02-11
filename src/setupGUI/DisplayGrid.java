@@ -19,8 +19,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import simulation.CellOccupant;
@@ -101,7 +104,6 @@ public class DisplayGrid {
 						List<String> colorsList = Arrays.asList(property.getElementsByTagName("Colors").item(0).getTextContent().split(","));
 						for (int j = 0; j<colorsList.size(); j++)
 						{
-							System.out.println(colorsList.get(j));
 							simColors[j] = Color.valueOf(colorsList.get(j));
 						}
 					}
@@ -211,9 +213,20 @@ public class DisplayGrid {
 		
 	}
 
-	public GridPane displaySimulationConfiguration() 
+	public Pane displaySimulationConfiguration() 
 	{
-		GridPane SIMULATION_DISPLAY = new GridPane();
+//		GridPane SIMULATION_DISPLAY = new GridPane();
+//		rectangleConfiguration(SIMULATION_DISPLAY);
+		
+		Pane SIMULATION_DISPLAY = new Pane();
+		SIMULATION_DISPLAY.setPrefSize(DISPLAY_SIZE,DISPLAY_SIZE+100);
+		hexagonConfiguration(SIMULATION_DISPLAY);
+		
+		return SIMULATION_DISPLAY;
+	}
+
+	private void rectangleConfiguration(GridPane simDisplay) 
+	{
 		for (int i = 0; i < CURRENT_CONFIGURATION.length; i++)
 		{
 			for(int j = 0; j<CURRENT_CONFIGURATION[i].length; j++)
@@ -224,10 +237,59 @@ public class DisplayGrid {
 				{
 					r.setStroke(Color.BLACK);
 				}
-				SIMULATION_DISPLAY.add(r, i, j);
+				simDisplay.add(r, i, j);
 			}
 		}
-		return SIMULATION_DISPLAY;
 	}
-
+	
+	private void hexagonConfiguration(Pane simDisplay)
+	{
+		//int blockSizeX = 3*BlockSizeX/4;
+		//int blockSizeY = 3*BlockSizeY/4;
+		int blockSizeX = BlockSizeX;
+		int blockSizeY = BlockSizeY;
+		int xLocation = blockSizeX;
+		for (int i = 0; i < CURRENT_CONFIGURATION.length; i++)
+		{
+			
+			int yLocation = 0;
+			for(int j = 0; j< CURRENT_CONFIGURATION[i].length; j++)
+			{
+				if(j%2==1)
+				{
+					xLocation += blockSizeX/2;
+				}
+				if(j%2==0)
+				{
+					xLocation -= blockSizeX/2;
+				}
+				Polygon hexagon = new Polygon();
+				double xDir = (double) i;
+				double yDir = (double) j;
+				hexagon.getPoints().addAll(new Double[] {
+						xDir,j+(0.25 * blockSizeY),
+						xDir+(0.5 * blockSizeX), yDir,
+						xDir+ blockSizeX, yDir+(0.25 * blockSizeY),
+						xDir+ blockSizeX, yDir+(0.75 * blockSizeY),
+						xDir+(0.5 * blockSizeX), yDir + blockSizeY,
+						xDir, yDir+(0.75 * blockSizeY)			
+				});
+				hexagon.setFill(CURRENT_CONFIGURATION[i][j].getCurrentPaint());
+				if(showGridLines)
+				{
+					hexagon.setStroke(Color.BLACK);
+				}
+				hexagon.relocate(xLocation, yLocation);
+				simDisplay.getChildren().add(hexagon);
+				yLocation += 3*blockSizeY/4;
+				//yLocation += blockSizeY;
+			}
+			if(CURRENT_CONFIGURATION.length <= 5)
+			{
+				xLocation += blockSizeX/2;
+			}
+			xLocation += blockSizeX;
+		}
+		
+	}
 }
