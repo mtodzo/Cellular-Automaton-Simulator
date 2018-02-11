@@ -17,13 +17,21 @@ public abstract class Grid {
 		myGrid = grid;
 	}
 	
+	/*
+	 * @return The 2D CellOccupant array
+	 */
 	public CellOccupant[][] getGrid() {
 		return myGrid;
 	}
+	/*
+	 * @return length of the grid
+	 */
 	public int getLength() {
 		return myGrid.length;
 	}
-	
+	/*
+	 * @return the width of the grid
+	 */
 	public int getWidth() {
 		return myGrid[0].length;
 	}
