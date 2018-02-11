@@ -269,7 +269,8 @@ public class DisplayGrid {
 				}
 			}
 		}
-		catch(Exception e) {
+		catch(Exception e) 
+		{
 			throw new LoadGridException("Load a Simulation First");
 		}
 	}

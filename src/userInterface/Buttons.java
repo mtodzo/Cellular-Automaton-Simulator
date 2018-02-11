@@ -1,4 +1,4 @@
-package setupGUI;
+package userInterface;
 
 import java.util.Properties;
 
@@ -7,19 +7,20 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import setupGUI.Setup;
 
 public abstract class Buttons 
 {
 	private Button myButton;
 	
-	public Buttons(String text)
+	public Buttons(String text, Properties prop, Timeline animation, Stage primaryStage)
 	{
 		myButton = new Button(text);
 		myButton.setOnAction(new EventHandler<ActionEvent>()
 		{
 			public void handle (ActionEvent e)
 				{
-					buttonEvent();
+					buttonEvent(myButton, prop,animation,primaryStage);
 				}
 		});
 	}
@@ -29,8 +30,14 @@ public abstract class Buttons
 		return myButton;
 	}
 	
-	public abstract void buttonEvent();
 	
-	public abstract void buttonEvent(Properties prop, Timeline animation, Stage primaryStage);
+	public abstract void buttonEvent(Button button, Properties prop, Timeline animation, Stage primaryStage);
+	
+	public void resetSimulation(Stage primaryStage, Timeline animation)
+	{
+		animation.stop();
+		Setup newGame = new Setup();
+		newGame.start(primaryStage);
+	}
 
 }
