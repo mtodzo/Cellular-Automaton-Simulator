@@ -4,6 +4,7 @@
 		<Height>30</Height>
 		<NumPopulations>3</NumPopulations>
 		<Colors>YELLOW,GREEN,RED</Colors>
+		<Shape></Shape>
 	</Properties>
 	<CellOccupant>
 		<CurrentState>1</CurrentState>
