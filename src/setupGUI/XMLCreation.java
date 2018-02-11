@@ -33,7 +33,7 @@ public class XMLCreation
 		fileName = name;
 	}
 
-	public void createRandomXML(String simulationType, int xSize, int ySize, String[] colors)
+	public void createRandomXML(String simulationType, int xSize, int ySize, String[] colors) throws LoadGridException
 	{
 		Properties prop = new Properties();
 		try
@@ -98,7 +98,8 @@ public class XMLCreation
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			throw new LoadGridException("COULD NOT CREATE RNADOM XML FILE");
 		}
 		
 		
