@@ -21,7 +21,7 @@ public class AntOccupant extends CellOccupant{
 	private static final Paint FOOD_PAINT = Color.BLUE;
 	private static final Paint NEST_PAINT = Color.BROWN;
 	private static final int PHEROMONE_DECREASE = 1;
-	private static final int MAX_PHEROMONES = 8;
+	private static final int MAX_PHEROMONES = 7;
 
 	private int patchHomePheromones;
 	private int patchFoodPheromones;
@@ -83,10 +83,11 @@ public class AntOccupant extends CellOccupant{
 		for (CellOccupant patch: neighbors) {
 			if (patch.getCurrentState() != ANT && patch.getNextState() != ANT) {
 				AntOccupant current = (AntOccupant) patch;
-				if (current.getCurrentState() == PATCH) {
+				if (current.getCurrentState() == PATCH || (!this.hasFood && current.getCurrentState() == FOOD_SOURCE)
+						||(this.hasFood && current.getCurrentState() == NEST)) {
 					patchNeighbors.add(current);
 				}
-				if(this.hasFood && current.patchHomePheromones > maxNeighborHomePheromones) {
+				if (this.hasFood && current.patchHomePheromones > maxNeighborHomePheromones) {
 					nextPatch = current;
 				}
 				else if (!this.hasFood && current.patchFoodPheromones > maxNeighborFoodPheromones) {
@@ -100,6 +101,8 @@ public class AntOccupant extends CellOccupant{
 			Random randy = new Random();
 			nextPatch = patchNeighbors.get(randy.nextInt(patchNeighbors.size()));
 		}
+		
+		System.out.println(nextPatch.getCurrentLocation()[0] + " "+ nextPatch.getCurrentLocation()[1]);
 		if (nextPatch.getCurrentState() == PATCH) {
 			moveAnt(nextPatch, maxNeighborFoodPheromones, maxNeighborHomePheromones);
 		}
@@ -113,14 +116,17 @@ public class AntOccupant extends CellOccupant{
 	}
 	
 	private void antReachedFood(AntOccupant nextPatch) {
+		System.out.println("FOOD");
 		this.hasFood = true;
 		this.setNextPaint(FOOD_ANT_PAINT);
 		nextPatch.setNextState(PATCH);
 		nextPatch.patchFoodPheromones = MAX_PHEROMONES - 2;
+		System.out.println(nextPatch.patchFoodPheromones);
 		nextPatch.setNextPaint(FOOD_PHEROMONE_PAINT[nextPatch.patchFoodPheromones]);
 	}
 
 	private void antReachedNest(AntOccupant nextPatch) {
+		System.out.println("NEST");
 		this.hasFood = false;
 		this.setNextPaint(NO_FOOD_ANT_PAINT);
 		
