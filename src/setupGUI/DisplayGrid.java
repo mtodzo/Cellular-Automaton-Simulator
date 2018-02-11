@@ -31,6 +31,7 @@ import simulation.SegOccupant;
 import simulation.Simulation;
 import simulation.WatorOccupant;
 import simulation.RPSOccupant;
+import simulation.SugarOccupant;
 
 public class DisplayGrid {
 	
@@ -197,6 +198,10 @@ public class DisplayGrid {
 		else if (CURRENT_SIMULATION_TYPE.equals("Segregation"))
 		{
 			return new SegOccupant(initState, initLocation, initColor, simColors);
+		}
+		else if (CURRENT_SIMULATION_TYPE.equals("SugarScape"))
+		{
+			return new SugarOccupant(initState, initLocation, initColor, simColors);
 		}
 		else
 		{

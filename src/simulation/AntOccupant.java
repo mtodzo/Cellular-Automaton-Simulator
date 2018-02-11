@@ -25,17 +25,13 @@ public class AntOccupant extends CellOccupant{
 
 	private int patchHomePheromones;
 	private int patchFoodPheromones;
-//	private int antHomePheromones;
-//	private int antFoodPheromones;
 	private boolean hasFood;
 	
 	
-	public AntOccupant(int initState, int[] initLocation, Paint initColor) {
-		super(initState, initLocation, initColor);
+	public AntOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
+		super(initState, initLocation, initColor, colors);
 		patchHomePheromones = 0;
 		patchFoodPheromones = 0;
-//		antHomePheromones = MAX_PHEROMONES;
-//		antFoodPheromones = 0;
 		hasFood = false;
 		
 		if (initState == PATCH) {

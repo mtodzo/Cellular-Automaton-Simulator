@@ -3,6 +3,7 @@
 		<Width>3</Width>
 		<Height>3</Height>
 		<NumPopulations>2</NumPopulations>
+		<Colors></Colors>
 	</Properties>
 	<CellOccupant>
 		<CurrentState>1</CurrentState>
@@ -35,7 +36,7 @@
 		<Color>WHITE</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>1</CurrentState>
+		<CurrentState>0</CurrentState>
 		<xLocation>1</xLocation>
 		<yLocation>2</yLocation>
 		<Color>RED</Color>
@@ -47,7 +48,7 @@
 		<Color>RED</Color>
 	</CellOccupant>
 	<CellOccupant>
-		<CurrentState>0</CurrentState>
+		<CurrentState>1</CurrentState>
 		<xLocation>2</xLocation>
 		<yLocation>1</yLocation>
 		<Color>BLUE</Color>
