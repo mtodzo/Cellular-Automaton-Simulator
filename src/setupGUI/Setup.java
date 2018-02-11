@@ -237,6 +237,9 @@ public class Setup extends Application
 					 catch(LoadGridException e1) {
 						 hardReset(primaryStage);
 					 }
+					 catch(Exception e2) {
+						 hardReset(primaryStage);
+					 }
 				 }
 				}
 		});
@@ -379,7 +382,7 @@ public class Setup extends Application
 	
 	private void resetSimulation(Stage primaryStage)
 	{
-		ANIMATION.stop();
+		//ANIMATION.stop();
 		Setup newGame = new Setup();
 		newGame.start(primaryStage);
 	}
