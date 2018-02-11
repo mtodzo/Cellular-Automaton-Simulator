@@ -65,7 +65,7 @@ public class XMLCreation
 			{
 				allColors += s + ",";
 			}
-			simColors.setTextContent(allColors.substring(0, allColors.length()-2));
+			simColors.setTextContent(allColors.substring(0, allColors.length()-1));
 			properties.appendChild(simColors);
 
 			for (int i=0; i< xSize; i++) 
