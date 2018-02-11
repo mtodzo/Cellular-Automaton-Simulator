@@ -251,7 +251,7 @@ public class DisplayGrid {
 		return SIMULATION_DISPLAY;
 	}
 
-	private void rectangleConfiguration(GridPane simDisplay)
+	private void rectangleConfiguration(GridPane simDisplay) throws LoadGridException
 	{
 		try
 		{

@@ -19,10 +19,10 @@ public abstract class TextFields
 	private Button myButton;
 	private HBox myNode;
 	
-	public TextFields(String text, Properties prop, Timeline animation, Stage primaryStage, String fileName, DisplayGrid currentDisplay)
+	public TextFields(String text, Properties prop, Timeline animation, Stage primaryStage, String fileName, DisplayGrid currentDisplay, List<TextField> texts)
 	{
 		myNode = new HBox();
-		fields = addFields(prop);
+		fields = addFields(prop, texts);
 		myButton = new Button(text);
 		myButton.setOnAction(new EventHandler<ActionEvent>()
 		{
@@ -48,8 +48,18 @@ public abstract class TextFields
 	{
 		return myButton;
 	}
+	
+	public List<TextField> getTextFields()
+	{
+		return fields;
+	}
+	
+	public void setTextFields(List<TextField> texts)
+	{
+		fields = texts;
+	}
 
-	public abstract List<TextField> addFields(Properties prop);
+	public abstract List<TextField> addFields(Properties prop, List<TextField> texts);
 	
 	public abstract void buttonEvent(Button myButton, Timeline animation, Stage primaryStage, List<TextField> texts, String fileName, DisplayGrid currentDisplay);
 

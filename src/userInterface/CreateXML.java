@@ -13,14 +13,14 @@ import setupGUI.XMLCreation;
 
 public class CreateXML extends TextFields{
 
-	public CreateXML(String text, Properties prop, Timeline animation, Stage primaryStage, String fileName, DisplayGrid currentDisplay) 
+	public CreateXML(String text, Properties prop, Timeline animation, Stage primaryStage, String fileName, DisplayGrid currentDisplay,  List<TextField> texts) 
 	{
-		super(text, prop, animation, primaryStage, fileName, currentDisplay);
+		super(text, prop, animation, primaryStage, fileName, currentDisplay, texts);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public List<TextField> addFields(Properties prop) 
+	public List<TextField> addFields(Properties prop,  List<TextField> texts) 
 	{
 		List<TextField> text= new ArrayList<>();
 		TextField newXML = new TextField();

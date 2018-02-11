@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -15,6 +16,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -33,7 +35,6 @@ import javafx.util.Duration;
 import userInterface.Buttons;
 import userInterface.CreateXML;
 import userInterface.PauseButton;
-import userInterface.RandomXML;
 import userInterface.StartButton;
 import userInterface.StopButton;
 import userInterface.TextFields;
@@ -99,7 +100,6 @@ public class Setup extends Application
 		prop = loadUIConfigurations(primaryStage);
 		
 		root.setBottom(addTextFields(prop, primaryStage));
-		
 		
 		return scene;	
 	}
@@ -201,14 +201,84 @@ public class Setup extends Application
 		controls.getChildren().addAll(CHOOSER,SECOND);
 		controls.setSpacing(SPACING);
 		
-		TextFields randomSim = new RandomXML(prop.getProperty("RandomText"), prop, ANIMATION, primaryStage, SimulationFileName, CURRENT_DISPLAY);
-		randomSim.getMyNode().setSpacing(SPACING);
+		HBox randomSim = new HBox();
+		TextField newRandomXML = new TextField();
+		newRandomXML.setPromptText(prop.getProperty("XMLText"));
+		TextField simType = new TextField();
+		simType.setPromptText(prop.getProperty("PromptSimType"));
+		TextField xSize = new TextField();
+		xSize.setPromptText(prop.getProperty("PromptXSize"));
+		TextField ySize = new TextField();
+		ySize.setPromptText(prop.getProperty("PromptYSize"));
+		TextField colors = new TextField();
+		colors.setPromptText(prop.getProperty("PromptColors"));
+		Button CREATE = new Button(prop.getProperty("RandomText"));
+		CREATE.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle (ActionEvent e)
+				{
+				 if (newRandomXML.getText() != null && !newRandomXML.getText().isEmpty() && simType.getText() != null && !simType.getText().isEmpty() && xSize.getText() != null && !xSize.getText().isEmpty() && ySize.getText() != null && !ySize.getText().isEmpty() && colors.getText() != null)
+				 {
+					 ANIMATION.pause();
+					 XMLCreation currentConfigs = new XMLCreation(newRandomXML.getText());
+
+					 List<String> colorsList = Arrays.asList(colors.getText().split(","));
+					 String[] colors = new String[colorsList.size()];
+					 for (int j = 0; j<colorsList.size(); j++)
+					 {
+						 colors[j] = colorsList.get(j);
+					 }
+					 currentConfigs.createRandomXML(simType.getText(), Integer.parseInt(xSize.getText()),Integer.parseInt(ySize.getText()),colors);
+					 SimulationFileName = newRandomXML.getText() + ".xml";
+					 resetSimulation(primaryStage);
+				 }
+				}
+		});
+		randomSim.getChildren().addAll(newRandomXML,simType,xSize,ySize, colors);
+		randomSim.setSpacing(SPACING);
+		
+		TextField percentages = new TextField();
+		percentages.setPromptText(prop.getProperty("PercentagePromp"));
+		Button PERCENTAGE = new Button(prop.getProperty("PercentageText"));
+		PERCENTAGE.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle (ActionEvent e)
+			{
+				if (newRandomXML.getText() != null && !newRandomXML.getText().isEmpty() && simType.getText() != null && !simType.getText().isEmpty() && xSize.getText() != null && !xSize.getText().isEmpty() && ySize.getText() != null && !ySize.getText().isEmpty() && colors.getText() != null)
+				{
+					ANIMATION.pause();
+					XMLCreation currentConfigs = new XMLCreation(newRandomXML.getText());
+
+					List<String> colorsList = Arrays.asList(colors.getText().split(","));
+					String[] colors = new String[colorsList.size()];
+					for (int j = 0; j<colorsList.size(); j++)
+					{
+						colors[j] = colorsList.get(j);
+					}
+
+					List<String> percentageList = Arrays.asList(percentages.getText().split(","));
+					int[] percentages = new int[percentageList.size()];
+					for (int i = 0; i<percentageList.size(); i++)
+					{
+						percentages[i] = Integer.parseInt(percentageList.get(i));
+					}
+
+					currentConfigs.createWithPopulationPercentages(simType.getText(), Integer.parseInt(xSize.getText()),Integer.parseInt(ySize.getText()),colors,percentages);
+					SimulationFileName = newRandomXML.getText() + ".xml";
+					resetSimulation(primaryStage);
+				}
+			}
+		});
+		HBox someButtons = new HBox();
+		someButtons.getChildren().addAll(CREATE,percentages, PERCENTAGE);
+		someButtons.setSpacing(SPACING);
 		
 		VBox result = new VBox();
-		result.getChildren().addAll(randomSim.getMyNode(), randomSim.getMyButton(), controls);
+		result.getChildren().addAll(randomSim, someButtons, controls);
 		result.setSpacing(SPACING);
 		
 		return result;
+
 		
 	}
 
@@ -263,7 +333,7 @@ public class Setup extends Application
 					root.setCenter(displays);
 				});
 		
-		TextFields newXML = new CreateXML(prop.getProperty("XMLText"), prop, ANIMATION, primaryStage, SimulationFileName, CURRENT_DISPLAY);
+		TextFields newXML = new CreateXML(prop.getProperty("XMLText"), prop, ANIMATION, primaryStage, SimulationFileName, CURRENT_DISPLAY, null);
 		newXML.getMyNode().getChildren().add(newXML.getMyButton());
 		newXML.getMyNode().setSpacing(SPACING);
 		
