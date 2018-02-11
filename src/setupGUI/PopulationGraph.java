@@ -20,7 +20,6 @@ public class PopulationGraph
 	
 	public PopulationGraph(DisplayGrid currentGrid)
 	{
-		
 		CURRENT_GRID = currentGrid;
 		NUMBER_POPULATIONS = CURRENT_GRID.getCURRENT_SIMULATION().getNumPopulations();
 		

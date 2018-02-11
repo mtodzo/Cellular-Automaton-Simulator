@@ -2,22 +2,18 @@ package setupGUI;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-
+import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -73,7 +69,7 @@ public class DisplayGrid {
 		showGridLines = val;
 	}
 
-	public void fillSimulationArray() 
+	public void fillSimulationArray() throws LoadGridException
 	{
 		try
 		{
@@ -82,17 +78,22 @@ public class DisplayGrid {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document sim = db.parse(NEW_SIMULATION);
 			sim.getDocumentElement().normalize();
-			
 			CURRENT_SIMULATION_TYPE = sim.getDocumentElement().getAttribute("type");
+			if(CURRENT_SIMULATION_TYPE == "") {
+				throw new LoadGridException("NO SIMULATION TYPE GIVEN");
+			}
 			NodeList SimulationProperties = sim.getElementsByTagName("Properties");
+			int width = -1;
+			int height = -1;
+			
 			for (int i = 0; i < SimulationProperties.getLength(); i++)
 			{
 				Node PROPERTY = SimulationProperties.item(i);
 				if (PROPERTY.getNodeType() == Node.ELEMENT_NODE)
 				{
 					Element property = (Element) PROPERTY;
-					int width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
-					int height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
+					width = Integer.parseInt(property.getElementsByTagName("Width").item(0).getTextContent());
+					height = Integer.parseInt(property.getElementsByTagName("Height").item(0).getTextContent());
 					numPopulations = Integer.parseInt(property.getElementsByTagName("NumPopulations").item(0).getTextContent());
 					simColors = new Paint[numPopulations];
 					if(property.getElementsByTagName("Colors").item(0).getTextContent().length() != 0)
@@ -110,27 +111,22 @@ public class DisplayGrid {
 					
 				}
 			}
+			if(width == -1 || height == -1) {
+				throw new LoadGridException("INVALID WIDTH/HEIGHT INPUT");	
+			}
 			
-			fillConfiguration(sim, simColors);
+			fillConfiguration(sim, simColors, width, height);
 			
 			CURRENT_SIMULATION = new Simulation(CURRENT_CONFIGURATION, CURRENT_SIMULATION_TYPE, numPopulations, simColors);
 		}
-		catch(ParserConfigurationException e)
-		{
-			System.out.println("Could not parse through XML configuration file.");
-			primaryStage.close();
-			return;
-		}
 		catch(Exception e)
 		{
-			System.out.println("Could not load XML file");
-			primaryStage.close();
-			e.printStackTrace();
-			return;
+			throw new LoadGridException("ERROR LOADING XML FILE, TRY A NEW ONE");
 		}
 	}
-
-	private void fillConfiguration(Document sim, Paint[] colors) 
+	
+	
+	private void fillConfiguration(Document sim, Paint[] colors, int width, int height) throws LoadGridException
 	{
 		Properties second = new Properties();
 		if (colors[0] == null)
@@ -148,10 +144,14 @@ public class DisplayGrid {
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				//e.printStackTrace();
+				throw new LoadGridException("COULD NOT FIND DEFAULT COLOR FILE");
 			}
 		}
 		NodeList CellOccupants = sim.getElementsByTagName("CellOccupant");
+		
+		Set<String> occupantLocations = new HashSet<>(); 
+		
 		for (int i = 0; i < CellOccupants.getLength(); i++)
 		{
 			Node OCCUPANT = CellOccupants.item(i);
@@ -161,14 +161,31 @@ public class DisplayGrid {
 				int initState = Integer.parseInt(occupant.getElementsByTagName("CurrentState").item(0).getTextContent());
 				int xCor = Integer.parseInt(occupant.getElementsByTagName("xLocation").item(0).getTextContent());
 				int yCor = Integer.parseInt(occupant.getElementsByTagName("yLocation").item(0).getTextContent());
+				
+				if(xCor < 0 || xCor >= width || yCor < 0 || yCor >= height) {
+					throw new LoadGridException("INPUT CELL HAS COORDINATES OUTSIDE OF THE GRID");
+				}
+				
 				//String COLOR = occupant.getElementsByTagName("Color").item(0).getTextContent();
 				int[] initLocation = new int[2];
 				initLocation[0] = xCor;
 				initLocation[1] = yCor;
+				
+				String locationCheck = xCor+","+yCor;
+				
+				if(occupantLocations.contains(locationCheck)) {
+					throw new LoadGridException("INPUT CELL HAS THE SAME COORDINATES AS ANOTHER INPUT CELL");
+				} else {
+					occupantLocations.add(locationCheck);
+				}
+				
 				Paint initColor = simColors[initState];
 				
-				CURRENT_CONFIGURATION[xCor][yCor] = createCellOccupant(initState,initLocation, initColor);
+				CURRENT_CONFIGURATION[xCor][yCor] = createCellOccupant(initState,initLocation,initColor);
 			}
+		}
+		if(occupantLocations.size() != (width * height)) {
+			throw new LoadGridException("INCORRECT AMOUNT OF CELLS IN INPUT FILE FOR SPECIFIED DIMENSIONS");
 		}
 	}
 
@@ -205,21 +222,27 @@ public class DisplayGrid {
 		
 	}
 
-	public GridPane displaySimulationConfiguration() 
+	public GridPane displaySimulationConfiguration() throws LoadGridException
 	{
 		GridPane SIMULATION_DISPLAY = new GridPane();
-		for (int i = 0; i < CURRENT_CONFIGURATION.length; i++)
+		try 
 		{
-			for(int j = 0; j<CURRENT_CONFIGURATION[i].length; j++)
+			for (int i = 0; i < CURRENT_CONFIGURATION.length; i++)
 			{
-				Rectangle r = new Rectangle(BlockSizeX, BlockSizeY);
-				r.setFill(CURRENT_CONFIGURATION[i][j].getCurrentPaint());
-				if(showGridLines)
+				for(int j = 0; j<CURRENT_CONFIGURATION[i].length; j++)
 				{
-					r.setStroke(Color.BLACK);
+					Rectangle r = new Rectangle(BlockSizeX, BlockSizeY);
+					r.setFill(CURRENT_CONFIGURATION[i][j].getCurrentPaint());
+					if(showGridLines)
+					{
+						r.setStroke(Color.BLACK);
+					}
+					SIMULATION_DISPLAY.add(r, i, j);
 				}
-				SIMULATION_DISPLAY.add(r, i, j);
 			}
+		}
+		catch(Exception e) {
+			throw new LoadGridException("Load a Simulation First");
 		}
 		return SIMULATION_DISPLAY;
 	}
