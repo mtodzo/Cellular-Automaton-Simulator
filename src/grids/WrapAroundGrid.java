@@ -5,6 +5,10 @@ import java.util.List;
 
 import simulation.CellOccupant;
 
+/*
+ * Subclass of the Grid class. Implements getNeighbors method for square neighbors with wrap-around capabilities.
+ * Wrap-around means that that right-most cell is neighbors with the left-most cell at the same y-position. This applies for all edges and corners.
+ */
 public class WrapAroundGrid extends Grid {
 
 	public WrapAroundGrid(CellOccupant [][] grid) {

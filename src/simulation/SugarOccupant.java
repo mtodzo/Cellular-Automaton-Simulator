@@ -6,6 +6,9 @@ import grids.Grid;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/*
+ * Subclass of CellOccupant for the SugarScape simulation.
+ */
 public class SugarOccupant extends CellOccupant{
 	private static final int PATCH = 0;
 	private static final int AGENT = 1;
@@ -35,6 +38,10 @@ public class SugarOccupant extends CellOccupant{
 		}		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see simulation.CellOccupant#calculateNextState(grids.Grid)
+	 */
 	@Override
 	public void calculateNextState(Grid grid) {
 		if (this.getCurrentState() == PATCH && this.getNextState() == PATCH) {
@@ -45,6 +52,10 @@ public class SugarOccupant extends CellOccupant{
 		}
 	}
 
+	/*
+	 * Moves the agent to the nextPatch and leaves that old agent cell as a patch.
+	 * @param grid
+	 */
 	private void agentNextState(Grid grid) {
 		SugarOccupant nextPatch = findMaxPatchInVision(grid.getCurrentAndNextPositionsOfType(PATCH), grid);
 		if(nextPatch == this) {
@@ -70,6 +81,10 @@ public class SugarOccupant extends CellOccupant{
 		}
 	}
 
+	/*
+	 * Checks to see if the agent cell is dead
+	 * @param agent is the agent in question
+	 */
 	private void checkAgentState(SugarOccupant agent) {
 		if (agent.myAgentSugar == 0) {
 			agent.setNextState(PATCH);
@@ -80,6 +95,11 @@ public class SugarOccupant extends CellOccupant{
 		
 	}
 
+	/*
+	 * Finds the patch with the max sugar that is within the agent's vision
+	 * @param allPatches is the locations of all patch cells
+	 * @grid is the grid for the simulation
+	 */
 	private SugarOccupant findMaxPatchInVision(List<int[]> allPatches, Grid grid) {
 		int max = this.myPatchSugar;
 		int distance = 0;
@@ -90,9 +110,6 @@ public class SugarOccupant extends CellOccupant{
 			if (patch[0] == this.getCurrentLocation()[0] && Math.abs(patch[1] - this.getCurrentLocation()[1]) <= this.myVision ||
 					patch[1] == this.getCurrentLocation()[1] && Math.abs(patch[0] - this.getCurrentLocation()[0]) <= this.myVision) {
 				SugarOccupant current = (SugarOccupant) grid.getOccupant(patch[0], patch[1]);
-				if (patch[0] == 0 && patch[1] == 2) {
-					System.out.println(current.myPatchSugar);
-				}
 				currentSugar = current.myPatchSugar;
 				if ((patch[0] == this.getCurrentLocation()[0])){
 					currentDistance = Math.abs(patch[1] - this.getCurrentLocation()[1]);
@@ -106,9 +123,6 @@ public class SugarOccupant extends CellOccupant{
 						currentSugar -= SUGAR_GROW_BACK_RATE;
 					}
 				} 
-				if (patch[0] == 0 && patch[1] == 2) {
-					System.out.println(currentSugar);
-				}
 				if (currentSugar > max || (currentSugar == max && currentDistance < distance)) {
 					max = currentSugar;
 					maxPatch = current;
@@ -116,10 +130,12 @@ public class SugarOccupant extends CellOccupant{
 				}
 			}
 		}
-		System.out.println();
 		return maxPatch;
 	}
 
+	/*
+	 * Sets next state for patch. Grows sugar.
+	 */
 	private void patchNextState() {
 		if (this.myPatchSugar + SUGAR_GROW_BACK_RATE < this.mySugarCapacity) {
 			this.myPatchSugar += SUGAR_GROW_BACK_RATE;
