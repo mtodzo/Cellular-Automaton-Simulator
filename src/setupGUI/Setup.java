@@ -294,10 +294,6 @@ public class Setup extends Application
 					 catch(LoadGridException e1) {
 						 hardReset(primaryStage);
 					 }
-					 catch(Exception e2)
-					 {
-						 hardReset(primaryStage);
-					 }
 				 }
 				}
 		});
