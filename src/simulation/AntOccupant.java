@@ -1,6 +1,5 @@
 package simulation;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -9,6 +8,9 @@ import grids.Grid;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/*
+ * Subclass of CellOccupant for the ForagingAnt simulation.
+ */
 public class AntOccupant extends CellOccupant{
 	
 	private static final int PATCH = 0;
@@ -26,7 +28,7 @@ public class AntOccupant extends CellOccupant{
 	private int patchHomePheromones;
 	private int patchFoodPheromones;
 	private boolean hasFood;
-	
+
 	
 	public AntOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
 		super(initState, initLocation, initColor, colors);
@@ -55,6 +57,10 @@ public class AntOccupant extends CellOccupant{
 		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see simulation.CellOccupant#calculateNextState(grids.Grid)
+	 */
 	@Override
 	public void calculateNextState(Grid grid) {
 		if (this.getCurrentState() == ANT) {
@@ -66,6 +72,9 @@ public class AntOccupant extends CellOccupant{
 		}	
 	}
 
+	/*
+	 * Updates the patch cells my decreasing pheromones and setting new paints.
+	 */
 	private void updatePatch() {
 		if (this.patchFoodPheromones - PHEROMONE_DECREASE >= 0) {
 			this.patchFoodPheromones -= PHEROMONE_DECREASE;
@@ -76,10 +85,14 @@ public class AntOccupant extends CellOccupant{
 		this.setNextPaint(FOOD_PHEROMONE_PAINT[this.patchFoodPheromones]);
 	}
 
+	/*
+	 * Finds the next location for ant by checking for locations with high values for the desired pheromone (depends on whether or not ant has food)
+	 * If no locations have any pheromones, next position of ant is a random neighbor
+	 * Calls move functions for ant going to patch, nest, or food source
+	 */
 	private void findNextAntLoc(List<CellOccupant> neighbors) {
 		int maxNeighborFoodPheromones = 0;
 		int maxNeighborHomePheromones = 0;
-		boolean test = false;
 		List<AntOccupant> patchNeighbors = new ArrayList<>();
 		AntOccupant nextPatch = this;
 		for (CellOccupant patch: neighbors) {
@@ -89,9 +102,6 @@ public class AntOccupant extends CellOccupant{
 					patchNeighbors.add(current);
 				}
 				if (this.hasFood && current.patchHomePheromones > maxNeighborHomePheromones) {
-					if (current.patchHomePheromones == 7) {
-						test = true;
-					}
 					nextPatch = current;
 				}
 				else if (!this.hasFood && current.patchFoodPheromones > maxNeighborFoodPheromones) {
@@ -117,6 +127,10 @@ public class AntOccupant extends CellOccupant{
 		
 	}
 	
+	/*
+	 * Called when ant reaches food
+	 * Removes food cell, and updates pheromones, paint color and ant hasFood value
+	 */
 	private void antReachedFood(AntOccupant nextPatch, int maxHome) {
 		nextPatch.hasFood = true;
 		this.setNextState(PATCH);
@@ -127,12 +141,19 @@ public class AntOccupant extends CellOccupant{
 		this.setNextPaint(FOOD_PHEROMONE_PAINT[this.patchFoodPheromones]);
 	}
 
+	/*
+	 * Called when ant reaches nest
+	 * Removes food, and sets new paint
+	 */
 	private void antReachedNest(AntOccupant nextPatch) {
 		this.hasFood = false;
 		this.setNextPaint(NO_FOOD_ANT_PAINT);
 		
 	}
 
+	/*
+	 * Moves ant to patch, updates pheromone values and paints
+	 */
 	private void moveAnt(AntOccupant nextPatch, int maxFood, int maxHome) {
 		if (!this.hasFood && maxHome-2 > 0) {
 			this.patchHomePheromones = maxHome-2;

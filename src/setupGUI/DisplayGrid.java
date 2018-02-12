@@ -54,6 +54,7 @@ public class DisplayGrid {
 	private boolean showGridLines;
 	private int DISPLAY_SIZE = 400;
 	private Paint[] simColors;
+	private String cellShape;
 	
 	/**
 	 * Class Constructor
@@ -150,6 +151,9 @@ public class DisplayGrid {
 							simColors[j] = Color.valueOf(colorsList.get(j));
 						}
 					}
+					
+					cellShape = property.getElementsByTagName("Shape").item(0).getTextContent();
+					
 					
 					BlockSizeX = DISPLAY_SIZE/width;
 					BlockSizeY = DISPLAY_SIZE/height;
@@ -304,12 +308,22 @@ public class DisplayGrid {
 	 */
 	public Pane displaySimulationConfiguration() throws LoadGridException
 	{
+		Pane SIMULATION_DISPLAY;
+		if (cellShape.equals("HEXAGON")) {
+			SIMULATION_DISPLAY = new Pane();
+			SIMULATION_DISPLAY.setPrefSize(DISPLAY_SIZE,DISPLAY_SIZE+100);
+			hexagonConfiguration(SIMULATION_DISPLAY);
+		}
+		
+		else {
+			SIMULATION_DISPLAY = new GridPane();
+			rectangleConfiguration((GridPane) SIMULATION_DISPLAY);
+			
+		}
 //		GridPane SIMULATION_DISPLAY = new GridPane();
 //		rectangleConfiguration(SIMULATION_DISPLAY);
 		
-		Pane SIMULATION_DISPLAY = new Pane();
-		SIMULATION_DISPLAY.setPrefSize(DISPLAY_SIZE,DISPLAY_SIZE+100);
-		hexagonConfiguration(SIMULATION_DISPLAY);
+		
 		
 		return SIMULATION_DISPLAY;
 	}
@@ -341,7 +355,7 @@ public class DisplayGrid {
 		catch(Exception e) 
 		{
 			throw new LoadGridException("Load a Simulation First");
-		}	
+		}
 	}
 
 	/**
@@ -352,52 +366,57 @@ public class DisplayGrid {
 	 */
 	private void hexagonConfiguration(Pane simDisplay) throws LoadGridException
 	{
-		//int blockSizeX = 3*BlockSizeX/4;
-		//int blockSizeY = 3*BlockSizeY/4;
-		int blockSizeX = BlockSizeX;
-		int blockSizeY = BlockSizeY;
-		int xLocation = blockSizeX;
-		for (int i = 0; i < CURRENT_CONFIGURATION.length; i++)
-		{
-			
-			int yLocation = 0;
-			for(int j = 0; j< CURRENT_CONFIGURATION[i].length; j++)
+		try 
 			{
-				if(j%2==1)
+			//int blockSizeX = 3*BlockSizeX/4;
+			//int blockSizeY = 3*BlockSizeY/4;
+			int blockSizeX = BlockSizeX;
+			int blockSizeY = BlockSizeY;
+			int xLocation = blockSizeX;
+			for (int i = 0; i < CURRENT_CONFIGURATION.length; i++)
+			{
+				
+				int yLocation = 0;
+				for(int j = 0; j< CURRENT_CONFIGURATION[i].length; j++)
+				{
+					if(j%2==1)
+					{
+						xLocation += blockSizeX/2;
+					}
+					if(j%2==0)
+					{
+						xLocation -= blockSizeX/2;
+					}
+					Polygon hexagon = new Polygon();
+					double xDir = (double) i;
+					double yDir = (double) j;
+					hexagon.getPoints().addAll(new Double[] {
+							xDir,j+(0.25 * blockSizeY),
+							xDir+(0.5 * blockSizeX), yDir,
+							xDir+ blockSizeX, yDir+(0.25 * blockSizeY),
+							xDir+ blockSizeX, yDir+(0.75 * blockSizeY),
+							xDir+(0.5 * blockSizeX), yDir + blockSizeY,
+							xDir, yDir+(0.75 * blockSizeY)			
+					});
+					hexagon.setFill(CURRENT_CONFIGURATION[i][j].getCurrentPaint());
+					if(showGridLines)
+					{
+						hexagon.setStroke(Color.BLACK);
+					}
+					hexagon.relocate(xLocation, yLocation);
+					simDisplay.getChildren().add(hexagon);
+					yLocation += 3*blockSizeY/4;
+					//yLocation += blockSizeY;
+				}
+				if(CURRENT_CONFIGURATION.length <= 5)
 				{
 					xLocation += blockSizeX/2;
 				}
-				if(j%2==0)
-				{
-					xLocation -= blockSizeX/2;
-				}
-				Polygon hexagon = new Polygon();
-				double xDir = (double) i;
-				double yDir = (double) j;
-				hexagon.getPoints().addAll(new Double[] {
-						xDir,j+(0.25 * blockSizeY),
-						xDir+(0.5 * blockSizeX), yDir,
-						xDir+ blockSizeX, yDir+(0.25 * blockSizeY),
-						xDir+ blockSizeX, yDir+(0.75 * blockSizeY),
-						xDir+(0.5 * blockSizeX), yDir + blockSizeY,
-						xDir, yDir+(0.75 * blockSizeY)			
-				});
-				hexagon.setFill(CURRENT_CONFIGURATION[i][j].getCurrentPaint());
-				if(showGridLines)
-				{
-					hexagon.setStroke(Color.BLACK);
-				}
-				hexagon.relocate(xLocation, yLocation);
-				simDisplay.getChildren().add(hexagon);
-				yLocation += 3*blockSizeY/4;
-				//yLocation += blockSizeY;
+				xLocation += blockSizeX;
 			}
-			if(CURRENT_CONFIGURATION.length <= 5)
-			{
-				xLocation += blockSizeX/2;
-			}
-			xLocation += blockSizeX;
 		}
-		
+		catch(Exception e) {
+			throw new LoadGridException("Load a Simulation First");
+		}
 	}
 }

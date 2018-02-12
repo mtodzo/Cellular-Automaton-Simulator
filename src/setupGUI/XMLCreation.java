@@ -122,7 +122,8 @@ public class XMLCreation
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			throw new LoadGridException("COULD NOT CREATE RNADOM XML FILE");
 		}
 		
 		

@@ -5,12 +5,19 @@ import java.util.List;
 
 import simulation.CellOccupant;
 
+/*
+ * Subclass of the Grid class. Implements getNeighbors method for hexagonal cells.
+ */
 public class HexagonGrid extends Grid {
 
 	public HexagonGrid(CellOccupant[][] grid) {
 		super(grid);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see grids.Grid#getNeighbors(simulation.CellOccupant)
+	 */
 	@Override
 	public List<CellOccupant> getNeighbors(CellOccupant cell) {
 		int xLoc = cell.getCurrentLocation()[0];

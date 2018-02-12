@@ -278,6 +278,8 @@ public class Setup extends Application
 				 if (newRandomXML.getText() != null && !newRandomXML.getText().isEmpty() && simType.getText() != null && !simType.getText().isEmpty() && xSize.getText() != null && !xSize.getText().isEmpty() && ySize.getText() != null && !ySize.getText().isEmpty() && colors.getText() != null)
 				 {
 					 ANIMATION.pause();
+					 try 
+					 {
 					 XMLCreation currentConfigs = new XMLCreation(newRandomXML.getText());
 
 					 List<String> colorsList = Arrays.asList(colors.getText().split(","));
@@ -289,6 +291,10 @@ public class Setup extends Application
 					 currentConfigs.createRandomXML(simType.getText(), Integer.parseInt(xSize.getText()),Integer.parseInt(ySize.getText()),colors);
 					 SimulationFileName = newRandomXML.getText() + ".xml";
 					 resetSimulation(primaryStage);
+					 }
+					 catch(LoadGridException e1) {
+						 hardReset(primaryStage);
+					 }
 				 }
 				}
 		});

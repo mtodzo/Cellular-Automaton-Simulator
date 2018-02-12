@@ -1,9 +1,11 @@
 package simulation;
 import grids.Grid;
 
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/*
+ * Subclass of CellOccupant for the Segregation simulation.
+ */
 public class SegOccupant extends CellOccupant {
 	private static double similarityNeeded = .24;
 	private static int EMPTY = 0;
@@ -30,17 +32,11 @@ public class SegOccupant extends CellOccupant {
 
 			SegOccupant nextCell = (SegOccupant) grid.getOccupant(emptyPos[0], emptyPos[1]);
 			
-			//int tempState = nextCell.getCurrentState();
-			//Paint tempPaint = nextCell.getCurrentPaint();
-			
 			nextCell.setNextState(this.getCurrentState());
 			nextCell.setNextPaint(this.getCurrentPaint());
 			
 			this.setNextState(EMPTY);
 			this.setNextPaint(this.getTypeColors()[EMPTY]);
 		}
-//		else {
-//			this.noChange();
-//		}
 	}
 }

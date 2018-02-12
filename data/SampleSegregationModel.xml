@@ -89,6 +89,7 @@
 		<xLocation>1</xLocation>
 		<yLocation>5</yLocation>
 		<Color>BLUE</Color>
+		<Shape></Shape>
 	</CellOccupant>
 	<CellOccupant>
 		<CurrentState>0</CurrentState>
