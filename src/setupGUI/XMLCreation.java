@@ -93,7 +93,9 @@ public class XMLCreation
 			}
 			simColors.setTextContent(allColors.substring(0, allColors.length()-1));
 			properties.appendChild(simColors);
-
+			Element shape = newXML.createElement("Shape");
+			properties.appendChild(shape);
+			
 			for (int i=0; i< xSize; i++) 
 			{
 				for (int j=0; j < ySize; j++)
@@ -162,7 +164,12 @@ public class XMLCreation
 			Element numPopulation = newXML.createElement("NumPopulations");
 			numPopulation.setTextContent(numStates);
 			properties.appendChild(numPopulation);
-
+			Element simColors = newXML.createElement("Colors");
+			properties.appendChild(simColors);
+			Element shape = newXML.createElement("Shape");
+			properties.appendChild(shape);
+			
+			String[] colors = new String[currentGrid.getCURRENT_SIMULATION().getNumPopulations()];
 			for (int i=0; i< currentGrid.getCURRENT_CONFIGURATION().length; i++) 
 			{
 				for (int j=0; j < currentGrid.getCURRENT_CONFIGURATION()[i].length; j++)
@@ -180,9 +187,17 @@ public class XMLCreation
 					cellOccupant.appendChild(yLocation);
 					Element color = newXML.createElement("Color");
 					color.setTextContent(currentGrid.getCURRENT_CONFIGURATION()[i][j].getCurrentPaint().toString());
+					colors[currentGrid.getCURRENT_CONFIGURATION()[i][j].getCurrentState()] = currentGrid.getCURRENT_CONFIGURATION()[i][j].getCurrentPaint().toString();
 					cellOccupant.appendChild(color);
 				}	
 			}
+			String allColors = "";
+			for (String s: colors)
+			{
+				allColors += s + ",";
+			}
+			simColors.setTextContent(allColors.substring(0, allColors.length()-1));
+			
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		    Transformer transformer = transformerFactory.newTransformer();
 		    DOMSource source = new DOMSource(newXML);
@@ -243,6 +258,8 @@ public class XMLCreation
 			}
 			simColors.setTextContent(allColors.substring(0, allColors.length()-1));
 			properties.appendChild(simColors);
+			Element shape = newXML.createElement("Shape");
+			properties.appendChild(shape);
 			
 			int totalCells = xSize*ySize;
 			
