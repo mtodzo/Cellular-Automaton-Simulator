@@ -123,7 +123,7 @@ public class XMLCreation
 		catch(Exception e)
 		{
 			//e.printStackTrace();
-			throw new LoadGridException("COULD NOT CREATE RNADOM XML FILE");
+			throw new LoadGridException("COULD NOT CREATE RANDOM XML FILE");
 		}
 		
 		
@@ -135,7 +135,7 @@ public class XMLCreation
 	 * 
 	 * @param currentGrid the current configuration of the simulation
 	 */
-	public void currentGridToXML(DisplayGrid currentGrid)
+	public void currentGridToXML(DisplayGrid currentGrid) throws LoadGridException
 	{
 		sizeX = Integer.toString(currentGrid.getCURRENT_CONFIGURATION().length);
 		sizeY = Integer.toString(currentGrid.getCURRENT_CONFIGURATION()[0].length);
@@ -204,7 +204,7 @@ public class XMLCreation
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			throw new LoadGridException("COULD NOT CONVERT TO XML");
 		}
 
 	}
@@ -220,7 +220,7 @@ public class XMLCreation
 	 * @param colors
 	 * @param percentages 
 	 */
-	public void createWithPopulationPercentages(String simulationType, int xSize, int ySize, String[] colors, int[] percentages)
+	public void createWithPopulationPercentages(String simulationType, int xSize, int ySize, String[] colors, int[] percentages) throws LoadGridException
 	{
 		Properties prop = new Properties();
 		try
@@ -298,7 +298,7 @@ public class XMLCreation
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			throw new LoadGridException("ERROR WITH GIVEN POPULATION PERCENTAGES, MAKE SURE THEY ADD TO 100");
 		}
 	}
 }
