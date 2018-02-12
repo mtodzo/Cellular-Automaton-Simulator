@@ -19,6 +19,16 @@ import org.w3c.dom.Element;
 
 import javafx.scene.paint.Paint;
 
+/**
+ * @author Belanie Nagiel
+ * 
+ * Deals with creating XML files based on three conditions.
+ * 1. Creating an XML file based on the configuration of a simulation in the middle of
+ * it running.
+ * 2. Creating a random XML file based on given simulation type, number of cells, and colors.
+ * 3. Create a random XML file based on percentages of certain states present.
+ *
+ */
 public class XMLCreation 
 {
 	private String sizeX;
@@ -28,11 +38,25 @@ public class XMLCreation
 	private String fileName;
 	private static final String propertiesFile = "data/SimulationToNumPopulations.properties";
 
+	/**
+	 * Constructor for the class
+	 * 
+	 * @param name the file name for the new file being created
+	 */
 	public XMLCreation(String name)
 	{
 		fileName = name;
 	}
 
+	/**
+	 * Creates a random configuration based on a given simulation type, width, height,
+	 * and array of colors. Writes this random configuration as an XML file.
+	 * 
+	 * @param simulationType
+	 * @param xSize
+	 * @param ySize
+	 * @param colors
+	 */
 	public void createRandomXML(String simulationType, int xSize, int ySize, String[] colors)
 	{
 		Properties prop = new Properties();
@@ -104,6 +128,12 @@ public class XMLCreation
 		
 	}
 
+	/**
+	 * Creates a configuration based on the configuration of a simulation as it is running.
+	 * Writes this current configuration to an XML file.
+	 * 
+	 * @param currentGrid the current configuration of the simulation
+	 */
 	public void currentGridToXML(DisplayGrid currentGrid)
 	{
 		sizeX = Integer.toString(currentGrid.getCURRENT_CONFIGURATION().length);
@@ -165,6 +195,17 @@ public class XMLCreation
 
 	}
 
+	/**
+	 * Creates a random configuration based on a given simulation type, width, height,
+	 * array of colors, and array of the percentage of cells that should be at a certain
+	 * state. Writes this configuration as an XML file.
+	 * 
+	 * @param simulationType
+	 * @param xSize
+	 * @param ySize
+	 * @param colors
+	 * @param percentages 
+	 */
 	public void createWithPopulationPercentages(String simulationType, int xSize, int ySize, String[] colors, int[] percentages)
 	{
 		Properties prop = new Properties();

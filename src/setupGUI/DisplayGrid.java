@@ -33,7 +33,14 @@ import simulation.WatorOccupant;
 import simulation.RPSOccupant;
 import simulation.SugarOccupant;
 import simulation.AntOccupant;
-
+/**
+ * @author Belanie Nagiel
+ * 
+ * This class handles setting up the original configuration based on the XML file
+ * and displaying the simulation on the user interface.
+ * 
+ *@see the dynamic simulation 
+ */
 public class DisplayGrid {
 	
 	private String CURRENT_SIMULATION_TYPE;
@@ -48,6 +55,12 @@ public class DisplayGrid {
 	private int DISPLAY_SIZE = 400;
 	private Paint[] simColors;
 	
+	/**
+	 * Class Constructor
+	 * 
+	 * @param smf simulation file name 
+	 * @param ps the current window's stage
+	 */
 	public DisplayGrid(String smf, Stage ps)
 	{
 		SimulationFileName = smf;
@@ -55,26 +68,53 @@ public class DisplayGrid {
 		showGridLines = false;
 	}
 	
+	/**
+	 * The getter for current simulation type 
+	 * 
+	 * @return string indicating the simulation type
+	 */
 	public String getCURRENT_SIMULATION_TYPE() 
 	{
 		return CURRENT_SIMULATION_TYPE;
 	}
 
+	/**
+	 * The getter for the 2D grid of cell occupants
+	 * 
+	 * @return 2D grid of cell occupants 
+	 */
 	public CellOccupant[][] getCURRENT_CONFIGURATION() 
 	{
 		return CURRENT_CONFIGURATION;
 	}
 
+	/**
+	 * The getter for the current Simulation object
+	 * 
+	 * @return Simulation object relating to the current simulation
+	 */
 	public Simulation getCURRENT_SIMULATION() 
 	{
 		return CURRENT_SIMULATION;
 	}
 	
+	/**
+	 * Boolean indicating whether grid lines can be seen in the display
+	 * 
+	 * @param val boolean indicating whether the checkbox in the user interface is enabled
+	 */
 	public void setShowGridLines(boolean val)
 	{
 		showGridLines = val;
 	}
 
+	/**
+	 * Creates the Simulation object for a new simulation based on the XML
+	 * file given. Also fills the 2D array associated with the Simulation
+	 * object based on the XML file.
+	 * 
+	 * @throws LoadGridException Creates a dialogue box indicating an error in creating of a simulation
+	 */
 	public void fillSimulationArray() throws LoadGridException
 	{
 		try
@@ -131,7 +171,15 @@ public class DisplayGrid {
 		}
 	}
 	
-	
+	/**
+	 * Fills the 2D array of cell occupants with the information from the XML file. 
+	 * 
+	 * @param sim the document containing the information from the XML file
+	 * @param colors the colors for the different states
+	 * @param width	how many cells in the x direction
+	 * @param height how many cells in the y direction
+	 * @throws LoadGridException
+	 */
 	private void fillConfiguration(Document sim, Paint[] colors, int width, int height) throws LoadGridException
 	{
 		Properties second = new Properties();
@@ -198,6 +246,15 @@ public class DisplayGrid {
 		}
 	}
 
+	/**
+	 * Returns the correct cell occupant based on the simulation type and the initial configuration
+	 * of that cell occupant.
+	 * 
+	 * @param initState
+	 * @param initLocation
+	 * @param initColor
+	 * @return
+	 */
 	public CellOccupant createCellOccupant(int initState, int[] initLocation, Paint initColor)
 	{
 		if (CURRENT_SIMULATION_TYPE.equals("SpreadingFire"))
@@ -239,6 +296,12 @@ public class DisplayGrid {
 		
 	}
 
+	/**
+	 * Creates the visual display for a specific simulation. Creates either a grid
+	 * of rectancle or hexagons depending on the input in the XML file.
+	 * 
+	 * @return a Pane filled with polygons that will be added to the GUI
+	 */
 	public Pane displaySimulationConfiguration() 
 	{
 //		GridPane SIMULATION_DISPLAY = new GridPane();
@@ -251,6 +314,12 @@ public class DisplayGrid {
 		return SIMULATION_DISPLAY;
 	}
 
+	/**
+	 * Creates a GridPane of rectangles based on the current 2D array configuration.
+	 * 
+	 * @param simDisplay empty pane to fill
+	 * @throws LoadGridException
+	 */
 	private void rectangleConfiguration(GridPane simDisplay) throws LoadGridException
 	{
 		try
@@ -275,6 +344,12 @@ public class DisplayGrid {
 		}	
 	}
 
+	/**
+	 * Creates a Pane of hexagons based on the current 2D array configuration.
+	 * 
+	 * @param simDisplay empty pane to fill
+	 * @throws LoadGridException
+	 */
 	private void hexagonConfiguration(Pane simDisplay)
 	{
 		//int blockSizeX = 3*BlockSizeX/4;

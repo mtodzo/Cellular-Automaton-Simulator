@@ -12,12 +12,24 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/**
+ * @author Belanie Nagiel
+ * 
+ *Creates a population graph that relates to the size of the populations
+ *to each other as time passes on the simulation.
+ */
 public class PopulationGraph 
 {
 	private int NUMBER_POPULATIONS;
 	private DisplayGrid CURRENT_GRID;
 	private Map<Integer, ArrayList<Integer>> POPULATION_DATA;
 	
+	/**
+	 * Class constructor
+	 * 
+	 * @param currentGrid the current DisplayGrid object that contains information on population 
+	 * numbers
+	 */
 	public PopulationGraph(DisplayGrid currentGrid)
 	{
 		CURRENT_GRID = currentGrid;
@@ -30,6 +42,10 @@ public class PopulationGraph
 		}
 	}
 	
+	/**
+	 * Adds 
+	 * 
+	 */
 	public void updatePopulationGraph()
 	{
 		int[] newPoints = new int[NUMBER_POPULATIONS];

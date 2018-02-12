@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -16,7 +15,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -38,7 +36,17 @@ import userInterface.PauseButton;
 import userInterface.StartButton;
 import userInterface.StopButton;
 import userInterface.TextFields;
-
+/**
+ * @author Belanie Nagiel and Kelley Scroggs
+ * 
+ * This is the class that runs the simulation. It sets up the user interface with calls
+ * to other classes as well as creation in its own methods. It opens up the screen that
+ * the simulations are displayed on as well as calls update methods and display methods 
+ * in order to show the simulation move.
+ * 
+ * @see the user interface with buttons, simulation display, and graph of populations 
+ * over time
+ */
 public class Setup extends Application
 {	
 	private static final String TITLE = "CA Simulations";
@@ -61,6 +69,12 @@ public class Setup extends Application
 	
 	private static String SimulationFileName = "";
 
+	/**
+	 * Start method necessary for Application
+	 * 
+	 * @param the screen that the scene will be displayed on
+	 * @see the user interface
+	 */
 	@Override
 	public void start(Stage primaryStage)
 	{
@@ -80,6 +94,12 @@ public class Setup extends Application
 		makeFrames(primaryStage, FRAMES_PER_SECOND);
 	}
 	
+	/**
+	 * Sets the number of framesPerSecond in order to allow changes to the animation speed.
+	 * 
+	 * @param primaryStage which window the change is happening on
+	 * @param framesPerSecond the desired frames per second
+	 */
 	public void makeFrames(Stage primaryStage, int framesPerSecond)
 	{
 		double millisecondDelay = 1000.0 / framesPerSecond;
@@ -88,7 +108,17 @@ public class Setup extends Application
 		ANIMATION.setCycleCount(Timeline.INDEFINITE);
 		ANIMATION.getKeyFrames().add(frame);
 	}
-
+	
+	/**
+	 * Sets the scene for the splash screen where no simulation is being displayed. Sets up
+	 * only the buttons that allow users to pick existing simulations or create new simulations.
+	 * 
+	 * @param width
+	 * @param height
+	 * @param myBackground color of the screen
+	 * @param primaryStage
+	 * @return the BorderPane object with all of the buttons added to it
+	 */
 	private Scene openingScene(int width, int height, Paint myBackground, Stage primaryStage)
 	{
 		root = new BorderPane();
@@ -103,7 +133,20 @@ public class Setup extends Application
 		
 		return scene;	
 	}
-
+	
+	/**
+	 * Sets the scene for all simulation displays based on the XML file that was selected.
+	 * Includes buttons for choosing and creating new simulation files as well as buttons
+	 * to interact with the current simulation.
+	 * 
+	 * @param width
+	 * @param height
+	 * @param myBackground color of scene
+	 * @param primaryStage
+	 * @param SimulationFileName
+	 * @return the BorderPane object with the buttons, simulation display, and populaiton graph 
+	 * added to it
+	 */
 	private Scene setupScene(int width, int height, Paint myBackground, Stage primaryStage, String SimulationFileName) 
 	{
 		root = new BorderPane();
@@ -138,6 +181,13 @@ public class Setup extends Application
 		
 	}
 	
+	/**
+	 * Loads the properties file that contains user interface information into a 
+	 * Properties object.
+	 * 
+	 * @param primaryStage
+	 * @return Properties object that contains the text for all the buttons in the user interface
+	 */
 	private Properties loadUIConfigurations(Stage primaryStage)
 	{
 		Properties prop = new Properties();
@@ -159,6 +209,14 @@ public class Setup extends Application
 		return prop;
 	}
 
+	/**
+	 * Adds all the buttons and text fields that have to do with choosing simulations, making
+	 * new XML files, and opening new windows.
+	 * 
+	 * @param prop The Properties object that references the file containing button text
+	 * @param primaryStage
+	 * @return a VBox that contains the buttons and text fields
+	 */
 	private javafx.scene.Node addTextFields(Properties prop, Stage primaryStage) 
 	{
 		HBox controls = new HBox();
@@ -282,6 +340,14 @@ public class Setup extends Application
 		
 	}
 
+	/**
+	 * Adds all the buttons and text fields that have to do with controlling the simulation
+	 * while it is running such as pausing it, restarting it, and speeding it up.
+	 * 
+	 * @param prop
+	 * @param primaryStage
+	 * @return a VBox that contains the buttons and text fields
+	 */
 	private javafx.scene.Node addButtons(Properties prop, Stage primaryStage) 
 	{
 		VBox controls = new VBox();
@@ -342,6 +408,13 @@ public class Setup extends Application
 		return controls;
 	}
 
+	/**
+	 * This is the game loop that updates the simulation as time passes. It calls 
+	 * the simulation update methods and then resets the display to match the new configuration.
+	 *
+	 * @param secondDelay
+	 * @param primaryStage
+	 */
 	private void updateAll(double secondDelay, Stage primaryStage)
 	{
 		try 
@@ -366,12 +439,22 @@ public class Setup extends Application
 		}
 	}
 	
+	/**
+	 * Sends the user back to the splash screen. Useful for addressing errors.
+	 * 
+	 * @param primaryStage
+	 */
 	private void hardReset(Stage primaryStage)
 	{
 		Setup.SimulationFileName = "";
 		resetSimulation(primaryStage);
 	}
 	
+	/**
+	 * Resets the current simulation to its original configuration.
+	 * 
+	 * @param primaryStage
+	 */
 	private void resetSimulation(Stage primaryStage)
 	{
 		ANIMATION.stop();
