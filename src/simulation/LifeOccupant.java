@@ -1,16 +1,16 @@
 package simulation;
 
-import java.util.ArrayList;
-
 import grids.Grid;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-/*Any live cell with fewer than two live neighbors dies, as if caused by underpopulation.
-*Any live cell with two or three live neighbors lives on to the next generation.
-*Any live cell with more than three live neighbors dies, as if by overpopulation.
-*Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
-*/
+
+/*
+ * Subclass of CellOccupant for GameOfLife simuation. Uses the following rules:
+ * Any live cell with fewer than two live neighbors dies, as if caused by underpopulation.
+ * Any live cell with two or three live neighbors lives on to the next generation.
+ * Any live cell with more than three live neighbors dies, as if by overpopulation.
+ * Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
+ */
 
 public class LifeOccupant extends CellOccupant{
 	private static int DEAD = 0;
@@ -23,6 +23,10 @@ public class LifeOccupant extends CellOccupant{
 		super(initState,initLocation,initColor, colors);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see simulation.CellOccupant#calculateNextState(grids.Grid)
+	 */
 	@Override
 	public void calculateNextState(Grid grid) {
 		int liveNeighbors = 0;
