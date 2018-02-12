@@ -24,6 +24,7 @@ public abstract class Buttons
 	
 	/**
 	 * Class Constructor 
+	 * Creates the Button and calls the method to define the button event.
 	 * 
 	 * @param text the button text
 	 * @param prop the Properties file that the button texts are being read from
@@ -53,7 +54,7 @@ public abstract class Buttons
 	}
 	
 	/**
-	 * Specifies the event that occurs when the button is pressed.
+	 * Abstract method that specifies the event that occurs when the button is pressed.
 	 * 
 	 * @param button
 	 * @param prop the properties file that contains button text
@@ -62,6 +63,12 @@ public abstract class Buttons
 	 */
 	public abstract void buttonEvent(Button button, Properties prop, Timeline animation, Stage primaryStage);
 	
+	/**
+	 * Resets the simulation to its original configuration.
+	 * 
+	 * @param primaryStage
+	 * @param animation
+	 */
 	public void resetSimulation(Stage primaryStage, Timeline animation)
 	{
 		animation.stop();
