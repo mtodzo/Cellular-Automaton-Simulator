@@ -13,6 +13,10 @@ import javafx.stage.Stage;
 import setupGUI.DisplayGrid;
 import setupGUI.Setup;
 
+/**
+ * @author Belanie Nagiel
+ *
+ */
 public abstract class TextFields 
 {
 	private List<TextField> fields;

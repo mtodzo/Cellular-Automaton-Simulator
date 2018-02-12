@@ -43,7 +43,8 @@ public class PopulationGraph
 	}
 	
 	/**
-	 * Adds 
+	 * Adds time points to the data set for each population based on the 
+	 * grid at a specific time point.
 	 * 
 	 */
 	public void updatePopulationGraph()
@@ -60,6 +61,11 @@ public class PopulationGraph
 		}
 	}
 	
+	/**
+	 * Creates the visual line chart for the set of population data arrays.
+	 * 
+	 * @return a VBox containing the line chart to add to the GUI
+	 */
 	public VBox displayPopulationGraph()
 	{
 		NumberAxis xAxis = new NumberAxis();

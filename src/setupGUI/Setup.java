@@ -37,7 +37,7 @@ import userInterface.StartButton;
 import userInterface.StopButton;
 import userInterface.TextFields;
 /**
- * @author Belanie Nagiel and Kelley Scroggs
+ * @author Belanie Nagiel
  * 
  * This is the class that runs the simulation. It sets up the user interface with calls
  * to other classes as well as creation in its own methods. It opens up the screen that
