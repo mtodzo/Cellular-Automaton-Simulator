@@ -6,8 +6,13 @@ import grids.Grid;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/**
+ * Subclass for cell occupants for the spreading fire simulation.
+ * 
+ * @author Kelley Scroggs
+ *
+ */
 public class FireOccupant extends CellOccupant {
-	private int turnsOnFire;
 
 	private static final double PROB_CATCH_FIRE = .15;
 	private static final int maxTurnsOnFire = 5;
@@ -15,43 +20,50 @@ public class FireOccupant extends CellOccupant {
 	private static final int TREE = 1;
 	private static final int FIRE = 2;
 
-	//private static Paint[] typeColors; // = {Color.YELLOW, Color.GREEN, Color.RED};
+	private int turnsOnFire;
 
+	/**
+	 * creates a cell occupant for the spreading fire simulation.
+	 * 
+	 * @param initState
+	 * @param initLocation
+	 * @param initColor
+	 * @param colors
+	 */
 	public FireOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
 		super(initState, initLocation, initColor, colors);
-		// 1 for initially fire 
 		turnsOnFire = 0;
 	}
 
+	/**
+	 * updates the number of turns a cell occupant has been on fire for. Called when
+	 * the state is currently on fire.
+	 */
 	private void updateTurnsOnFire() {
 		turnsOnFire++;
 	}
 
+	/**
+	 * returns the number of turns a state has been on fire for.
+	 * 
+	 * @return
+	 */
 	private int getTurnsOnFire() {
 		return turnsOnFire;
 	}
 
-	/** 
-	 * Calculate the next state.
-	 * States:
-	 * 		Nothing:		0
-	 * 		Tree:		1
-	 * 		Fire:		2
-	 * Transitions:	
-	 * 			    <>N
-	 * 				  ^	(after burning for 5 times)
-	 * 				   \
-	 * 			<>T  ->	F<> (if burning for < 5 times)
-	 * 			(p=0.15 if neighbor)
-	 */		
+	/**
+	 * Calculate the next state of a fire occupant. States: Nothing, Tree, or Fire.
+	 * Transitions: N -> N; F -> N; T -> F
+	 */
 	@Override
 	public void calculateNextState(Grid grid) {
-		if(this.getCurrentState() == EMPTY) {
+		if (this.getCurrentState() == EMPTY) {
 			// no changes, might not be necessary
 			this.noChange();
 		} else if (this.getCurrentState() == TREE) {
-			if(neighborOnFire(grid.getNeighbors(this))) {
-				if(Math.random() < PROB_CATCH_FIRE) {
+			if (neighborOnFire(grid.getNeighbors(this))) {
+				if (Math.random() < PROB_CATCH_FIRE) {
 					this.setNextState(FIRE);
 					this.setNextPaint(this.getTypeColors()[FIRE]);
 				} else {
@@ -70,20 +82,21 @@ public class FireOccupant extends CellOccupant {
 			}
 		}
 	}
-	
+
 	/**
-	 * Helper method for calculateNextState method. 
-	 * Determines if one of the cell's neighbors is on Fire.
+	 * Helper method for calculateNextState method. Determines if one of the cell's
+	 * neighbors is on Fire.
+	 * 
 	 * @param neighborsList
 	 * @return
 	 */
 	private boolean neighborOnFire(List<CellOccupant> neighborsList) {
-		for(CellOccupant neighbor : neighborsList) {
+		for (CellOccupant neighbor : neighborsList) {
 			if (neighbor.getCurrentState() == FIRE) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 }
