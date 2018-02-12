@@ -292,7 +292,12 @@ public class Setup extends Application
 					 SimulationFileName = newRandomXML.getText() + ".xml";
 					 resetSimulation(primaryStage);
 					 }
-					 catch(LoadGridException e1) {
+					 catch(LoadGridException e1) 
+					 {
+						 hardReset(primaryStage);
+					 }
+					 catch(Exception e2) 
+					 {
 						 hardReset(primaryStage);
 					 }
 				 }
@@ -326,8 +331,16 @@ public class Setup extends Application
 					{
 						percentages[i] = Integer.parseInt(percentageList.get(i));
 					}
-
-					currentConfigs.createWithPopulationPercentages(simType.getText(), Integer.parseInt(xSize.getText()),Integer.parseInt(ySize.getText()),colors,percentages);
+					
+					try {
+						currentConfigs.createWithPopulationPercentages(simType.getText(), Integer.parseInt(xSize.getText()),Integer.parseInt(ySize.getText()),colors,percentages);
+					} catch (NumberFormatException e1) {
+						// TODO Auto-generated catch block
+						hardReset(primaryStage);
+					} catch (LoadGridException e1) {
+						// TODO Auto-generated catch block
+						hardReset(primaryStage);
+					}
 					SimulationFileName = newRandomXML.getText() + ".xml";
 					resetSimulation(primaryStage);
 				}
