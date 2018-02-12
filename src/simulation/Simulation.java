@@ -3,10 +3,7 @@ package simulation;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -14,19 +11,14 @@ import grids.DiagonalSquareGrid;
 import grids.Grid;
 import grids.SquareGrid;
 import grids.WrapAroundGrid;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 public class Simulation {
 	private boolean isRunning;
 	private String mySimulationType;
-	//private CellOccupant[][] myOccupants;
 	private Grid myGrid;
-	//private List<int[]> myEmptyLocations;
-	//private static final int EMPTY = 0;
 	private Map<String, String> simulationToGridMap;
 	private int numPopulations;
-	private Paint[] popColors;
 	
 	public Simulation(CellOccupant[][] grid, String simType, int population, Paint[] colors) {
 		Properties properties = new Properties();
@@ -52,24 +44,17 @@ public class Simulation {
 		}
 		isRunning = true;
 		numPopulations = population;
-		popColors = colors;	
 	}
-	
 	/*
-	 * Sets the specified cell within myOccupants to hold the passed type
-	 */
-//	public void setOccupant(int x, int y, CellOccupant type) {
-//		myOccupants[x][y] = type;
-//	}
-	
-	/*
-	 * Change the run status to start, stop, or pause the simulation.
+	 * Change the run status in order to start, stop, or pause the simulation.
+	 * @param status is a boolean: false to stop simulation, true to start
 	 */
 	public void setRunStatus(boolean status) {
 		isRunning = status;
 	}
 	/*
 	 * Returns the run status of the simulation
+	 * @return boolean value corresponding to run status
 	 */
 	public boolean getStatus() {
 		return isRunning;
@@ -77,25 +62,25 @@ public class Simulation {
 	
 	/*
 	 * Returns the type of the simulation
+	 * @return String that is the name of the simulation
 	 */
 	public String getType() {
 		return mySimulationType;
 	}
 	/*
 	 * Returns the myOccupants grid
+	 * @return 2D array retrieved from the Grid calss
 	 */
 	public CellOccupant[][] getOccupantGrid() {
 		return myGrid.getGrid();
 	}
 	
 	/*
-	 * Returns the CellOccupant at the specified location
+	 * Iterates through every CellOccupant in the grid and calls calculateNextState method
+	 * calculateNextState assigns a nextState value to each cell
+	 * @param none
+	 * @return nothing
 	 */
-//	public CellOccupant getOccupant(int x, int y) {
-//		return myOccupants[x][y];
-//	}
-	
-	
 	public void setNextStates() {
 		for (int y=0; y< myGrid.getLength(); y++) {
 			for (int x=0; x<myGrid.getWidth(); x++) {
@@ -104,6 +89,11 @@ public class Simulation {
 		}
 	}
 	
+	/*
+	 * Iterates through every CellOccupant in the grid and sets currentState and currentPaint
+	 * @param none
+	 * @return nothing
+	 */
 	public  void updateStates() {
 		for (int y=0; y< myGrid.getLength(); y++) {
 			for (int x=0; x<myGrid.getWidth(); x++) {
@@ -113,6 +103,10 @@ public class Simulation {
 		}
 	}
 	
+	/*
+	 * @param none
+	 * @return an int[]: each index corresponds to the state, and the value is the number of cells of that state
+	 */
 	public int[] getPopulationNumbers()
 	{
 		int[] result = new int[numPopulations];
@@ -127,6 +121,9 @@ public class Simulation {
 		return result;
 	}
 	
+	/*
+	 * @return the number of populations
+	 */
 	public int getNumPopulations()
 	{
 		return numPopulations;
