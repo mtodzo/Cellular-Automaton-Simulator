@@ -4,12 +4,16 @@
 Names: Miles Todzo, Belanie Nagiel, Kelley Scroggs
 
 Date Started: 1/29/18
+
 Date Ended: 2/11/18
 
 Cumulative Hours Worked: 120
 
 ### Roles
 Miles: 
+* Simulation class
+* SegOccupant, LifeOccupant, SugarOccupant, and AntOccupant subclasses
+* Grid superclass and subclasses
 
 Belanie: 
 * Setup class
@@ -42,6 +46,8 @@ Put your source code, resources, and property files here.
 13. [Using Polygon](https://www.tutorialspoint.com/javafx/2dshapes_polygon.htm)
 14. [Langton Loops](http://diga.me.uk/LangtonLoops.html)
 15. [More Langton Loops](http://lslwww.epfl.ch/pages/embryonics/thesis/Chapter3.html)
+16. [Ant Foraging](https://cs.gmu.edu/~eclab/projects/mason/publications/alife04ant.pdf)
+17. [SugarScape](https://www2.le.ac.uk/departments/interdisciplinary-science/research/the-sugarscape)
 
 ### File to Start
 Setup.java
@@ -53,17 +59,22 @@ The following table matches simulation to their input files:
 
 The following table lays out the sample buggy input files we created:
 
-![Sample Buggy Files](crc-example.png "An alternate design")
+![Sample Buggy Files](./doc/buggyChart.png)
 
 Other errors we handle without crashing:
 * any type of invalid input from user while creating either random or probability specific XML files for simulations
 
 ### Resource Files
 
- ![Sample Buggy Files](crc-example.png "An alternate design")
+ ![Sample Buggy Files](./doc/resources.png)
  
 ### Decisions, Assumption, Simplifications
 * Some simulation specific parameters (probability of a state catching fire when neighbor is on fire) are stated in the CellOccupant subclass for the simulation type. In order for the user to change them, the variable must be changed in these classes, but this only needs to be done once.
 * When a  user opens up a new simulation in a new window, the two simulations will be running separately and they do not need to be the same type of simulation or the same simulation.
 * A user can specify whether they want hexagonal or square cells in the XML file.
-* A 
+
+### Bugs,Crashes, Problems
+* The Hexagon display will occasionally be off because of some difficulty coordinating the size of the hexagons and how far they are away from each other. Having odd and even numbers of hexagons in the rows and columns caused part of this difficulty.
+
+### Impressions
+We really like working on this project and had a great time!
