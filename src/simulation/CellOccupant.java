@@ -3,7 +3,13 @@ package simulation;
 import grids.Grid;
 import javafx.scene.paint.Paint;
 
-public abstract class CellOccupant{
+/**
+ * CellOccupant super class to represent types of states in each simulation.
+ * 
+ * @author Kelley Scroggs
+ *
+ */
+public abstract class CellOccupant {
 
 	private int currentState;
 	private int nextState;
@@ -11,8 +17,20 @@ public abstract class CellOccupant{
 	private int[] nextLocation;
 	private Paint currentColor;
 	private Paint nextColor;
-	private Paint[] typeColors; 
+	private Paint[] typeColors;
 
+	/**
+	 * creates cell occupant. called when gird is initialized.
+	 * 
+	 * @param initState
+	 *            initial state
+	 * @param initLocation
+	 *            initial x,y location
+	 * @param initColor
+	 *            initial color
+	 * @param colors
+	 *            list of colors for all state types in simulation
+	 */
 	public CellOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
 		currentState = initState;
 		currentLocation = initLocation;
@@ -22,11 +40,9 @@ public abstract class CellOccupant{
 		nextColor = currentColor;
 		typeColors = colors;
 	}
-	
-	
-	
-	public Paint[] getTypeColors() 
-	{
+
+	// get all the color array for simulation type
+	public Paint[] getTypeColors() {
 		return typeColors;
 	}
 
@@ -34,12 +50,12 @@ public abstract class CellOccupant{
 	public Paint getCurrentPaint() {
 		return currentColor;
 	}
-	
+
 	// get next paint
 	public Paint getNextPaint() {
 		return nextColor;
 	}
-	
+
 	// get current state
 	public int getCurrentState() {
 		return currentState;
@@ -59,20 +75,19 @@ public abstract class CellOccupant{
 	public int[] getNextLocation() {
 		return nextLocation;
 	}
-	
+
 	// set current paint
 	public void setCurrentPaint() {
 		currentColor = this.getNextPaint();
 	}
-	
+
 	// set next paint
 	public void setNextPaint(Paint color) {
 		nextColor = color;
 	}
-	
+
 	// set current state
-	public void setCurrentState() 
-	{
+	public void setCurrentState() {
 		currentState = this.getNextState();
 	}
 
@@ -90,26 +105,22 @@ public abstract class CellOccupant{
 	public void setNextLocation(int[] location) {
 		nextLocation = location;
 	}
-	
+
+	/**
+	 * called when the cell occupant does not need to be updated.
+	 */
 	public void noChange() {
 		this.setNextState(this.currentState);
 		this.setNextLocation(this.currentLocation);
 		this.setNextPaint(this.currentColor);
 	}
-	
-	public abstract void calculateNextState(Grid grid);
-	// public abstract int getTurnsOnFire();
-	
-	// public abstract void updateTurnsOnFire();
-	
 
-	// TODO: add subclasses:
-	// Shark
-	// Fish
-	// Cells
-	// Community1
-	// Community2
-	// Tree
-	// Fire
-	// Blank
+	/**
+	 * Updates the cell occupants next state, location, paint and other relevant
+	 * information based on the update rules specified for each simulation.
+	 * 
+	 * @param grid
+	 */
+	public abstract void calculateNextState(Grid grid);
+
 }

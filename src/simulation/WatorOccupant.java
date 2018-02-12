@@ -4,6 +4,12 @@ import grids.Grid;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+/**
+ * CellOccupant subclass for Wator predator prey simulation.
+ * 
+ * @author Kelley Scroggs
+ *
+ */
 public class WatorOccupant extends CellOccupant {
 	private int turnsAlive;
 	private int energyUnits;
@@ -15,11 +21,17 @@ public class WatorOccupant extends CellOccupant {
 	private static final int FISH_STATE = 1;
 	private static final int SHARK_STATE = 2;
 
+	/**
+	 * creates watorOccupant subclass upon intialization of the grid.
+	 * 
+	 * @param initState
+	 * @param initLocation
+	 * @param initColor
+	 * @param colors
+	 */
 	public WatorOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
 		super(initState, initLocation, initColor, colors);
-		// 1 for initially fire
 		turnsAlive = 0;
-		// nextAlive = turnsAlive;
 		if (initState == SHARK_STATE) {
 			resetEnergyUnits();
 		} else {
@@ -52,24 +64,31 @@ public class WatorOccupant extends CellOccupant {
 	}
 
 	/**
-	 * Calculates the next state. Does so by switching the information in each cell.
+	 * Calls the correct method to update the state based on the current state of
+	 * the cell occupant.
 	 */
 	@Override
 	public void calculateNextState(Grid grid) {
-		if (this.getCurrentState() == FISH_STATE && this.getNextState() == FISH_STATE) 
-		{
+		if (this.getCurrentState() == FISH_STATE && this.getNextState() == FISH_STATE) {
 			changeFishState(grid);
-		} 
-		else if (this.getCurrentState() == SHARK_STATE && this.getNextState() == SHARK_STATE) 
-		{
-			changeSharkState(grid);	
+		} else if (this.getCurrentState() == SHARK_STATE && this.getNextState() == SHARK_STATE) {
+			changeSharkState(grid);
 		}
 	}
 
-	private void changeSharkState(Grid grid) 
-	{
+	/**
+	 * Changes the next state for a WatorOccupant of type shark. If a shark has a
+	 * fish for a neighbor it moves to a random fish neighbor and eats it. If not a
+	 * shark moves to an empty neighbor if it has one. When a shark moves to a
+	 * neighbor, it reproduces, leaving behind a new shark, if it has been alive
+	 * long enough. If a shark has not eaten enough fish to sustain it, it dies,
+	 * leaving behind an empty spot.
+	 * 
+	 * @param grid
+	 */
+	private void changeSharkState(Grid grid) {
 		WatorOccupant fishNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), FISH_STATE);
-		if (fishNeighbor != null) {				
+		if (fishNeighbor != null) {
 			switchCells(this, fishNeighbor);
 			fishNeighbor.resetEnergyUnits();
 			if (fishNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
@@ -86,12 +105,9 @@ public class WatorOccupant extends CellOccupant {
 				fishNeighbor.incTurnsAlive();
 			}
 
-		}
-		else 
-		{
+		} else {
 			// move to empty
-			WatorOccupant emptyNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this),
-					EMPTY_STATE);
+			WatorOccupant emptyNeighbor = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), EMPTY_STATE);
 			if (emptyNeighbor != null) {
 				switchCells(this, emptyNeighbor);
 				if (emptyNeighbor.turnsAlive >= SHARK_TO_REPRODUCE) {
@@ -128,8 +144,14 @@ public class WatorOccupant extends CellOccupant {
 		}
 	}
 
-	private void changeFishState(Grid grid) 
-	{
+	/**
+	 * Changes the next state for a WatorOccupant of type fish. If a fish has an
+	 * empty neighbor it moves to it. If it has been alive long enough, it
+	 * reproduces, in the same way that the shark does.
+	 * 
+	 * @param grid
+	 */
+	private void changeFishState(Grid grid) {
 		WatorOccupant neighborCell = (WatorOccupant) grid.getNeighborOfType(grid.getNeighbors(this), EMPTY_STATE);
 		if (neighborCell != null) {
 			// MOVE TO EMPTY NEIGHBOR, either we leave a fish behind or we dont
@@ -142,8 +164,7 @@ public class WatorOccupant extends CellOccupant {
 			} else {
 				neighborCell.incTurnsAlive();
 			}
-		}
-		else {
+		} else {
 			this.setNextState(this.getCurrentState());
 			this.incTurnsAlive();
 		}

@@ -6,6 +6,12 @@ import java.util.Random;
 import grids.Grid;
 import javafx.scene.paint.Paint;
 
+/**
+ * Subclass for Rock Paper Scissors simulation.
+ * 
+ * @author Kelley Scroggs
+ *
+ */
 public class RPSOccupant extends CellOccupant {
 
 	private static final int ROCK_STATE = 3;
@@ -16,16 +22,25 @@ public class RPSOccupant extends CellOccupant {
 	private static final int NUMBER_PLAYERS = 3;
 	
 	private int gradientLevel;
-		
+	
+	/**
+	 * Creates RPS occupant for RPS simulation upon initialization of the grid.
+	 * 
+	 * @param initState
+	 * @param initLocation
+	 * @param initColor
+	 * @param colors
+	 */
 	public RPSOccupant(int initState, int[] initLocation, Paint initColor, Paint[] colors) {
 		super(initState, initLocation, initColor, colors);
-		// TODO Auto-generated constructor stub
 		gradientLevel = 0;
 	}
 
+	/** 
+	 * Calculate the next state of the RPS cell.
+	 */
 	@Override
 	public void calculateNextState(Grid grid) {
-		// TODO Auto-generated method stub
 		List<CellOccupant> myNeighbors = grid.getNeighbors(this);
 		Random r = new Random();
 		RPSOccupant randNeighbor = (RPSOccupant) myNeighbors.get(r.nextInt(myNeighbors.size()));
@@ -52,22 +67,45 @@ public class RPSOccupant extends CellOccupant {
 		}
 	}
 	
+	/**
+	 * Returns true if typeOne beats typeTwo, otherwise returns false.
+	 * 
+	 * @param typeOne
+	 * @param typeTwo
+	 * @return
+	 */
 	private boolean cellEats(int typeOne, int typeTwo) {
 		return typeOne%NUMBER_PLAYERS == ((typeTwo + 1)%NUMBER_PLAYERS);
 	}
 	
+	/**
+	 * returns gradient level of a cell. 
+	 * 
+	 * @return
+	 */
 	private int getGradientLevel() {
 		return this.gradientLevel;
 	}
 	
+	/**
+	 * replaces current gradient level of a cell.
+	 * 
+	 * @param x
+	 */
 	private void replaceGradientLevel(int x) {
 		this.gradientLevel = x + 1;
 	}
 	
+	/**
+	 * decreases the gradient level of a cell.
+	 */
 	private void upgradeGradientLevel() {
 		this.gradientLevel--;
 	}
 	
+	/** 
+	 * increases the gradient level of a cell.
+	 */
 	private void downgradeGradientLevel() {
 		this.gradientLevel++;
 	}
