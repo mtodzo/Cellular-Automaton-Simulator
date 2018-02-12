@@ -31,11 +31,10 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import userInterface.Buttons;
-import userInterface.CreateXML;
 import userInterface.PauseButton;
 import userInterface.StartButton;
 import userInterface.StopButton;
-import userInterface.TextFields;
+
 /**
  * @author Belanie Nagiel
  * 
@@ -404,12 +403,28 @@ public class Setup extends Application
 					}
 					root.setCenter(displays);
 				});
-		
-		TextFields newXML = new CreateXML(prop.getProperty("XMLText"), prop, ANIMATION, primaryStage, SimulationFileName, CURRENT_DISPLAY, null);
-		newXML.getMyNode().getChildren().add(newXML.getMyButton());
-		newXML.getMyNode().setSpacing(SPACING);
-		
-		controls.getChildren().addAll(START.getMyButton(),PAUSE.getMyButton(), STOP.getMyButton(), STEP, INFO, ANIMATION_RATE, RATE, GRID_LINES, newXML.getMyNode());
+
+		TextField newXML = new TextField();
+		newXML.setPromptText(prop.getProperty("XMLText"));
+		Button CREATE = new Button(prop.getProperty("XMLText"));
+		CREATE.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle (ActionEvent e)
+			{
+				if (newXML.getText() != null && !newXML.getText().isEmpty())
+				{
+					ANIMATION.pause();
+					XMLCreation currentConfigs = new XMLCreation(newXML.getText());
+					currentConfigs.currentGridToXML(CURRENT_DISPLAY);
+				}
+
+			}
+		});
+		HBox xml = new HBox();
+		xml.getChildren().addAll(newXML,CREATE);
+		xml.setSpacing(SPACING);
+
+		controls.getChildren().addAll(START.getMyButton(),PAUSE.getMyButton(), STOP.getMyButton(), STEP, INFO, ANIMATION_RATE, RATE, GRID_LINES, xml);
 		controls.setSpacing(SPACING);
 		return controls;
 	}
