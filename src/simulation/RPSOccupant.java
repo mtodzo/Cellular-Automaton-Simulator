@@ -14,9 +14,6 @@ import javafx.scene.paint.Paint;
  */
 public class RPSOccupant extends CellOccupant {
 
-	private static final int ROCK_STATE = 3;
-	private static final int SCISSORS_STATE = 2;
-	private static final int PAPER_STATE = 1;
 	private static final int NULL_STATE = 0;
 	private static final int MAX_GRADIENT = 9;
 	private static final int NUMBER_PLAYERS = 3;

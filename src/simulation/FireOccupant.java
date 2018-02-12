@@ -15,7 +15,7 @@ import javafx.scene.paint.Paint;
 public class FireOccupant extends CellOccupant {
 
 	private static final double PROB_CATCH_FIRE = .15;
-	private static final int maxTurnsOnFire = 5;
+	private static final int MAX_TURNS_ON_FIRE = 5;
 	private static final int EMPTY = 0;
 	private static final int TREE = 1;
 	private static final int FIRE = 2;
@@ -73,7 +73,7 @@ public class FireOccupant extends CellOccupant {
 				this.noChange();
 			}
 		} else {
-			if (getTurnsOnFire() == maxTurnsOnFire) {
+			if (getTurnsOnFire() == MAX_TURNS_ON_FIRE) {
 				this.setNextState(EMPTY);
 				this.setNextPaint(this.getTypeColors()[EMPTY]);
 			} else {

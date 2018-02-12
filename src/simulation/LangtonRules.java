@@ -123,7 +123,7 @@ public class LangtonRules {
 	 * @return
 	 */
 	private ArrayList<Integer> rotateList(int num, List<Integer> inputList) {
-		ArrayList<Integer> retList = new ArrayList<Integer>();
+		ArrayList<Integer> retList = new ArrayList<>();
 		for (int i = num; i < inputList.size(); i++) {
 			retList.add(inputList.get(i));
 		}
