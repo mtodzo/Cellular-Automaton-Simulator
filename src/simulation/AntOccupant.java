@@ -93,7 +93,6 @@ public class AntOccupant extends CellOccupant{
 	private void findNextAntLoc(List<CellOccupant> neighbors) {
 		int maxNeighborFoodPheromones = 0;
 		int maxNeighborHomePheromones = 0;
-		boolean test = false;
 		List<AntOccupant> patchNeighbors = new ArrayList<>();
 		AntOccupant nextPatch = this;
 		for (CellOccupant patch: neighbors) {
@@ -103,9 +102,6 @@ public class AntOccupant extends CellOccupant{
 					patchNeighbors.add(current);
 				}
 				if (this.hasFood && current.patchHomePheromones > maxNeighborHomePheromones) {
-					if (current.patchHomePheromones == 7) {
-						test = true;
-					}
 					nextPatch = current;
 				}
 				else if (!this.hasFood && current.patchFoodPheromones > maxNeighborFoodPheromones) {
