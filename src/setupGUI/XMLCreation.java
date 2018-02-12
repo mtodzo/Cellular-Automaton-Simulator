@@ -57,7 +57,7 @@ public class XMLCreation
 	 * @param ySize
 	 * @param colors
 	 */
-	public void createRandomXML(String simulationType, int xSize, int ySize, String[] colors)
+	public void createRandomXML(String simulationType, int xSize, int ySize, String[] colors) throws LoadGridException
 	{
 		Properties prop = new Properties();
 		try

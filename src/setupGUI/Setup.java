@@ -388,14 +388,14 @@ public class Setup extends Application
 				{
 					CURRENT_DISPLAY.setShowGridLines(new_val);
 					VBox displays = new VBox();
-//					try 
-//					{
+					try 
+					{
 						displays.getChildren().addAll(CURRENT_DISPLAY.displaySimulationConfiguration(), CURRENT_POPULATION_GRAPH.displayPopulationGraph());
-//					}
-//					catch(LoadGridException e)
-//					{
-//						hardReset(primaryStage);
-//					}
+					}
+					catch(LoadGridException e)
+					{
+						hardReset(primaryStage);
+					}
 					root.setCenter(displays);
 				});
 		

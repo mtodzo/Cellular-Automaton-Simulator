@@ -302,7 +302,7 @@ public class DisplayGrid {
 	 * 
 	 * @return a Pane filled with polygons that will be added to the GUI
 	 */
-	public Pane displaySimulationConfiguration() 
+	public Pane displaySimulationConfiguration() throws LoadGridException
 	{
 //		GridPane SIMULATION_DISPLAY = new GridPane();
 //		rectangleConfiguration(SIMULATION_DISPLAY);
@@ -350,7 +350,7 @@ public class DisplayGrid {
 	 * @param simDisplay empty pane to fill
 	 * @throws LoadGridException
 	 */
-	private void hexagonConfiguration(Pane simDisplay)
+	private void hexagonConfiguration(Pane simDisplay) throws LoadGridException
 	{
 		//int blockSizeX = 3*BlockSizeX/4;
 		//int blockSizeY = 3*BlockSizeY/4;
