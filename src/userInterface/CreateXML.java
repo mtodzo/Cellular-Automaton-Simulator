@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import setupGUI.DisplayGrid;
+import setupGUI.LoadGridException;
 import setupGUI.XMLCreation;
 
 public class CreateXML extends TextFields{
@@ -37,7 +38,12 @@ public class CreateXML extends TextFields{
 		 {
 			 animation.pause();
 			 XMLCreation currentConfigs = new XMLCreation(texts.get(0).getText());
-			 currentConfigs.currentGridToXML(currentDisplay);
+			 try {
+				currentConfigs.currentGridToXML(currentDisplay);
+			} catch (LoadGridException e) {
+				// TODO Auto-generated catch block
+				System.out.println("Could not convert grid to XML");
+			}
 		 }
 		
 	}
