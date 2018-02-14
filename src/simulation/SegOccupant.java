@@ -4,6 +4,7 @@ import grids.Grid;
 import javafx.scene.paint.Paint;
 
 /*
+ * @author Miles Todzo
  * Subclass of CellOccupant for the Segregation simulation.
  */
 public class SegOccupant extends CellOccupant {
