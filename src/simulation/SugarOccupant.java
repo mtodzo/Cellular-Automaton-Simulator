@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /*
+ * @author Miles Todzo
  * Subclass of CellOccupant for the SugarScape simulation.
  */
 public class SugarOccupant extends CellOccupant{
