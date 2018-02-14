@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 /*
+ * @author Miles Todzo
  * The Grid superclass is an abstract class that implements a number of methods for accessing or changing CellOccupants that are part
  * of the grid. The one abstract method is getNeighbors. This is implemented by each of the subclasses since it is the only method that
  * varies with grid type.
