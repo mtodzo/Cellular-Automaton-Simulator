@@ -13,6 +13,12 @@ import grids.SquareGrid;
 import grids.WrapAroundGrid;
 import javafx.scene.paint.Paint;
 
+/**
+* @author Miles Todzo
+* Class used to move update each cell occupant and move to the next generation
+* Initializes grid type
+**/
+
 public class Simulation {
 	private boolean isRunning;
 	private String mySimulationType;
