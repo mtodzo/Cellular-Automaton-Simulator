@@ -6,6 +6,7 @@ import java.util.List;
 import simulation.CellOccupant;
 
 /*
+ * @author Miles Todzo
  * Subclass of the Grid class. Implements getNeighbors method for square neighbors and diagonal neighbors.
  */
 public class DiagonalSquareGrid extends Grid {
