@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /*
+ * @author Miles Todzo
  * Subclass of CellOccupant for the ForagingAnt simulation.
  */
 public class AntOccupant extends CellOccupant{
