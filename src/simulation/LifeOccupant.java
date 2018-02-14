@@ -5,6 +5,7 @@ import javafx.scene.paint.Paint;
 
 
 /*
+ * @author Miles Todzo
  * Subclass of CellOccupant for GameOfLife simuation. Uses the following rules:
  * Any live cell with fewer than two live neighbors dies, as if caused by underpopulation.
  * Any live cell with two or three live neighbors lives on to the next generation.
